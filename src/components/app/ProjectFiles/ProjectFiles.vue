@@ -3,10 +3,11 @@ import type { core } from '@/api/api'
 import { onMounted } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import dayjs from 'dayjs'
+import ListItem from '@/components/ui/ListItem/ListItem.vue'
 
 const props = defineProps<{
   title?: string
-  assetId: string
+  projectId: string
   data: core.MediaFile[]
 }>()
 
@@ -19,7 +20,7 @@ onMounted(() => {
   if (props.data.some((obj) => obj.fileId === route.params.fileId)) return
 
   router.replace({
-    name: 'view-asset',
+    name: 'project-page-root',
     params: {
       fileId: props.data[0].fileId
     }
@@ -37,14 +38,13 @@ onMounted(() => {
         v-for="file in data"
         :key="file.fileId"
         :to="{
-          name: 'view-asset',
-          params: { itemId: file.itemId, fileId: file.fileId }
+          name: 'project-page-root',
+          params: { projectId: file.projectId, fileId: file.fileId }
         }"
       >
-        <li class="list-item">
-          <VueFeather type="file" size="24" strokeWidth="2" />
+        <ListItem icon="file">
           <strong>{{ dayjs(file.created).format('YYYY-MM-DD HH:mm') }}</strong>
-        </li>
+        </ListItem>
       </RouterLink>
     </ul>
   </div>
@@ -62,12 +62,6 @@ onMounted(() => {
   @apply text-xl;
 
   font-weight: 300;
-}
-
-.router-link-exact-active > .list-item {
-  color: rgba(var(--rgb) / 100%);
-  background-color: rgba(var(--rgb) / 10%);
-  border-left: 1px solid rgba(var(--rgb) / 100%);
 }
 
 .view-track-header {

@@ -7,7 +7,7 @@ import { BrandLogo } from '../'
   <nav id="navbar">
     <RouterLink
       :to="{
-        name: 'projects-list'
+        name: 'collections-list'
       }"
     >
       <BrandLogo />

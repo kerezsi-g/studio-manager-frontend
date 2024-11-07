@@ -7,7 +7,7 @@ onMounted(() => {
   const router = useRouter()
 
   router.replace({
-    name: 'projects-list'
+    name: 'collections-list'
   })
 })
 </script>

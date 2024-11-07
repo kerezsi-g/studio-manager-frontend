@@ -5,13 +5,13 @@ import { PendingOverlay } from '@/components/ui'
 import { AsyncLoader } from '@/components/utility'
 
 interface Props {
-  projectId: string
+  collectionId: string
 }
 
 defineProps<Props>()
 
-async function get({ projectId }: { projectId: string }): Promise<core.Asset[]> {
-  const res = await API.getAssets(projectId)
+async function get({ collectionId }: { collectionId: string }): Promise<core.Project[]> {
+  const res = await API.getProjects(collectionId)
 
   return res.data
 }
@@ -21,7 +21,7 @@ async function get({ projectId }: { projectId: string }): Promise<core.Asset[]> 
     :fn="get"
     :debounce="600"
     :args="{
-      projectId
+      collectionId
     }"
     v-slot="{ data, pending }"
   >

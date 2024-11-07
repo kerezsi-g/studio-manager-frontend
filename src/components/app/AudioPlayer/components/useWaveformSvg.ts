@@ -1,7 +1,5 @@
 // import type { AudioChannelPeaks } from './channel-waveform.vue'
 
-import type { core } from '@/api/api'
-
 interface UseWaveformSvgParams {
   bits: number
   length: number

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { NavBar } from '@/components/app'
-import Background from '@/components/app/Background/Background.vue'
+// import { NavBar } from '@/components/app'
+// import Background from '@/components/app/Background/Background.vue'
 </script>
 <template>
-  <NavBar />
+  <!-- <NavBar /> -->
   <main id="inner">
     <RouterView />
   </main>

@@ -1,26 +1,26 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <route lang="json">
 {
-  "name": "projects-list"
+  "name": "collections-list"
 }
 </route>
 <script setup lang="ts">
 // import MediaList from '@/components/app/AssetList/AssetList.vue'
 import { API } from '@/api/client'
-import { ProjectsList } from '@/components/app/ProjectsList'
+import { CollectionsList } from '@/components/app/CollectionsList'
 // import { MediaIndexProvider } from '@/components/data/TracksByProjectId'
 import AsyncLoader from '@/components/utility/AsyncLoader/AsyncLoader.vue'
 
-async function getProjects() {
-  const response = await API.getProjects()
+async function get() {
+  const response = await API.getCollections()
 
   return response.data
 }
 </script>
 <template>
-  <AsyncLoader :fn="getProjects" :args="{}">
+  <AsyncLoader :fn="get" :args="{}">
     <template #data="{ data }">
-      <ProjectsList :data="data" />
+      <CollectionsList :data="data" />
     </template>
   </AsyncLoader>
 </template>

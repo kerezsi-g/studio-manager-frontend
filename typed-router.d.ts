@@ -19,10 +19,10 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    'view-asset': RouteRecordInfo<'view-asset', '/assets/:assetId/:fileId?', { assetId: ParamValue<true>, fileId?: ParamValueZeroOrOne<true> }, { assetId: ParamValue<false>, fileId?: ParamValueZeroOrOne<false> }>,
+    'list-projects': RouteRecordInfo<'list-projects', '/collections/:collectionId', { collectionId: ParamValue<true> }, { collectionId: ParamValue<false> }>,
     '/files/[fileId]': RouteRecordInfo<'/files/[fileId]', '/files/:fileId', { fileId: ParamValue<true> }, { fileId: ParamValue<false> }>,
+    'collections-list': RouteRecordInfo<'collections-list', '/home', Record<never, never>, Record<never, never>>,
     'login': RouteRecordInfo<'login', '/login', Record<never, never>, Record<never, never>>,
-    'projects-list': RouteRecordInfo<'projects-list', '/projects', Record<never, never>, Record<never, never>>,
-    'view-project': RouteRecordInfo<'view-project', '/projects/:projectId', { projectId: ParamValue<true> }, { projectId: ParamValue<false> }>,
+    'project-page-root': RouteRecordInfo<'project-page-root', '/projects/:projectId/:fileId?', { projectId: ParamValue<true>, fileId?: ParamValueZeroOrOne<true> }, { projectId: ParamValue<false>, fileId?: ParamValueZeroOrOne<false> }>,
   }
 }

@@ -3,19 +3,19 @@ import { API } from '@/api/client'
 import { AsyncLoader } from '@/components/utility'
 
 interface Props {
-  assetId: string
+  projectId: string
 }
 
 defineProps<Props>()
 
-async function load({ assetId }: { assetId: string }) {
-  const { data } = await API.getAssetDetails(assetId)
+async function load({ projectId }: { projectId: string }) {
+  const { data } = await API.getProjectDetails(projectId)
 
   return data
 }
 </script>
 <template>
-  <AsyncLoader :fn="load" :args="{ assetId }">
+  <AsyncLoader :fn="load" :args="{ projectId }">
     <template #data="{ data }">
       <slot v-bind="{ data }" />
     </template>

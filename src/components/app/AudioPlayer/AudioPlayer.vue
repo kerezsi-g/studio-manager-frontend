@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { breakpointsVuetifyV2, useMediaControls } from '@vueuse/core'
+import { useMediaControls } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 import { fetchPeaks } from './composables/fetchPeaks'
@@ -7,17 +7,18 @@ import ChannelWaveform from './components/channel-waveform.vue'
 
 import { debounce, formatTimestamp } from '@/utils'
 import { AsyncLoader } from '@/components/utility'
-import { PendingOverlay, VButton } from '@/components/ui'
+import { PendingOverlay } from '@/components/ui'
 import PlayerControls from './components/player-controls.vue'
+import type { core } from '@/api/api'
 
 const props = defineProps<{
   fileId: string
-  annotations: TrackAnnotations
+  annotations: core.Review[]
 }>()
 const audioElement = ref<HTMLAudioElement>()
 
 const mediaControls = useMediaControls(audioElement, {
-  src: `/api/files/${props.fileId}`
+  src: `/api/media/${props.fileId}`
 })
 
 const waveformContainerRef = ref<HTMLElement>()
@@ -159,7 +160,6 @@ function handleSeekStart() {
       :data-time="timestamp"
     /> -->
     <PlayerControls :context="mediaControls" />
-    <audio ref="audioElement" controls hidden class="w-full" />
   </main>
 </template>
 <style lang="scss">
@@ -170,21 +170,6 @@ function handleSeekStart() {
   flex-grow: 1;
 
   //   align-self: stretch;
-}
-
-.timestamp {
-  @apply font-mono;
-  @apply px-2;
-  @apply rounded;
-  font-size: 14px;
-  font-weight: 400;
-
-  @apply text-sky-500;
-  @apply bg-sky-500 bg-opacity-20;
-
-  //   background-color: rgba(var(--rgb) / 20%);
-  //   color: rgba(var(--rgb) / 100%);
-  //   color: white;
 }
 
 .markers-list {

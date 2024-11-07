@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { clamp, type UseMediaControlsReturn } from '@vueuse/core'
+import { useAudioContext } from '../AudioContext/AudioContext.vue'
+import { formatTimestamp } from '@/utils'
 
 import { VButton } from '@/components/ui'
 import { computed } from 'vue'
+import { API } from '@/api/client'
 
 const props = withDefaults(
   defineProps<{
-    context: UseMediaControlsReturn
     seekParams?: number[]
   }>(),
   {
@@ -14,23 +15,11 @@ const props = withDefaults(
   }
 )
 
-const { playing, volume } = props.context
+const emit = defineEmits<{
+  (c: 'createReview', t: number): void
+}>()
 
-function togglePlayback() {
-  const { playing } = props.context
-  playing.value = !playing.value
-}
-
-function seek(targetTime: number) {
-  const { currentTime, duration } = props.context
-
-  currentTime.value = clamp(targetTime, 0, duration.value)
-}
-
-function seekRelative(offset: number) {
-  const { currentTime } = props.context
-  seek(currentTime.value + offset)
-}
+const { seekRelative, togglePlayback, playing, volume, currentTime, duration } = useAudioContext()
 
 const iconProps = {
   size: 48,
@@ -47,10 +36,14 @@ const volumeIcon = computed(() => {
 
   return 'volume'
 })
+
+function handleCreateReview() {
+  emit('createReview', currentTime.value)
+}
 </script>
 <template>
   <nav class="player-controls">
-    <div class="flex gap-2 flex-row-reverse">
+    <div class="flex gap-2 flex-row">
       <VButton
         v-for="param in seekParams"
         :key="param"
@@ -61,17 +54,12 @@ const volumeIcon = computed(() => {
         <VueFeather :type="param >= 10 ? 'chevrons-left' : 'chevron-left'" v-bind="iconProps" />
         <span class="subtext"> {{ param }}s </span>
       </VButton>
-    </div>
 
-    <VButton @click="togglePlayback" class="icon-button p-2">
-      <VueFeather type="play" v-bind="iconProps" v-if="playing == false" />
-      <VueFeather type="pause" v-bind="iconProps" v-if="playing == true" />
+      <VButton @click="togglePlayback" class="icon-button p-2">
+        <VueFeather type="play" v-bind="iconProps" v-if="playing == false" />
+        <VueFeather type="pause" v-bind="iconProps" v-if="playing == true" />
+      </VButton>
 
-      <!-- <span class="subtext"> {{ playing ? 'PAUSE' : 'PLAY' }} </span> -->
-      <!-- {{ context.playing ? 'PAUSE' : 'PLAY' }} -->
-    </VButton>
-
-    <div class="flex gap-2 flex-row">
       <VButton
         v-for="param in seekParams"
         :key="param"
@@ -81,6 +69,17 @@ const volumeIcon = computed(() => {
       >
         <VueFeather :type="param >= 10 ? 'chevrons-right' : 'chevron-right'" v-bind="iconProps" />
         <span class="subtext"> {{ param }}s </span>
+      </VButton>
+    </div>
+
+    <span class="font-mono font-light">
+      {{ formatTimestamp(currentTime) }} / {{ formatTimestamp(duration) }}
+    </span>
+
+    <div class="flex-grow flex items-center gap-4">
+      <VButton :action="handleCreateReview">
+        <VueFeather type="edit-3" size="16" />
+        Write review
       </VButton>
     </div>
 
