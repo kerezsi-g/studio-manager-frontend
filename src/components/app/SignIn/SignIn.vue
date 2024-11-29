@@ -34,35 +34,53 @@ const disallowSubmit = computed(() => {
   <div class="login-backdrop">
     <main class="login-window">
       <form class="login-form" @submit.prevent="handleSignIn" v-auto-animate>
-        <VueFeather strokeWidth="0" size="48" type="shield" fill="white" />
         <header>
-          <strong>Sign in to your account</strong>
-          <span>The page you are trying to access requires authentication</span>
+          <VueFeather strokeWidth="0" size="48" type="shield" fill="white" />
+          <p>
+            <strong>Sign in to your account</strong>
+            <span>The page you are trying to access requires authentication</span>
+          </p>
         </header>
         <hr />
+
+        <div class="msg color-info">
+          <VueFeather type="info" size="24" />
+          <div>
+            The application is still in demo mode.<br />The following test accounts are available
+            for signing in:<br />
+            <div class="flex flex-row gap-2 text-xs font-mono">
+              <span class="px-1 bg-black bg-opacity-30">test1:test</span>
+              <span class="px-1 bg-black bg-opacity-30">test2:test</span>
+              <span class="px-1 bg-black bg-opacity-30">test3:test</span>
+            </div>
+          </div>
+        </div>
+
         <span class="field">
-          <VueFeather strokeWidth="1.5" size="32" type="user" />
+          <!-- <VueFeather strokeWidth="1.5" size="32" type="user" /> -->
           <v-input
             placeholder="E-mail address"
+            label="E-mail address"
             :disabled="pending"
             v-model="params.email"
             required
           />
         </span>
         <span class="field">
-          <VueFeather strokeWidth="1.5" size="32" type="key" />
+          <!-- <VueFeather strokeWidth="1.5" size="32" type="key" /> -->
           <v-input
             placeholder="Password"
+            label="Password"
             :disabled="pending"
             v-model="params.password"
             required
             type="password"
           />
         </span>
-        <p class="error" v-if="error">
+        <div class="msg color-error" v-if="error">
           <VueFeather strokeWidth="1.5" type="alert-triangle" size="24" />
           <span> {{ error }} </span>
-        </p>
+        </div>
         <VButton type="submit" :disabled="disallowSubmit">
           <span class="inline-block">Sign In</span>
           <VueFeather type="chevrons-right" size="20" />
@@ -106,11 +124,11 @@ const disallowSubmit = computed(() => {
 .login-form {
   @apply px-32 py-24;
   position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(240px, 360px);
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
-  column-gap: 1rem;
+  //   column-gap: 1rem;
   row-gap: 1rem;
   font-size: 1rem;
 
@@ -122,12 +140,17 @@ const disallowSubmit = computed(() => {
 
   header {
     display: flex;
-    flex-direction: column;
-    // gap: -8px;
-    grid-column: 2;
-    // grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+
     font-size: 2rem;
+    gap: 0.5rem;
     font-weight: 300;
+
+    p {
+      display: flex;
+      flex-direction: column;
+    }
 
     span {
       font-size: 0.875rem;
@@ -135,27 +158,22 @@ const disallowSubmit = computed(() => {
       //   color: rgba(255 0 48/ 100%);
       color: rgba(var(--rgb) / 100%);
       padding-left: 0.125rem;
-      //   opacity: 75;
     }
   }
-  .field {
-    grid-column: 1 /-1;
-    display: grid;
-    grid-template-columns: subgrid;
+  //   .field {
+  // grid-column: 1 /-1;
+  // display: grid;
+  // grid-template-columns: subgrid;
 
-    i {
-      justify-self: flex-end;
-      align-self: center;
-    }
-  }
-
-  button {
-    grid-column: 2;
-  }
+  // i {
+  //   justify-self: flex-end;
+  //   align-self: center;
+  // }
+  //   }
 }
 
-p.error {
-  --rgb: 255 0 32;
+.msg {
+  //   --rgb: 255 0 32;
   //   --color: gba(var(--rgb) / 15%);
 
   grid-column: 2;
@@ -165,7 +183,7 @@ p.error {
   background-color: rgba(var(--rgb) / 15%);
 
   @apply flex;
-  @apply items-center justify-center;
+  @apply items-center justify-start;
   @apply px-4 py-2  gap-4;
 }
 </style>

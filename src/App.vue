@@ -66,6 +66,10 @@ html {
   --rgb: 255 0 32;
 }
 
+.color-info {
+  --rgb: 0 128 255;
+}
+
 #inner {
   @apply flex flex-col  flex-grow;
   //   @apply items-center justify-center;
