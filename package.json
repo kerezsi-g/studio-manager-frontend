@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
     "@meersagor/wavesurfer-vue": "^0.1.0",
     "@vueuse/core": "^10.10.1",
     "dayjs": "^1.11.11",

@@ -6,4 +6,14 @@ const router = createRouter({
   routes
 })
 
+/**
+ * Redirect on non-existent urls
+ */
+router.afterEach((to) => {
+  if (to.matched.length == 0)
+    router.replace({
+      name: 'collections-list'
+    })
+})
+
 export default router

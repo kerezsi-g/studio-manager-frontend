@@ -10,10 +10,10 @@ interface Props {
 
 defineProps<Props>()
 
-async function get({ collectionId }: { collectionId: string }): Promise<core.Project[]> {
+async function get({ collectionId }: { collectionId: string }) {
   const res = await API.getProjects(collectionId)
 
-  return res.data
+  return res
 }
 </script>
 <template>
@@ -25,7 +25,7 @@ async function get({ collectionId }: { collectionId: string }): Promise<core.Pro
     }"
     v-slot="{ data, pending }"
   >
-    <slot v-if="data" v-bind="{ data }" />
+    <slot v-if="data" v-bind="{ collection: data }" />
     <Transition name="fade">
       <PendingOverlay v-if="pending" />
     </Transition>

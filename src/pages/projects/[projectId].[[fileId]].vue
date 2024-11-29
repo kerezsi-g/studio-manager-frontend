@@ -31,9 +31,10 @@ async function createReview(t: number) {
 <template>
   <div class="project-page-root">
     <ProjectDetails v-bind="{ projectId }" v-slot="{ data: project }">
-      <aside class="flex flex-col">
+      <Teleport to="#navbar-slot">
         <header class="project-page-header">
           <RouterLink
+            class="link flex items-center gap-2"
             :to="{
               name: 'list-projects',
               params: {
@@ -41,13 +42,14 @@ async function createReview(t: number) {
               }
             }"
           >
-            <h2 class="flex items-center gap-1">
-              <VueFeather type="folder" size="20" strokeWidth="1.5" />
-              {{ project.collectionName }}
-            </h2>
+            <VueFeather type="folder" size="20" strokeWidth="1" />
+            <span>{{ project.collectionName }}</span>
           </RouterLink>
-          <h1>{{ project.projectName }}</h1>
+          /
+          <strong>{{ project.projectName }}</strong>
         </header>
+      </Teleport>
+      <aside class="flex flex-col">
         <ProjectFiles v-bind="{ projectId }" :data="project.versions" />
       </aside>
       <main class="flex flex-col flex-grow">
@@ -61,7 +63,9 @@ async function createReview(t: number) {
                 :peaks="channel"
                 :key="i"
               />
+
               <Scrubber />
+
               <Marker
                 v-for="review in reviews.filter((r) => !r.resolvedBy)"
                 v-bind="review"
@@ -95,22 +99,23 @@ async function createReview(t: number) {
 }
 
 .project-page-header {
-  //   height: 128px;
-  @apply px-8 py-2;
-  @apply self-stretch;
+  @apply flex items-center;
   @apply bg-black bg-opacity-50;
+  @apply gap-2;
+  @apply text-lg;
+  //   height: 128px;
+  //   @apply px-8 py-2;
+  //   @apply self-stretch;
+}
 
-  h1 {
-    @apply text-4xl;
-    // @apply border-b;
-    font-weight: 300;
-  }
+a.link {
+  color: rgba(var(--rgb) / 100%);
+  padding-inline: 4px;
+  border-radius: 2px;
+  //   line-height: unset;
 
-  h2 {
-    @apply text-xl;
-    // @apply ml-1;
-    color: rgba(var(--rgb) / 100%);
-    opacity: 0.8;
+  &:hover {
+    background-color: rgba(var(--rgb) / 10%);
   }
 }
 </style>

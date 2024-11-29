@@ -11,7 +11,7 @@
       '--thickness': '4px'
     }"
   >
-    <span class="spinner" style="--size: 128px; --thickness: 2px" />
+    <span class="spinner" style="--size: 128px; --thickness: 1px" />
     <span class="spinner" style="--size: 118px; --thickness: 4px" />
     <!-- <span class="spinner" style="--size: 106px; --thickness: 2px" /> -->
   </div>
@@ -35,7 +35,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(0 0 0 /10%);
+  background-color: rgba(0 0 0 /50%);
 }
 
 .spinner {
@@ -50,9 +50,10 @@
   transform-origin: center center;
 
   animation-name: rotate;
-  animation-duration: 1500ms;
+  animation-duration: 1800ms;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  //   animation-direction: alternate;
 
   border: var(--thickness) solid transparent;
 

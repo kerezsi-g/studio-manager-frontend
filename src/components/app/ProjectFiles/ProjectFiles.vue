@@ -4,6 +4,7 @@ import { onMounted } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import ListItem from '@/components/ui/ListItem/ListItem.vue'
+import { Panel } from '@/components/ui/Panel'
 
 const props = defineProps<{
   title?: string
@@ -28,26 +29,24 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div id="annotations-list" class="panel surface-0 flex-grow">
-    <header class="panel-header">
-      <VueFeather type="archive" size="24" strokeWidth="2" />
-      <span> Versions </span>
-    </header>
-    <ul class="versions-list">
-      <RouterLink
-        v-for="file in data"
-        :key="file.fileId"
-        :to="{
-          name: 'project-page-root',
-          params: { projectId: file.projectId, fileId: file.fileId }
-        }"
-      >
-        <ListItem icon="file">
-          <strong>{{ dayjs(file.created).format('YYYY-MM-DD HH:mm') }}</strong>
-        </ListItem>
-      </RouterLink>
-    </ul>
-  </div>
+  <Panel title="Versions" icon="archive" class="flex-grow">
+    <template #body>
+      <ul class="versions-list">
+        <RouterLink
+          v-for="file in data"
+          :key="file.fileId"
+          :to="{
+            name: 'project-page-root',
+            params: { projectId: file.projectId, fileId: file.fileId }
+          }"
+        >
+          <ListItem icon="file">
+            <strong>{{ dayjs(file.created).format('YYYY-MM-DD HH:mm') }}</strong>
+          </ListItem>
+        </RouterLink>
+      </ul>
+    </template>
+  </Panel>
 </template>
 <style lang="scss">
 .versions-list {

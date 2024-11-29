@@ -1,6 +1,9 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   label?: string
+  placeholder?: string
+  required?: boolean
+  type?: string
 }>()
 
 const model = defineModel()
@@ -13,7 +16,7 @@ const model = defineModel()
       </slot>
     </span>
     <span class="v-input">
-      <input v-model="model" />
+      <input v-model="model" v-bind="{ required, placeholder, type }" />
     </span>
   </label>
 </template>
@@ -30,6 +33,8 @@ const model = defineModel()
   @apply transition-all;
   @apply rounded-sm;
   @apply px-4 py-2;
+
+  display: flex;
 
   --bg-alpha: 0;
   --border-alpha: 0.5;
@@ -62,6 +67,8 @@ const model = defineModel()
     background: none;
     border: none;
     outline: none;
+    flex-grow: 1;
+    // width: 100%;
   }
 }
 </style>

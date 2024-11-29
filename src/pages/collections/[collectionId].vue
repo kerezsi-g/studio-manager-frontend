@@ -16,8 +16,8 @@ interface Props {
 defineProps<Props>()
 </script>
 <template>
-  <ProjectAssets v-slot="{ data }" v-bind="{ collectionId }">
-    <ProjectsList :data="data" />
+  <ProjectAssets v-slot="{ collection }" v-bind="{ collectionId }">
+    <ProjectsList :data="collection.data" :title="collection.collectionName" class="flex-grow" />
   </ProjectAssets>
 </template>
 <style lang="scss"></style>

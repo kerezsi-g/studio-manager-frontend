@@ -56,9 +56,18 @@ function handleClick(e: MouseEvent) {
     --bg-alpha: 80%;
   }
 
-  &:active {
+  // Apparently disabled buttons can be active
+  &:active:not(:disabled) {
     --bg-alpha: 90%;
     box-shadow: 0px 0px 0px var(--ring) rgba(var(--rgb) / 60%);
+  }
+
+  &:disabled {
+    --rgb: 64 64 64;
+    // --bg-alpha: 25%;
+    opacity: 50%;
+    // color:
+    cursor: not-allowed;
   }
 }
 </style>

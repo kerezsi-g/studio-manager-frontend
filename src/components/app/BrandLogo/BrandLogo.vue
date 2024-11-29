@@ -9,9 +9,10 @@
 <style lang="scss">
 .brand {
   @apply text-white;
-  @apply px-8 py-4;
   @apply text-4xl;
-  text-align: center;
+  //   text-align: center;
+
+  //   flex-grow: 1;
   font-weight: 500;
   letter-spacing: 2px;
   line-height: unset;

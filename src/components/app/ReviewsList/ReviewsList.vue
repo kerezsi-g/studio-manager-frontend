@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { core } from '@/api/api'
 import ListItem from '@/components/ui/ListItem/ListItem.vue'
+import { Panel } from '@/components/ui/Panel'
 import { formatTimestamp } from '@/utils'
 
 const props = withDefaults(
   defineProps<{
     data: core.Review[]
     currentTime?: number
-    highlightTolerance: number
+    highlightTolerance?: number
   }>(),
   {
     highlightTolerance: 2
@@ -25,30 +26,28 @@ function isNear(r: core.Review) {
 }
 </script>
 <template>
-  <div class="reviews-list-root panel surface-0 flex-grow">
-    <header class="panel-header">
-      <VueFeather type="list" size="24" strokeWidth="2" />
-      <span> Reviews </span>
-    </header>
-    <ul class="reviews-list">
-      <ListItem
-        v-for="review in props.data"
-        :key="review.reviewId"
-        class="reviews-list-item"
-        :icon="review.resolvedBy ? 'check-circle' : 'alert-circle'"
-        :class="{
-          resolved: review.resolvedBy,
-          highlight: isNear(review)
-        }"
-        @click="() => emit('reviewClicked', review)"
-      >
-        <template #start>
-          <span class="timestamp"> {{ formatTimestamp(review.t) }} </span>
-        </template>
-        <span> {{ review.content }} </span>
-      </ListItem>
-    </ul>
-  </div>
+  <Panel title="Reviews" class="reviews-list-root flex-grow" icon="message-square">
+    <template #body>
+      <ul class="reviews-list">
+        <ListItem
+          v-for="review in props.data"
+          :key="review.reviewId"
+          class="reviews-list-item"
+          :icon="review.resolvedBy ? 'check-circle' : 'alert-circle'"
+          :class="{
+            resolved: review.resolvedBy,
+            highlight: isNear(review)
+          }"
+          @click="() => emit('reviewClicked', review)"
+        >
+          <template #start>
+            <span class="timestamp"> {{ formatTimestamp(review.t) }} </span>
+          </template>
+          <span> {{ review.content }} </span>
+        </ListItem>
+      </ul>
+    </template>
+  </Panel>
 </template>
 <style lang="scss">
 .reviews-list-root {
@@ -71,9 +70,16 @@ function isNear(r: core.Review) {
   &.resolved {
     --rgb: 0 192 0;
   }
+}
 
-  &.highlight {
-    background-color: rgba(var(--rgb) / 25%);
+.reviews-list-item.highlight {
+  background-color: rgba(255 255 255 / 20%);
+  color: rgba(var(--rgb) / 100%);
+
+  .timestamp {
+    background-color: rgba(var(--rgb) / 50%);
+    color: white;
+    margin-left: 8px;
   }
 }
 
@@ -81,6 +87,7 @@ function isNear(r: core.Review) {
   @apply font-mono;
   @apply px-2;
   @apply rounded;
+  @apply transition-all;
   font-size: 12px;
   font-weight: 300;
 

@@ -1,11 +1,23 @@
 <script setup lang="ts">
 // import { NavBar } from '@/components/app'
 // import Background from '@/components/app/Background/Background.vue'
+import NavBar from './components/app/NavBar/NavBar.vue'
+import SignIn from './components/app/SignIn/SignIn.vue'
+import { useAuthentication, currentUser } from './composables/useAuthentication'
+
+const { pending } = useAuthentication()
 </script>
 <template>
   <!-- <NavBar /> -->
   <main id="inner">
-    <RouterView />
+    <template v-if="pending"></template>
+    <template v-else-if="currentUser">
+      <NavBar />
+      <RouterView />
+    </template>
+    <template v-else>
+      <SignIn />
+    </template>
   </main>
 </template>
 <style lang="scss">
@@ -50,29 +62,13 @@ html {
   @apply bg-black bg-opacity-85;
 }
 
-.panel {
-  @apply flex flex-col;
-  @apply px-12 py-8 gap-8;
-  @apply shadow-xl;
-  @apply rounded-sm;
-}
-
-.panel-header {
-  @apply text-4xl;
-  @apply px-4 py-2 gap-4;
-  @apply flex items-center;
-  @apply text-white;
-  @apply uppercase;
-  font-weight: 300;
-
-  border-bottom: 1px solid;
-  border-color: rgba(var(--rgb) / 100%);
-  //   color: rgba(var(--rgb) / 100%);;
+.color-error {
+  --rgb: 255 0 32;
 }
 
 #inner {
   @apply flex flex-col  flex-grow;
-  @apply items-center justify-center;
+  //   @apply items-center justify-center;
   //   @apply backdrop-filter backdrop-blur-lg;
 }
 </style>
