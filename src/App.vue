@@ -3,12 +3,13 @@
 // import Background from '@/components/app/Background/Background.vue'
 import NavBar from './components/app/NavBar/NavBar.vue'
 import SignIn from './components/app/SignIn/SignIn.vue'
+import { VModalOutlet } from './components/ui/ModalOutlet'
+import VModalGlide from './components/ui/ModalOutlet/animations/v-modal-glide.vue'
 import { useAuthentication, currentUser } from './composables/useAuthentication'
 
 const { pending } = useAuthentication()
 </script>
 <template>
-  <!-- <NavBar /> -->
   <main id="inner">
     <template v-if="pending"></template>
     <template v-else-if="currentUser">
@@ -18,6 +19,9 @@ const { pending } = useAuthentication()
     <template v-else>
       <SignIn />
     </template>
+    <VModalOutlet v-slot="state">
+      <VModalGlide v-bind="state" />
+    </VModalOutlet>
   </main>
 </template>
 <style lang="scss">
@@ -30,6 +34,21 @@ html {
   height: 100%;
   width: 100%;
   font-family: 'Barlow';
+  @apply text-white;
+}
+
+:root {
+  //   --rgb: 190 210 230; //desaturated
+  //   --rgb: 56 189 248; // blueish
+  //   --rgb: 245 158 11; // amber
+  //   --rgb: 132 204 22; // lime
+  //   --rgb: 34 197 94; // green
+  //   --rgb: 16 185 129; // emerald
+  //   --rgb: 20 184 166; // teal
+  //   --rgb: 14 165 233; // sky
+  //   --rgb: 233 16 48; // red
+  //   --rgb: 124 58 237; // purps
+  --rgb: 6 182 212; // cyan
 }
 
 #app {
@@ -43,19 +62,6 @@ html {
   background-size: cover;
   background-position: center center;
   //   background-clip: border-box;
-  @apply text-white;
-
-  //   --rgb: 190 210 230; //desaturated
-  //   --rgb: 56 189 248; // blueish
-  //   --rgb: 245 158 11; // amber
-  //   --rgb: 132 204 22; // lime
-  //   --rgb: 34 197 94; // green
-  //   --rgb: 16 185 129; // emerald
-  //   --rgb: 20 184 166; // teal
-  --rgb: 6 182 212; // cyan
-  //   --rgb: 14 165 233; // sky
-  //   --rgb: 233 16 48; // red
-  //   --rgb: 124 58 237; // purps
 }
 
 .surface-0 {
