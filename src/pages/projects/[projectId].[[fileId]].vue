@@ -16,6 +16,9 @@ import Scrubber from '@/components/app/AudioPlayer/Scrubber.vue'
 import Marker from '@/components/app/AudioPlayer/Marker.vue'
 import ProjectFiles from '@/components/app/ProjectFiles/ProjectFiles.vue'
 import { API } from '@/api/client'
+import { useModal } from '@/components/ui/ModalOutlet'
+import NewReview from '@/components/app/NewReview/NewReview.vue'
+import { ref } from 'vue'
 
 const props = defineProps<{
   projectId: string
@@ -25,7 +28,23 @@ const props = defineProps<{
 async function createReview(t: number) {
   const { fileId, projectId } = props
 
-  return await API.createReview(projectId, { fileId: fileId!, t, content: 'test' })
+  const content = await useModal(NewReview, { t })
+
+  if (!content) return
+
+  return await API.createReview(projectId, { fileId: fileId!, t, content })
+}
+
+interface PlayerState {
+  playing: boolean
+  timestamp: number
+}
+const fileSwitchState = ref<PlayerState>()
+
+function handleFileSwitch(st: PlayerState) {
+  console.log(st)
+
+  fileSwitchState.value = st
 }
 </script>
 <template>
@@ -54,10 +73,18 @@ async function createReview(t: number) {
       </aside>
       <main class="flex flex-col flex-grow">
         <ProjectReviews v-slot="{ data: reviews, reload }" v-bind="{ projectId }">
-          <AudioContext v-bind="{ fileId }" v-slot="{ peaks, controls }" v-if="fileId">
+          <AudioContext
+            v-bind="{ fileId }"
+            v-slot="{ peaks, controls }"
+            v-if="fileId"
+            :key="fileId"
+            :initial-state="fileSwitchState"
+            @unmount="handleFileSwitch"
+          >
             <div class="waveform-container" v-if="peaks !== null">
               <WaveformDisplay
                 v-for="(channel, i) in peaks?.peaks"
+                fileSwitchState
                 :bits="peaks.bits"
                 :length="peaks.length"
                 :peaks="channel"

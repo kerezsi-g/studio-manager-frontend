@@ -1,7 +1,18 @@
 <script lang="ts">
 const injectionKey = Symbol('audio-context')
+
+/**
+ * TODO: rename
+ *
+ * Used for maintaing audio player between file switches
+ */
+interface State {
+  playing: boolean
+  timestamp: number
+}
 interface AudioContextProps {
   fileId: string
+  initialState?: State
 }
 
 export interface AudioContext {
@@ -33,9 +44,22 @@ import { API } from '@/api/client'
 import AsyncLoader from '@/components/utility/AsyncLoader/AsyncLoader.vue'
 import { formatTimestamp } from '@/utils'
 import { clamp, useMediaControls } from '@vueuse/core'
-import { computed, inject, provide, ref, type ComputedRef, type Ref } from 'vue'
+import {
+  computed,
+  inject,
+  onBeforeUnmount,
+  onMounted,
+  provide,
+  ref,
+  type ComputedRef,
+  type Ref
+} from 'vue'
 
 const props = defineProps<AudioContextProps>()
+
+const emit = defineEmits<{
+  (c: 'unmount', v: State): void
+}>()
 
 const fileUrl = computed(() => `/api/media/${props.fileId}`)
 const audioElementRef = ref<HTMLAudioElement>()
@@ -52,6 +76,20 @@ const timestamp = computed(() => {
 
 const playheadPosition = computed(() => {
   return currentTime.value / duration.value
+})
+
+onMounted(() => {
+  if (props.initialState) {
+    currentTime.value = props.initialState.timestamp
+    playing.value = props.initialState.playing
+  }
+})
+
+onBeforeUnmount(() => {
+  emit('unmount', {
+    playing: playing.value,
+    timestamp: currentTime.value
+  })
 })
 
 async function loadPeaks({ fileId }: { fileId: string }) {
