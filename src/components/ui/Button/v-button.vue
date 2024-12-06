@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   value?: T
-  action?: ((v: T) => any) | ((v: T) => Promise<any>)
+  action?: ((v: T, e: MouseEvent) => any) | ((v: T, e: MouseEvent) => Promise<any>)
 }>()
 
 const emit = defineEmits<{
@@ -16,7 +16,7 @@ function handleClick(e: MouseEvent) {
   emit('click', e)
 
   if (props.action) {
-    const promise = props.action(props.value!)
+    const promise = props.action(props.value!, e)
 
     if (promise instanceof Promise) {
       pending.value = true
