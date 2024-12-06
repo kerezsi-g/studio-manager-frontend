@@ -1,9 +1,10 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 import { useAudioContext } from '../AudioContext/AudioContext.vue'
 import { computed } from 'vue'
 
-const props = defineProps<core.Review>()
+const props = defineProps<types.Review>()
 
 const ctx = useAudioContext()
 
@@ -12,7 +13,11 @@ const position = computed(() => {
 })
 </script>
 <template>
-  <span class="marker" :style="{ '--position': position }" />
+  <span class="marker" :style="{ '--position': position }">
+    <!-- <p class="marker-text">
+      {{ content }}
+    </p> -->
+  </span>
 </template>
 <style lang="scss">
 .marker {
@@ -23,5 +28,17 @@ const position = computed(() => {
   left: var(--position);
 
   @apply bg-lime-500;
+}
+
+.marker-text {
+  @apply text-xs;
+  @apply bg-lime-500 bg-opacity-25;
+  position: absolute;
+  //   left: 0;
+  //   bottom: 100%;
+  user-select: none;
+  //   white-space: nowrap;
+
+  padding: 0px 2px;
 }
 </style>

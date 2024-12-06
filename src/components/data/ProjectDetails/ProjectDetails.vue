@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { API } from '@/api/client'
+import { CoreAPI } from '@/api/client'
 import { AsyncLoader } from '@/components/utility'
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 defineProps<Props>()
 
 async function load({ projectId }: { projectId: string }) {
-  const { data } = await API.getProjectDetails(projectId)
+  const { data } = await CoreAPI.getProjectDetails(projectId)
 
   return data
 }

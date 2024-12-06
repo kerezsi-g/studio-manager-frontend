@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { core } from '@/api/api'
 import { computed } from 'vue'
 import { useWaveformSvg } from './components/useWaveformSvg'
 

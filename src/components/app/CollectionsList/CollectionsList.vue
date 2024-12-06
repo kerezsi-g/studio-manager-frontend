@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 
 import { ListItem } from '@/components/ui/ListItem'
 import { Panel } from '@/components/ui/Panel'
 
 defineProps<{
-  data: core.Collection[]
+  data: types.Collection[]
 }>()
 </script>
 <template>

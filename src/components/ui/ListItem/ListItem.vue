@@ -38,12 +38,11 @@ const props = defineProps<{
   @apply transition-all;
 
   cursor: pointer;
-
   border-left: 2px solid transparent;
 
   &:hover {
     color: rgba(var(--rgb) / 100%);
-    background-color: rgba(var(--rgb) / 10%);
+    background-color: rgba(var(--rgb) / 5%);
     border-color: rgba(var(--rgb) / 100%);
 
     @apply pl-5 pr-3;

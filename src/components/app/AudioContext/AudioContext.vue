@@ -11,7 +11,7 @@ interface State {
   timestamp: number
 }
 interface AudioContextProps {
-  fileId: string
+  accessToken: string
   initialState?: State
 }
 
@@ -40,8 +40,6 @@ function createAudioContext(ctx: AudioContext) {
 }
 </script>
 <script setup lang="ts">
-import { API } from '@/api/client'
-import AsyncLoader from '@/components/utility/AsyncLoader/AsyncLoader.vue'
 import { formatTimestamp } from '@/utils'
 import { clamp, useMediaControls } from '@vueuse/core'
 import {
@@ -61,7 +59,7 @@ const emit = defineEmits<{
   (c: 'unmount', v: State): void
 }>()
 
-const fileUrl = computed(() => `/api/media/${props.fileId}`)
+const fileUrl = computed(() => `/api/media/${props.accessToken}`)
 const audioElementRef = ref<HTMLAudioElement>()
 
 const mediaControls = useMediaControls(audioElementRef, {
@@ -92,12 +90,9 @@ onBeforeUnmount(() => {
   })
 })
 
-async function loadPeaks({ fileId }: { fileId: string }) {
-  const { data } = await API.getAudioPeaks(fileId, {
-    bits: 8,
-    chunkSize: 4096
-  })
-  return data
+async function initialize({ fileId }: { fileId: string }) {
+  //   const { data } = await MediaAPI.getAudioPeaks(fileId, {)
+  //   return data
 }
 
 // const seekDebounced = debounce(seekToPercentage, 10)
@@ -136,9 +131,9 @@ createAudioContext(context)
 defineExpose(context)
 </script>
 <template>
-  <AsyncLoader :fn="loadPeaks" :args="{ fileId }" v-slot="{ data }">
-    <slot v-bind="{ controls: context, peaks: data }" />
-  </AsyncLoader>
+  <!-- <AsyncLoader :fn="initialize" :args="{ fileId }" v-slot="{ data }"> -->
+  <slot v-bind="{ controls: context }" />
+  <!-- </AsyncLoader> -->
   <audio ref="audioElementRef" controls hidden />
 </template>
 <style lang="scss"></style>

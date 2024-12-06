@@ -15,30 +15,32 @@ import { MediaControls, WaveformDisplay } from '@/components/app'
 import Scrubber from '@/components/app/AudioPlayer/Scrubber.vue'
 import Marker from '@/components/app/AudioPlayer/Marker.vue'
 import ProjectFiles from '@/components/app/ProjectFiles/ProjectFiles.vue'
-import { API } from '@/api/client'
+import { CoreAPI } from '@/api/client'
 import { useModal } from '@/components/ui/ModalOutlet'
 import NewReview from '@/components/app/NewReview/NewReview.vue'
 import { ref } from 'vue'
+import MediaFile from '@/components/data/MediaFile/MediaFile.vue'
 
 const props = defineProps<{
   projectId: string
   fileId?: string
 }>()
 
-async function createReview(t: number) {
+async function createReview(t: number, e?: MouseEvent) {
   const { fileId, projectId } = props
 
-  const content = await useModal(NewReview, { t })
+  const content = await useModal(NewReview, { t }, { e })
 
-  if (!content) return
+  if (!content) return null
 
-  return await API.createReview(projectId, { fileId: fileId!, t, content })
+  return await CoreAPI.createReview(projectId, { fileId: fileId!, t, content })
 }
 
 interface PlayerState {
   playing: boolean
   timestamp: number
 }
+
 const fileSwitchState = ref<PlayerState>()
 
 function handleFileSwitch(st: PlayerState) {
@@ -73,41 +75,50 @@ function handleFileSwitch(st: PlayerState) {
       </aside>
       <main class="flex flex-col flex-grow">
         <ProjectReviews v-slot="{ data: reviews, reload }" v-bind="{ projectId }">
-          <AudioContext
-            v-bind="{ fileId }"
-            v-slot="{ peaks, controls }"
-            v-if="fileId"
-            :key="fileId"
-            :initial-state="fileSwitchState"
-            @unmount="handleFileSwitch"
-          >
-            <div class="waveform-container" v-if="peaks !== null">
-              <WaveformDisplay
-                v-for="(channel, i) in peaks?.peaks"
-                fileSwitchState
-                :bits="peaks.bits"
-                :length="peaks.length"
-                :peaks="channel"
-                :key="i"
-              />
+          <MediaFile :fileId="fileId" v-slot="{ peaks, token }" v-if="fileId">
+            <AudioContext
+              :key="token"
+              :initial-state="fileSwitchState"
+              :access-token="token"
+              v-slot="{ controls }"
+              v-if="token"
+              @unmount="handleFileSwitch"
+            >
+              <div class="waveform-container" v-if="peaks !== null">
+                <WaveformDisplay
+                  v-for="(channel, i) in peaks?.peaks"
+                  fileSwitchState
+                  :bits="peaks.bits"
+                  :length="peaks.length"
+                  :peaks="channel"
+                  :key="i"
+                />
 
-              <Scrubber />
+                <Scrubber />
 
-              <Marker
-                v-for="review in reviews.filter((r) => !r.resolvedBy)"
-                v-bind="review"
-                :key="review.reviewId"
+                <Marker
+                  v-for="review in reviews.filter((r) => !r.resolvedBy)"
+                  v-bind="review"
+                  :key="review.reviewId"
+                />
+              </div>
+              <MediaControls
+                @create-review="
+                  (t, e) =>
+                    createReview(t, e).then((result) => {
+                      if (result) reload()
+                    })
+                "
               />
-            </div>
-            <MediaControls @create-review="(t) => createReview(t).then(reload)" />
-            <!-- <AudioPlayer v-bind="{ fileId }" :annotations="data" v-if="fileId" /> -->
-            <!-- {{ controls.currentTime.value }} -->
-            <ReviewsList
-              :data="reviews"
-              @reviewClicked="(review) => controls.seek(review.t - 1)"
-              :current-time="controls.currentTime.value"
-            />
-          </AudioContext>
+              <!-- <AudioPlayer v-bind="{ fileId }" :annotations="data" v-if="fileId" /> -->
+              <!-- {{ controls.currentTime.value }} -->
+              <ReviewsList
+                :data="reviews"
+                @reviewClicked="(review) => controls.seek(review.t - 1)"
+                :current-time="controls.currentTime.value"
+              />
+            </AudioContext>
+          </MediaFile>
         </ProjectReviews>
       </main>
     </ProjectDetails>

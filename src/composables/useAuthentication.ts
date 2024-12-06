@@ -1,16 +1,12 @@
-import { Core, type core } from '@/api/api'
-import { API } from '@/api/client'
+import { types } from '@/api/api'
+import { CoreAPI } from '@/api/client'
 import { sleep, stall } from '@/utils/timing'
 import { computed, onMounted, ref } from 'vue'
 import { useSessionStorage } from '@vueuse/core'
 
-type UserData = any
-
-const __currentUser = ref<core.UserData | null>(null)
+const __currentUser = ref<types.UserData | null>(null)
 
 const __token = useSessionStorage('ACCESS_TOKEN', '')
-
-// let __token: string | null = null
 
 interface AuthParams {
   email: string
@@ -22,7 +18,7 @@ export function getToken() {
 }
 
 export async function signIn({ email, password }: AuthParams) {
-  const { data, token } = await stall(API.signIn({ email, password }), 800)
+  const { data, token } = await stall(CoreAPI.signIn({ email, password }), 800)
 
   __token.value = token
 
@@ -44,7 +40,7 @@ export const currentUser = computed(() => {
 
 async function checkIdentity() {
   try {
-    const { data, token } = await API.checkIdentity()
+    const { data, token } = await CoreAPI.checkIdentity()
 
     __currentUser.value = data
 

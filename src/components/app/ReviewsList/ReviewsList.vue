@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 import ListItem from '@/components/ui/ListItem/ListItem.vue'
 import { Panel } from '@/components/ui/Panel'
 import { formatTimestamp } from '@/utils'
 
 const props = withDefaults(
   defineProps<{
-    data: core.Review[]
+    data: types.Review[]
     currentTime?: number
     highlightTolerance?: number
   }>(),
@@ -16,10 +16,10 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (c: 'reviewClicked', v: core.Review): void
+  (c: 'reviewClicked', v: types.Review): void
 }>()
 
-function isNear(r: core.Review) {
+function isNear(r: types.Review) {
   if (props.currentTime === undefined) return false
 
   return Math.abs(r.t - props.currentTime) < props.highlightTolerance
@@ -73,7 +73,7 @@ function isNear(r: core.Review) {
 }
 
 .reviews-list-item.highlight {
-  background-color: rgba(255 255 255 / 20%);
+  background-color: rgba(var(--rgb) / 20%);
   color: rgba(var(--rgb) / 100%);
 
   .timestamp {

@@ -451,7 +451,7 @@ function encodeWebSocketHeaders(headers: Record<string, string>) {
     .replaceAll('=', '')
     .replaceAll('+', '-')
     .replaceAll('/', '_')
-  return 'encore.dev.headers.' + base64encoded
+  return 'entypesdev.headers.' + base64encoded
 }
 
 class WebSocketConnection {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 import ListItem from '@/components/ui/ListItem/ListItem.vue'
 import { Panel } from '@/components/ui/Panel'
 import dayjs from 'dayjs'
 
 defineProps<{
   title: string
-  data: core.Project[]
+  data: types.Project[]
 }>()
 
 // function formatFileSize(bytes: number) {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { API } from '@/api/client'
+import { CoreAPI } from '@/api/client'
 
 import { PendingOverlay } from '@/components/ui'
 import { AsyncLoader } from '@/components/utility'
@@ -11,7 +11,7 @@ interface Props {
 defineProps<Props>()
 
 async function get({ projectId }: { projectId: string }) {
-  const res = await API.getReviews(projectId)
+  const res = await CoreAPI.getReviews(projectId)
 
   return res.data
 }

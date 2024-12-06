@@ -4,7 +4,7 @@ import { formatTimestamp } from '@/utils'
 
 import { VButton } from '@/components/ui'
 import { computed } from 'vue'
-import { API } from '@/api/client'
+import { CoreAPI } from '@/api/client'
 
 const props = withDefaults(
   defineProps<{
@@ -16,7 +16,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (c: 'createReview', t: number): void
+  (c: 'createReview', t: number, e: MouseEvent): void
 }>()
 
 const { seekRelative, togglePlayback, playing, volume, currentTime, duration } = useAudioContext()
@@ -37,8 +37,8 @@ const volumeIcon = computed(() => {
   return 'volume'
 })
 
-function handleCreateReview() {
-  emit('createReview', currentTime.value)
+function handleCreateReview(e: MouseEvent) {
+  emit('createReview', currentTime.value, e)
 }
 </script>
 <template>
@@ -77,7 +77,7 @@ function handleCreateReview() {
     </span>
 
     <div class="flex-grow flex items-center gap-4">
-      <VButton :action="handleCreateReview">
+      <VButton :action="(_, e) => handleCreateReview(e)">
         <VueFeather type="edit-3" size="16" />
         Write review
       </VButton>

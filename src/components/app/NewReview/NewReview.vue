@@ -5,8 +5,8 @@ import { VButton } from '@/components/ui'
 const props = defineProps<{ t: number }>()
 
 const emit = defineEmits<{
-  (e: 'resolve', v: string | null): void
-  (e: 'reject'): void
+  (c: 'resolve', p: string | null): void
+  (c: 'reject'): void
 }>()
 
 const review = ref('')

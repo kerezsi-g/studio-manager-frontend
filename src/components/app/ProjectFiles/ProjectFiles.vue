@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 import { onMounted } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import dayjs from 'dayjs'
@@ -9,7 +9,7 @@ import { Panel } from '@/components/ui/Panel'
 const props = defineProps<{
   title?: string
   projectId: string
-  data: core.MediaFile[]
+  data: types.MediaFile[]
 }>()
 
 onMounted(() => {

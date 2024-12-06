@@ -9,11 +9,11 @@ import { debounce, formatTimestamp } from '@/utils'
 import { AsyncLoader } from '@/components/utility'
 import { PendingOverlay } from '@/components/ui'
 import PlayerControls from './components/player-controls.vue'
-import type { core } from '@/api/api'
+import type { types } from '@/api/api'
 
 const props = defineProps<{
   fileId: string
-  annotations: core.Review[]
+  annotations: types.Review[]
 }>()
 const audioElement = ref<HTMLAudioElement>()
 
@@ -100,7 +100,7 @@ function handleSeekStart() {
         type="range"
         min="0"
         :max="duration"
-        step="0.1"
+        step="0.05"
         class="scrubber"
         v-model="currentTime"
       />
