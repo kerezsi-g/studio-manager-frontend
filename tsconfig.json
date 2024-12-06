@@ -1,11 +1,19 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "vite.config.ts"],
+  "exclude": ["src/work-in-progress"],
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "types": ["unplugin-vue-router/client"],
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+    "noImplicitAny": true,
+    "preserveValueImports": false
+  }
 }
