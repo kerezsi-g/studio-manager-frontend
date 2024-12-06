@@ -1,11 +1,14 @@
 import Client from './api'
 import { getToken } from '@/composables/useAuthentication'
 
-export const API = new Client('/api', {
+const client = new Client('/api', {
   auth: () => {
     const token = getToken()
     return {
       authorization: token
     }
   }
-}).Core
+})
+
+export const CoreAPI = client.Core
+export const MediaAPI = client.File
