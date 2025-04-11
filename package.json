@@ -10,10 +10,18 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "openapi-gen": "openapi-generator-cli generate -i http://localhost:5173/api/reference/json -o ./src/api-client --additional-properties=supportsES6=true,modelPropertyNaming=original,paramNaming=original,enumPropertyNaming=original,withoutRuntimeChecks=true,withInterfaces=true -g typescript-fetch"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.8.2",
+    "@iconify/vue": "^4.3.0",
+    "@tailwindcss/postcss": "^4.1.3",
+    "@tailwindcss/vite": "^4.1.3",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.3",
     "vue": "^3.5.13",
+    "vue-component-type-helpers": "^2.2.8",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
@@ -28,6 +36,7 @@
     "jiti": "^2.4.2",
     "npm-run-all2": "^7.0.2",
     "prettier": "3.5.3",
+    "sass": "^1.86.3",
     "typescript": "~5.8.0",
     "unplugin-vue-router": "^0.12.0",
     "vite": "^6.2.4",

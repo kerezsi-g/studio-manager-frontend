@@ -1,10 +1,24 @@
+@import 'tailwindcss';
 @import './base.css';
+@import './palette.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+html {
+  /* background-image: url('/backgrounds/drumset.jpg'); */
+  /* background-image: url('/backgrounds/guitar-2916408.jpg'); */
+  background-image: url('/backgrounds/electric-guitar-7815026.jpg');
+  /* background-image: url('/backgrounds/bass-guitar-1841186.jpg'); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+
+  font-family: 'Barlow';
+}
+
+body {
+  @apply h-full;
+  @apply bg-slate-950/60;
+  @apply text-white;
 }
 
 a,
@@ -13,23 +27,4 @@ a,
   color: hsla(160, 100%, 37%, 1);
   transition: 0.4s;
   padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
 }

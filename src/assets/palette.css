@@ -1,0 +1,44 @@
+/* Sources: https://tailwindcss.com/docs/colors#default-color-palette-reference */
+
+:root {
+  --color-disabled: 144 144 144;
+}
+
+.palette-success {
+  --color-main: 22 163 74; /* green-600 */
+  --color-accent: 34 197 94; /* green-500 */
+  --color-text: 255 255 255; /* white */
+}
+.palette-warning {
+  --color-main: 249 115 22;
+  --color-accent: 255 255 255;
+  --color-text: 0 0 0;
+}
+
+.palette-info {
+  --color-main: 14 165 233; /* sky-500 */
+  --color-accent: 56 189 248; /* sky-400 */
+  --color-text: 255 255 255; /* white */
+}
+
+.palette-error {
+  --color-main: 220 38 38; /* red-600 */
+  --color-accent: 239 68 68; /* red-500 */
+  --color-text: 255 255 255; /* white */
+}
+
+.palette-primary {
+  --color-main: 14 165 233; /* sky-500 */
+  --color-accent: 56 189 248; /* sky-400 */
+  --color-text: 255 255 255; /* white */
+}
+
+.palette-secondary {
+  --color-main: 14 165 233; /* sky-500 */
+  --color-accent: 56 189 248; /* sky-400 */
+  --color-text: 255 255 255; /* white */
+}
+
+.apply-palette {
+  color: rgba(var(--color-main) / var(--text-opacity, 100%));
+}
