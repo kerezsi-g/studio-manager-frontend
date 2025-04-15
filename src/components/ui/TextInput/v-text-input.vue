@@ -10,6 +10,7 @@ export interface TextInputProps {
   pattern?: string | RegExp
   required?: boolean
   color?: PaletteKey
+  readonly?: boolean
   //   validate?: VALIDATE
   defaultValue?: string
   value?: string
@@ -52,6 +53,7 @@ const modelValue = defineModel('modelValue', {
         autocomplete,
         name,
         type,
+        readonly,
         pattern: pattern instanceof RegExp ? pattern.toString() : pattern,
         required,
       }"
@@ -68,10 +70,12 @@ const modelValue = defineModel('modelValue', {
   --border-alpha: 60%;
   --bg-alpha: 50%;
 
+  position: relative;
+
   display: flex;
   align-items: center;
 
-  gap: 16px;
+  gap: 8px;
   padding-inline: 12px;
   padding-block: 8px;
 
@@ -92,8 +96,21 @@ const modelValue = defineModel('modelValue', {
   --ring-width: 4px;
   --ring-alpha: 100%;
   --border-alpha: 100%;
-  --bg-alpha: 90%;
+  background-color: rgba(var(--color-main) / 10%);
 }
+
+.v-input-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background: rgba(0 0 0 / var(--bg-alpha));
+  z-index: -1;
+}
+
 .v-input-wrapper:hover {
   --border-alpha: 80%;
   --bg-alpha: 60%;
