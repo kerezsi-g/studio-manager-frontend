@@ -27,9 +27,11 @@ import type {
 } from '../models/index';
 
 export interface AddFileToProjectRequest {
-    category: string;
+    tag: string;
+    fileName: string;
     projectId: string;
-    fileId: string;
+    sha256: string;
+    path?: string;
 }
 
 export interface AddUserToProjectRequest {
@@ -67,9 +69,9 @@ export interface GetProjectMembersRequest {
 }
 
 export interface RemoveFileFromProjectRequest {
-    category: string;
+    tag: string;
     projectId: string;
-    fileId: string;
+    sha256: string;
 }
 
 export interface RemoveUserFromProjectRequest {
@@ -97,9 +99,11 @@ export interface ProjectsApiInterface {
     /**
      * 
      * @summary addFileToProject
-     * @param {string} category 
+     * @param {string} tag 
+     * @param {string} fileName 
      * @param {string} projectId 
-     * @param {string} fileId 
+     * @param {string} sha256 
+     * @param {string} [path] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
@@ -250,9 +254,9 @@ export interface ProjectsApiInterface {
     /**
      * 
      * @summary removeFileFromProject
-     * @param {string} category 
+     * @param {string} tag 
      * @param {string} projectId 
-     * @param {string} fileId 
+     * @param {string} sha256 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
@@ -323,10 +327,17 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
      * addFileToProject
      */
     async addFileToProjectRaw(requestParameters: AddFileToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['category'] == null) {
+        if (requestParameters['tag'] == null) {
             throw new runtime.RequiredError(
-                'category',
-                'Required parameter "category" was null or undefined when calling addFileToProject().'
+                'tag',
+                'Required parameter "tag" was null or undefined when calling addFileToProject().'
+            );
+        }
+
+        if (requestParameters['fileName'] == null) {
+            throw new runtime.RequiredError(
+                'fileName',
+                'Required parameter "fileName" was null or undefined when calling addFileToProject().'
             );
         }
 
@@ -337,23 +348,31 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
             );
         }
 
-        if (requestParameters['fileId'] == null) {
+        if (requestParameters['sha256'] == null) {
             throw new runtime.RequiredError(
-                'fileId',
-                'Required parameter "fileId" was null or undefined when calling addFileToProject().'
+                'sha256',
+                'Required parameter "sha256" was null or undefined when calling addFileToProject().'
             );
         }
 
         const queryParameters: any = {};
 
-        if (requestParameters['category'] != null) {
-            queryParameters['category'] = requestParameters['category'];
+        if (requestParameters['tag'] != null) {
+            queryParameters['tag'] = requestParameters['tag'];
+        }
+
+        if (requestParameters['path'] != null) {
+            queryParameters['path'] = requestParameters['path'];
+        }
+
+        if (requestParameters['fileName'] != null) {
+            queryParameters['fileName'] = requestParameters['fileName'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
+            path: `/projects/{projectId}/files/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -682,10 +701,10 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
      * removeFileFromProject
      */
     async removeFileFromProjectRaw(requestParameters: RemoveFileFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['category'] == null) {
+        if (requestParameters['tag'] == null) {
             throw new runtime.RequiredError(
-                'category',
-                'Required parameter "category" was null or undefined when calling removeFileFromProject().'
+                'tag',
+                'Required parameter "tag" was null or undefined when calling removeFileFromProject().'
             );
         }
 
@@ -696,23 +715,23 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
             );
         }
 
-        if (requestParameters['fileId'] == null) {
+        if (requestParameters['sha256'] == null) {
             throw new runtime.RequiredError(
-                'fileId',
-                'Required parameter "fileId" was null or undefined when calling removeFileFromProject().'
+                'sha256',
+                'Required parameter "sha256" was null or undefined when calling removeFileFromProject().'
             );
         }
 
         const queryParameters: any = {};
 
-        if (requestParameters['category'] != null) {
-            queryParameters['category'] = requestParameters['category'];
+        if (requestParameters['tag'] != null) {
+            queryParameters['tag'] = requestParameters['tag'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
+            path: `/projects/{projectId}/files/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,

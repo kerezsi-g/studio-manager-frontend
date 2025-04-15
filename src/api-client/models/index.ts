@@ -155,6 +155,19 @@ export interface CreateProjectRequest {
 /**
  * 
  * @export
+ * @interface CreateUploadUrl200Response
+ */
+export interface CreateUploadUrl200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateUploadUrl200Response
+     */
+    uploadUrl: string;
+}
+/**
+ * 
+ * @export
  * @interface GetAccessUrl200Response
  */
 export interface GetAccessUrl200Response {
@@ -164,38 +177,6 @@ export interface GetAccessUrl200Response {
      * @memberof GetAccessUrl200Response
      */
     url: string;
-}
-/**
- * 
- * @export
- * @interface GetUploadUrl200Response
- */
-export interface GetUploadUrl200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetUploadUrl200Response
-     */
-    uploadUrl: string;
-}
-/**
- * 
- * @export
- * @interface GetUploadUrlRequest
- */
-export interface GetUploadUrlRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetUploadUrlRequest
-     */
-    hash: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof GetUploadUrlRequest
-     */
-    fileName: string;
 }
 /**
  * 
@@ -226,13 +207,13 @@ export interface Issue {
      * @type {number}
      * @memberof Issue
      */
-    timestamp: number;
+    timestamp: number | null;
     /**
      * 
      * @type {number}
      * @memberof Issue
      */
-    duration: number;
+    duration: number | null;
     /**
      * 
      * @type {number}
@@ -244,56 +225,7 @@ export interface Issue {
      * @type {number}
      * @memberof Issue
      */
-    resolvedAt: number;
-}
-/**
- * 
- * @export
- * @interface Issue1
- */
-export interface Issue1 {
-    /**
-     * 
-     * @type {string}
-     * @memberof Issue1
-     */
-    issueId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Issue1
-     */
-    userId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Issue1
-     */
-    description: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Issue1
-     */
-    timestamp: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Issue1
-     */
-    duration: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Issue1
-     */
-    createdAt: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Issue1
-     */
-    resolvedAt: number;
+    resolvedAt: number | null;
 }
 /**
  * 
@@ -358,47 +290,59 @@ export interface ProjectDetails {
     createdAt: number;
     /**
      * 
-     * @type {Array<ProjectDetailsFilesInner>}
+     * @type {Array<ProjectMedia>}
      * @memberof ProjectDetails
      */
-    files: Array<ProjectDetailsFilesInner>;
+    files: Array<ProjectMedia>;
     /**
      * 
-     * @type {Array<Issue1>}
+     * @type {Array<Issue>}
      * @memberof ProjectDetails
      */
-    issues: Array<Issue1>;
+    issues: Array<Issue>;
 }
 /**
  * 
  * @export
- * @interface ProjectDetailsFilesInner
+ * @interface ProjectMedia
  */
-export interface ProjectDetailsFilesInner {
+export interface ProjectMedia {
     /**
      * 
      * @type {string}
-     * @memberof ProjectDetailsFilesInner
+     * @memberof ProjectMedia
      */
-    fileId: string;
+    sha256: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectDetailsFilesInner
+     * @memberof ProjectMedia
+     */
+    contentType: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectMedia
      */
     fileName: string;
     /**
      * 
      * @type {string}
-     * @memberof ProjectDetailsFilesInner
+     * @memberof ProjectMedia
      */
-    category: string;
+    path: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectMedia
+     */
+    tag: string;
     /**
      * 
      * @type {number}
-     * @memberof ProjectDetailsFilesInner
+     * @memberof ProjectMedia
      */
-    createdAt: number;
+    addedAt: number;
 }
 /**
  * 
