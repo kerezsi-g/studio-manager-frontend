@@ -37,4 +37,14 @@ const iconString = computed(() => {
     stroke-width: 1.5;
   }
 }
+
+.icon-sm {
+  font-size: 16px;
+  g,
+  path {
+    line-height: normal;
+
+    stroke-width: 2;
+  }
+}
 </style>
