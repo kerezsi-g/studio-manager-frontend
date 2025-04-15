@@ -5,6 +5,7 @@ import VButton from '../ui/Button/v-button.vue'
 import { ref } from 'vue'
 import { VTextInput } from '../ui/TextInput'
 import { VDialog } from '../dialog'
+import { VAlert } from '../alert'
 
 const props = defineProps<{
   onResolve(projectId: string | null): void
@@ -28,8 +29,12 @@ function handleClose() {
 }
 </script>
 <template>
-  <VDialog title="Create a New Project" color="primary">
+  <VDialog title="Create a New Project" color="primary" class="padded">
     <template #body>
+      <VAlert title="Demo feature" color="warning" icon="shield-warning">
+        <p>Feature is currently made available only as a part the demo.</p>
+        <p>Creating new projects will be an administrator responsibility.</p>
+      </VAlert>
       <VTextInput v-model="projectName" placeholder="Project name">
         <template #prefix>
           <SolarIcon icon="file-text" class="icon-base" />
@@ -46,7 +51,7 @@ function handleClose() {
       <VButton :action="handleSubmit">
         Create
         <template #suffix>
-          <SolarIcon icon="cloud-plus" class="icon-base" />
+          <SolarIcon icon="archive" class="icon-base" />
         </template>
       </VButton>
     </template>
