@@ -5,9 +5,12 @@ import VButton from '../ui/Button/v-button.vue'
 
 import VTextInput from '../ui/TextInput/v-text-input.vue'
 import { ref } from 'vue'
+import { useS3Upload, type S3Upload } from '@/composables/use-s3-upload'
+import { VAlert } from '../alert'
 
 const props = defineProps<{
   projectId: string
+  tag: string
   onResolve(fileId: string | null): void
 }>()
 
@@ -16,75 +19,77 @@ function handleClose() {
 }
 
 const fileRef = ref<File | null>(null)
+const path = ref('')
+const filename = ref('')
 
 function handleFileChange(e: Event) {
   const target = e.target as HTMLInputElement
-  fileRef.value = target.files?.[0] || null
+
+  const file = target.files?.[0]
+
+  if (!file) {
+    return
+  }
+
+  fileRef.value = file
+  filename.value = file.name
 }
 
-// function readbinaryfile(file: File) {
-//   return new Promise<ArrayBuffer>((resolve, reject) => {
-//     const fr = new FileReader()
-//     fr.onload = () => {
-//       resolve(fr.result as ArrayBuffer)
-//     }
-//     fr.onerror = reject
-//     fr.readAsArrayBuffer(file)
-//   })
-// }
-
-// function hashfile(file: File) {
-//   return readbinaryfile(file)
-//     .then(function (result) {
-//       const arrayBuffer = new Uint8Array(result)
-//       return window.crypto.subtle.digest('SHA-256', arrayBuffer)
-//     })
-//     .then(function (result) {
-//       const arrayBuffer = new Uint8Array(result)
-//       const hexString = Array.from(arrayBuffer)
-//         .map((b) => b.toString(16).padStart(2, '0'))
-//         .join('')
-//       return hexString
-//     })
-// }
+const upload = ref<S3Upload | null>(null)
 
 async function handleSubmit() {
-  const xhr = new XMLHttpRequest() // create XMLHttpRequest
+  const uploadController = await useS3Upload(fileRef.value!)
 
-  // const hash = await hashfile(fileRef.value!)
+  upload.value = uploadController
 
-  const fileName = fileRef.value!.name
+  const sha256 = await uploadController.start()
 
-  const { uploadUrl } = await API.Files.getUploadUrl({
-    GetUploadUrlRequest: {
-      fileName,
-      hash: fileName,
-    },
-  })
-
-  await new Promise<void>(async (resolve) => {
-    xhr.open('PUT', uploadUrl)
-    xhr.setRequestHeader('Content-Type', 'application/octet-stream') // Set the correct Content-Type
-    xhr.send(fileRef.value!)
-
-    xhr.onloadend = () => {
-      resolve()
-    }
-  })
+  if (!sha256) {
+    return
+  }
 
   await API.Projects.addFileToProject({
-    category: 'file',
+    tag: props.tag,
     projectId: props.projectId,
-    fileId: fileName,
+    fileName: filename.value,
+    sha256,
   })
 
-  props.onResolve(fileName)
+  props.onResolve(sha256)
 }
 </script>
 <template>
-  <VDialog title="Add File To Project" color="primary">
+  <VDialog title="Add File To Project" color="primary" class="padded" icon="cloud-plus">
     <template #body>
-      <VTextInput type="file" placeholder="choose a file" @change="handleFileChange" />
+      <VAlert title="Demo feature" color="warning" icon="danger-triangle">
+        <p>Uploading files from the browser is made available for demo purposes only.</p>
+        <p>Large files may result in significant slowdowns.</p>
+      </VAlert>
+      <VTextInput type="file" placeholder="Choose a file" @change="handleFileChange" />
+      <VTextInput v-model="filename" type="text">
+        <template #prefix>
+          <span class="text-white opacity-50 text-sm">Filename:</span>
+        </template>
+      </VTextInput>
+      <VTextInput :model-value="tag" type="text" readonly>
+        <template #prefix>
+          <span class="text-white opacity-50 text-sm">Tag:</span>
+        </template>
+      </VTextInput>
+      <VTextInput v-model="path" type="text">
+        <template #prefix>
+          <span class="text-white opacity-50 text-sm">Path:</span>
+        </template>
+      </VTextInput>
+      <div class="progress-bar">
+        <span class="progress-outer">
+          <span
+            class="progress-inner"
+            :style="{ '--width': `${(upload?.progress ?? 0) * 100}%` }"
+          />
+        </span>
+        <span class="progress-text"> {{ upload?.progress ?? 0 }}% </span>
+      </div>
     </template>
     <template #actions>
       <VButton @click="handleClose" variant="outlined">
@@ -102,4 +107,31 @@ async function handleSubmit() {
     </template>
   </VDialog>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // gap: 4rem;
+}
+
+.progress-outer {
+  display: block;
+  width: 100%;
+  height: 10px;
+  background-color: rgba(var(--color-main) / var(--bg-opacity, 50%));
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.progress-inner {
+  display: block;
+  height: 100%;
+  background-color: rgba(var(--color-accent) / var(--bg-opacity, 100%));
+  border-radius: 5px;
+  transition: width 0.3s ease;
+  width: var(--width);
+}
+</style>
