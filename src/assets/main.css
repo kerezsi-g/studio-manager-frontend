@@ -4,8 +4,8 @@
 
 html {
   /* background-image: url('/backgrounds/drumset.jpg'); */
-  /* background-image: url('/backgrounds/guitar-2916408.jpg'); */
-  background-image: url('/backgrounds/electric-guitar-7815026.jpg');
+  background-image: url('/backgrounds/guitar-2916408.jpg');
+  /* background-image: url('/backgrounds/electric-guitar-7815026.jpg'); */
   /* background-image: url('/backgrounds/bass-guitar-1841186.jpg'); */
   background-position: center;
   background-repeat: no-repeat;
@@ -17,14 +17,6 @@ html {
 
 body {
   @apply h-full;
-  @apply bg-slate-950/60;
+  /* @apply bg-slate-950/25; */
   @apply text-white;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
 }

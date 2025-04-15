@@ -19,7 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     'app-home': RouteRecordInfo<'app-home', '/', Record<never, never>, Record<never, never>>,
-    'file': RouteRecordInfo<'file', '/files/:fileId', { fileId: ParamValue<true> }, { fileId: ParamValue<false> }>,
+    'file': RouteRecordInfo<'file', '/files/:sha256', { sha256: ParamValue<true> }, { sha256: ParamValue<false> }>,
     'project': RouteRecordInfo<'project', '/projects/:projectId', { projectId: ParamValue<true> }, { projectId: ParamValue<false> }>,
   }
 }

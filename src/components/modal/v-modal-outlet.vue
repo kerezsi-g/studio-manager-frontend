@@ -2,10 +2,10 @@
 /**
  * @author KG <kerezsigergely@infobex.hu>
  *
- * Vue 3 component that handles the rendering of the global dialog queue.
+ * Vue 3 component that handles the rendering modal dialogs.
  *
  * @remarks
- * Renders dialogs from the global dialog queue.
+ * Renders dialogs from a global dialog queue.
  * Pushing into the the queue is possible with the `useModal` composable. This component focuses solely on the rendering aspect.
  * Dialogs must handle their own closing logic.
  *
@@ -27,7 +27,7 @@ export interface ModalOutletProps {
 
 const props = withDefaults(defineProps<ModalOutletProps>(), {
   transitionName: 'v-dialog',
-  containerId: DefaultModalOutlet
+  containerId: DefaultModalOutlet,
 })
 
 const containerRef = ref<HTMLDialogElement>()

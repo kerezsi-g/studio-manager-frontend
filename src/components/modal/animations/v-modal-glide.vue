@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<GlideProps>(), {
   initialScale: 0.6,
   translateOffset: 0.4,
   enter: 375,
-  leave: 175
+  leave: 175,
 })
 
 function calculateOffsetVector(e: Event) {
@@ -63,7 +63,7 @@ const style = computed(() => {
     '--translate-coeff': translateOffset,
     '--scale': currentDialog?.e ? initialScale : 0.9,
     '--enter-duration': `${enter}ms`,
-    '--leave-duration': `${leave}ms`
+    '--leave-duration': `${leave}ms`,
   }
 })
 </script>
@@ -73,8 +73,8 @@ const style = computed(() => {
     <div :style="style" v-if="currentDialog" :key="currentDialog.id">
       <component
         v-bind="currentDialog.props"
-        @resolve="currentDialog.onResolve"
-        @reject="currentDialog.onReject"
+        @resolve="currentDialog!.onResolve"
+        @reject="currentDialog!.onReject"
         :is="currentDialog.component"
       />
     </div>

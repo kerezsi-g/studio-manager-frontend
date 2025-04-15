@@ -9,23 +9,24 @@ import { API } from '@/api'
 import { DataLoader } from '@/components/data-loader'
 
 interface FileId {
-  fileId: string
+  sha256: string
 }
 
-const props = defineProps<FileId>()
+defineProps<FileId>()
 
-async function getPublicAccessUrl({ fileId }: FileId) {
-  const { url } = await API.Files.getAccessUrl({
-    fileId,
-  })
+async function getPublicAccessUrl({ sha256 }: FileId) {
+  const { url } = await API.Files.getAccessUrl({ sha256 })
+
   return url
 }
 </script>
 <template>
   <div class="flex-grow w-full">
-    <DataLoader :fn="getPublicAccessUrl" :args="{ fileId: props.fileId }" v-slot="{ data }">
+    <DataLoader :fn="getPublicAccessUrl" :args="{ sha256 }" v-slot="{ data }">
       <template v-if="data">
-        <video controls class="w-full" crossorigin="anonymous" :src="data"></video>
+        <div class="flex items-center justify-center">
+          <video controls crossorigin="anonymous" :src="data"></video>
+        </div>
       </template>
     </DataLoader>
   </div>

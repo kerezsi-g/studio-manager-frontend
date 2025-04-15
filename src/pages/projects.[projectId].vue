@@ -5,35 +5,52 @@
 }
 </route>
 <script setup lang="ts">
+import type { ProjectMedia } from '@/api-client'
 import ProjectDetailsProvider from '@/components/api/ProjectDetailsProvider.vue'
-import { useModal } from '@/components/modal'
-import { VButton } from '@/components/ui/Button'
-import UploadFileDialog from '@/components/upload-file-dialog/upload-file-dialog.vue'
 
-const props = defineProps<{
+import PrimaryFilesList from '@/components/primary-files-list/primary-files-list.vue'
+import ProjectGallery from '@/components/project-gallery/project-gallery.vue'
+import SolarIcon from '@/components/SolarIcon.vue'
+import { VButton } from '@/components/ui/Button'
+
+defineProps<{
   projectId: string
 }>()
-
-async function handleAddFile() {
-  const result = await useModal(UploadFileDialog, {
-    projectId: props.projectId,
-  })
-}
 </script>
 <template>
-  <ProjectDetailsProvider :projectId="projectId" v-slot="{ data }">
-    {{ data }}
+  <main id="project-root" class="palette-primary">
+    <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
+      <header>
+        <SolarIcon icon="folder-2" class="icon-base" />
+        <span>{{ data.projectName }}</span>
 
-    <ul>
-      <li v-for="file in data.files" :key="file.fileId">
-        <router-link :to="{ name: 'file', params: { fileId: file.fileId } }">
-          {{ file.fileId }} |
-          {{ file.fileName }}
-        </router-link>
-      </li>
-    </ul>
+        <VButton @click="() => $router.back()" class="sm" variant="subdued" color="error">
+          <SolarIcon icon="undo-left" class="icon-base" />
+        </VButton>
+      </header>
 
-    <VButton @click="handleAddFile">Add File</VButton>
-  </ProjectDetailsProvider>
+      <div class="p-4 flex gap-4">
+        <PrimaryFilesList :files="data.files" :projectId="projectId" @file-uploaded="reload" />
+        <ProjectGallery :files="data.files" />
+      </div>
+    </ProjectDetailsProvider>
+  </main>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+#project-root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+
+  & > header {
+    font-size: 2rem;
+    font-weight: 300;
+    padding: 1rem 4rem;
+    gap: 1rem;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0 0 0 / 80%);
+  }
+}
+</style>
