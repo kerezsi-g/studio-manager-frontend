@@ -6,6 +6,7 @@ import SolarIcon from '../SolarIcon.vue'
 import { VButton } from '../ui/Button'
 import { Icon } from '@iconify/vue/dist/iconify.js'
 import dayjs from 'dayjs'
+import PageWrapper from '../page-wrapper/page-wrapper.vue'
 
 defineProps<{
   projects: Project[]
@@ -24,20 +25,17 @@ async function handleCreateProject(e?: MouseEvent) {
 }
 </script>
 <template>
-  <section class="folder-list">
-    <header>
-      <h3>Projects</h3>
+  <PageWrapper title="Projects">
+    <template #actions>
       <VButton @click="handleCreateProject">
         Create new project
         <template #suffix>
           <SolarIcon icon="add-circle" class="icon-base" />
         </template>
       </VButton>
-    </header>
-    <hr />
-
-    <template v-if="projects.length > 0">
-      <ul class="grid-list" v-auto-animate>
+    </template>
+    <template #body>
+      <ul v-if="projects.length > 0" class="grid-list" v-auto-animate>
         <li v-for="project in projects" :key="project.projectId" class="grid-list-item">
           <router-link
             :to="{
@@ -59,11 +57,10 @@ async function handleCreateProject(e?: MouseEvent) {
           </router-link>
         </li>
       </ul>
+
+      <div v-else class="no-data">No Projects found</div>
     </template>
-    <template v-else>
-      <div class="no-data">No Projects found</div>
-    </template>
-  </section>
+  </PageWrapper>
 </template>
 <style lang="css">
 @reference 'tailwindcss';
@@ -99,10 +96,11 @@ async function handleCreateProject(e?: MouseEvent) {
 
 .no-data {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem 4rem;
-  font-size: 4rem;
+  padding: 1rem 2rem;
+  font-size: 3rem;
   font-weight: 100;
   opacity: 0.5;
 }
@@ -126,34 +124,5 @@ async function handleCreateProject(e?: MouseEvent) {
 .grid-list-item:hover {
   color: rgb(var(--color-accent));
   --bg-opacity: 25%;
-}
-
-.folder-list {
-  padding: 1rem 3rem;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-
-  hr {
-    opacity: 0.3;
-  }
-
-  header {
-    display: flex;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-    padding: 1rem 4rem;
-
-    h3 {
-      font-size: 2rem;
-      flex-grow: 1;
-    }
-  }
-
-  div {
-    flex-grow: 1;
-  }
 }
 </style>

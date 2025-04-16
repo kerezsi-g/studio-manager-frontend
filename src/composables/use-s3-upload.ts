@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { detectFilenameMime } from 'mime-detect'
 import { createResolver } from '@/utils/resolver'
 import { API } from '@/api'
+import { generateSha256Hash } from '@/utils/gen-hash'
 
 export async function useS3Upload(file: File) {
   const progress = ref(0)
@@ -17,9 +18,10 @@ export async function useS3Upload(file: File) {
 
   const { promise, resolve, reject } = createResolver<string | null>()
 
-  const buf = await file.arrayBuffer()
-
-  const [sha256, detectedMime] = await Promise.all([genHash(buf), detectFilenameMime(file.name)])
+  const [sha256, detectedMime] = await Promise.all([
+    generateSha256Hash(file),
+    detectFilenameMime(file.name),
+  ])
 
   xhr.upload.addEventListener('progress', (event) => {
     if (event.lengthComputable) {

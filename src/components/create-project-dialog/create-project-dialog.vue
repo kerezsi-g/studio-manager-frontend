@@ -29,7 +29,13 @@ function handleClose() {
 }
 </script>
 <template>
-  <VDialog title="Create a New Project" color="primary" class="padded">
+  <VDialog
+    title="Create a New Project"
+    color="primary"
+    class="padded"
+    icon="add-folder"
+    subtitle="Create a new project"
+  >
     <template #body>
       <VAlert title="Demo feature" color="warning" icon="shield-warning">
         <p>Feature is currently made available only as a part the demo.</p>

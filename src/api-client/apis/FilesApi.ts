@@ -28,6 +28,7 @@ export interface CreateUploadUrlRequest {
 
 export interface GetAccessUrlRequest {
     sha256: string;
+    preview?: boolean;
 }
 
 export interface MarkForDeletionRequest {
@@ -62,6 +63,7 @@ export interface FilesApiInterface {
      * 
      * @summary getAccessUrl
      * @param {string} sha256 
+     * @param {boolean} [preview] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApiInterface
@@ -162,6 +164,10 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['preview'] != null) {
+            queryParameters['preview'] = requestParameters['preview'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

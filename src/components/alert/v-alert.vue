@@ -10,7 +10,7 @@ const props = defineProps<{
 <template>
   <div class="v-alert" :class="`palette-${props.color}`">
     <div class="v-alert-icon">
-      <SolarIcon :icon="props.icon" class="icon-base" />
+      <SolarIcon :icon="props.icon" class="icon-32" variant="bold-duotone" />
     </div>
     <h3 class="v-alert-title">{{ props.title }}</h3>
     <div class="v-alert-message">
@@ -22,11 +22,12 @@ const props = defineProps<{
 .v-alert {
   // display: flex;
   // flex-direction: row;
-  gap: 0.25rem 1rem;
-  padding: 0.5rem 1rem;
+  gap: 0rem 1rem;
+  padding: 0.5rem 1.5rem;
 
   background-color: rgba(var(--color-main) / 20%);
-  border-left: 4px solid rgba(var(--color-main) / 90%);
+  border: 1px dashed rgba(var(--color-main) / 100%);
+  // border-left: 6px solid rgba(var(--color-main) / 90%);
 
   background-image: linear-gradient(
     135deg,
@@ -40,7 +41,7 @@ const props = defineProps<{
   );
   background-size: 19.8px 19.8px;
 
-  box-shadow: 0.05rem 0.1rem 0.5rem rgba(var(--color-main) / 5%);
+  // box-shadow: 0.05rem 0.1rem 0.5rem rgba(var(--color-main) / 25%);
 
   border-radius: 3px;
 

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { API } from '@/api'
-import VDialog from '../dialog/v-dialog.vue'
+import { VDialog } from '../dialog'
 import VButton from '../ui/Button/v-button.vue'
 
 import VTextInput from '../ui/TextInput/v-text-input.vue'
 import { ref } from 'vue'
 import { useS3Upload, type S3Upload } from '@/composables/use-s3-upload'
 import { VAlert } from '../alert'
+import VFileInput from '../file-input/v-file-input.vue'
 
 const props = defineProps<{
   projectId: string
@@ -18,22 +19,10 @@ function handleClose() {
   props.onResolve(null)
 }
 
-const fileRef = ref<File | null>(null)
+const fileRef = ref<File>()
+
 const path = ref('')
-const filename = ref('')
-
-function handleFileChange(e: Event) {
-  const target = e.target as HTMLInputElement
-
-  const file = target.files?.[0]
-
-  if (!file) {
-    return
-  }
-
-  fileRef.value = file
-  filename.value = file.name
-}
+const uploadFileName = ref('')
 
 const upload = ref<S3Upload | null>(null)
 
@@ -51,22 +40,38 @@ async function handleSubmit() {
   await API.Projects.addFileToProject({
     tag: props.tag,
     projectId: props.projectId,
-    fileName: filename.value,
+    fileName: uploadFileName.value,
     sha256,
   })
 
   props.onResolve(sha256)
 }
+
+function extractDefaultName() {
+  if (!fileRef.value) {
+    uploadFileName.value = ''
+    return
+  }
+
+  const fileNameWithoutExtension = fileRef.value.name.split('.').slice(0, -1).join('')
+
+  uploadFileName.value = fileNameWithoutExtension
+}
 </script>
 <template>
   <VDialog title="Add File To Project" color="primary" class="padded" icon="cloud-plus">
     <template #body>
-      <VAlert title="Demo feature" color="warning" icon="danger-triangle">
+      <VAlert title="Demo feature" color="warning" icon="shield-warning">
         <p>Uploading files from the browser is made available for demo purposes only.</p>
-        <p>Large files may result in significant slowdowns.</p>
+        <p>File sizes are limited.</p>
       </VAlert>
-      <VTextInput type="file" placeholder="Choose a file" @change="handleFileChange" />
-      <VTextInput v-model="filename" type="text">
+      <VFileInput
+        v-model="fileRef"
+        label="Choose a File"
+        :max-size="300"
+        @file-changed="extractDefaultName"
+      />
+      <VTextInput v-model="uploadFileName" type="text">
         <template #prefix>
           <span class="text-white opacity-50 text-sm">Filename:</span>
         </template>

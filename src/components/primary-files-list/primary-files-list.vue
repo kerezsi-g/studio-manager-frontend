@@ -5,7 +5,8 @@ import { useModal } from '../modal'
 import dayjs from 'dayjs'
 import { VButton } from '@/components/ui/Button'
 import SolarIcon from '@/components/SolarIcon.vue'
-import VDialog from '../dialog/v-dialog.vue'
+import { VDialog } from '../dialog'
+import { computed } from 'vue'
 
 const props = defineProps<{
   files: ProjectMedia[]
@@ -30,12 +31,16 @@ async function handleAddFile(e: MouseEvent) {
     emit('file-uploaded', result)
   }
 }
+
+const data = computed(() => {
+  return props.files.filter((file) => file.tag === 'primary')
+})
 </script>
 <template>
   <VDialog title="Primary Media" color="primary" class="w-fit">
     <template #body>
       <ul class="file-list" v-auto-animate>
-        <li v-for="file in files" :key="file.sha256" class="file-list-item">
+        <li v-for="file in data" :key="file.sha256" class="file-list-item">
           <router-link
             :to="{ name: 'file', params: { sha256: file.sha256 } }"
             class="flex gap-4 items-center px-4 py-2 hover:bg-sky-500/30"
@@ -45,11 +50,11 @@ async function handleAddFile(e: MouseEvent) {
               <span class="text-lg">
                 {{ file.fileName }}
               </span>
-              <span class="text-xs font-mono opacity-60 font-semibold">
+              <span class="text-xs font-mono opacity-60">
                 {{ file.sha256.slice(0, 24) }}
               </span>
             </div>
-            <div class="text-sm">
+            <div class="text-xs">
               {{ file.contentType }}
             </div>
             <div class="bg-sky-500/50 text-white text-xs font-bold rounded px-2">
@@ -72,6 +77,9 @@ async function handleAddFile(e: MouseEvent) {
 <style>
 .file-list {
   --bg-opacity: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   /* background-color: rgba(16 16 16 / var(--bg-opacity)); */
 }
 

@@ -6,12 +6,18 @@ const VARIANT = 'broken'
 import { Icon } from '@iconify/vue'
 import { computed } from 'vue'
 
-const props = defineProps<{
-  icon: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    icon: string
+    variant?: 'broken' | 'line' | 'line-duotone' | 'linear' | 'outline' | 'bold' | 'bold-duotone'
+  }>(),
+  {
+    variant: VARIANT,
+  },
+)
 
 const iconString = computed(() => {
-  return `${SCOPE}:${props.icon}-${VARIANT}`
+  return `${SCOPE}:${props.icon}-${props.variant}`
 })
 </script>
 <template>
@@ -28,8 +34,28 @@ const iconString = computed(() => {
   }
 }
 
+.icon-lg {
+  font-size: 48px;
+  g,
+  path {
+    line-height: normal;
+
+    stroke-width: 1;
+  }
+}
+
 .icon-base {
   font-size: 24px;
+  g,
+  path {
+    line-height: normal;
+
+    stroke-width: 1.5;
+  }
+}
+
+.icon-32 {
+  font-size: 32px;
   g,
   path {
     line-height: normal;

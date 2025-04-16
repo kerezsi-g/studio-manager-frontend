@@ -5,36 +5,36 @@
 }
 </route>
 <script setup lang="ts">
-import type { ProjectMedia } from '@/api-client'
 import ProjectDetailsProvider from '@/components/api/ProjectDetailsProvider.vue'
 
 import PrimaryFilesList from '@/components/primary-files-list/primary-files-list.vue'
 import ProjectGallery from '@/components/project-gallery/project-gallery.vue'
+import ProjectIssues from '@/components/project-issues/project-issues.vue'
 import SolarIcon from '@/components/SolarIcon.vue'
 import { VButton } from '@/components/ui/Button'
+import PageWrapper from '@/components/page-wrapper/page-wrapper.vue'
 
 defineProps<{
   projectId: string
 }>()
 </script>
 <template>
-  <main id="project-root" class="palette-primary">
-    <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
-      <header>
-        <SolarIcon icon="folder-2" class="icon-base" />
-        <span>{{ data.projectName }}</span>
-
+  <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
+    <PageWrapper :title="data.projectName">
+      <template #actions>
         <VButton @click="() => $router.back()" class="sm" variant="subdued" color="error">
           <SolarIcon icon="undo-left" class="icon-base" />
         </VButton>
-      </header>
-
-      <div class="p-4 flex gap-4">
-        <PrimaryFilesList :files="data.files" :projectId="projectId" @file-uploaded="reload" />
-        <ProjectGallery :files="data.files" />
-      </div>
-    </ProjectDetailsProvider>
-  </main>
+      </template>
+      <template #body>
+        <div class="flex gap-4 py-2">
+          <PrimaryFilesList :files="data.files" :projectId="projectId" @file-uploaded="reload" />
+          <ProjectGallery :files="data.files" :projectId="projectId" class="flex-grow" />
+          <ProjectIssues :issues="data.issues" />
+        </div>
+      </template>
+    </PageWrapper>
+  </ProjectDetailsProvider>
 </template>
 <style lang="scss">
 #project-root {

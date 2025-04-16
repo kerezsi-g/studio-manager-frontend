@@ -128,8 +128,6 @@ const icon = 'solar:shield-user-line-duotone'
 
   background-color: rgba(0 0 0 / 90%);
 
-  backdrop-filter: blur(8px);
-
   main {
     display: flex;
     flex-direction: column;
