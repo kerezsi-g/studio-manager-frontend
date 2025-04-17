@@ -22,6 +22,8 @@ import { VModalGlide, VModalOutlet } from './components/modal'
 #app-inner {
   flex-grow: 1;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 
   --border: rgba(255 255 255 / 5%);
   background-image: linear-gradient(

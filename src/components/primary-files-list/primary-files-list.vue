@@ -7,6 +7,7 @@ import { VButton } from '@/components/ui/Button'
 import SolarIcon from '@/components/SolarIcon.vue'
 import { VDialog } from '../dialog'
 import { computed } from 'vue'
+import PrimaryFilesListItem from './primary-files-list-item.vue'
 
 const props = defineProps<{
   files: ProjectMedia[]
@@ -40,28 +41,7 @@ const data = computed(() => {
   <VDialog title="Primary Media" color="primary" class="w-fit">
     <template #body>
       <ul class="file-list" v-auto-animate>
-        <li v-for="file in data" :key="file.sha256" class="file-list-item">
-          <router-link
-            :to="{ name: 'file', params: { sha256: file.sha256 } }"
-            class="flex gap-4 items-center px-4 py-2 hover:bg-sky-500/30"
-          >
-            <SolarIcon icon="file" class="icon-base" />
-            <div class="flex flex-col flex-grow">
-              <span class="text-lg">
-                {{ file.fileName }}
-              </span>
-              <span class="text-xs font-mono opacity-60">
-                {{ file.sha256.slice(0, 24) }}
-              </span>
-            </div>
-            <div class="text-xs">
-              {{ file.contentType }}
-            </div>
-            <div class="bg-sky-500/50 text-white text-xs font-bold rounded px-2">
-              {{ dayjs(file.addedAt).format('YYYY-MM-DD') }}
-            </div>
-          </router-link>
-        </li>
+        <PrimaryFilesListItem v-for="file in data" :key="file.sha256" v-bind="file" />
       </ul>
     </template>
     <template #actions>

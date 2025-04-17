@@ -7,6 +7,7 @@ import { VButton } from '../ui/Button'
 import { Icon } from '@iconify/vue/dist/iconify.js'
 import dayjs from 'dayjs'
 import PageWrapper from '../page-wrapper/page-wrapper.vue'
+import ProjectListItem from './project-list-item.vue'
 
 defineProps<{
   projects: Project[]
@@ -36,28 +37,8 @@ async function handleCreateProject(e?: MouseEvent) {
     </template>
     <template #body>
       <ul v-if="projects.length > 0" class="grid-list" v-auto-animate>
-        <li v-for="project in projects" :key="project.projectId" class="grid-list-item">
-          <router-link
-            :to="{
-              name: 'project',
-              params: {
-                projectId: project.projectId,
-              },
-            }"
-            class="folder-link"
-          >
-            <span>
-              <Icon icon="fxemoji:folder" width="96" />
-            </span>
-            <h4>
-              <SolarIcon icon="calendar-minimalistic" class="icon-sm" />
-              {{ dayjs(project.createdAt).format('YYYY-MM-DD') }}
-            </h4>
-            <h3>{{ project.projectName }}</h3>
-          </router-link>
-        </li>
+        <ProjectListItem v-for="project in projects" :key="project.projectId" v-bind="project" />
       </ul>
-
       <div v-else class="no-data">No Projects found</div>
     </template>
   </PageWrapper>

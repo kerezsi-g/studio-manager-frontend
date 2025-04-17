@@ -27,10 +27,15 @@ defineProps<{
         </VButton>
       </template>
       <template #body>
-        <div class="flex gap-4 py-2">
+        <div class="flex gap-4 py-2 flex-grow">
           <PrimaryFilesList :files="data.files" :projectId="projectId" @file-uploaded="reload" />
-          <ProjectGallery :files="data.files" :projectId="projectId" class="flex-grow" />
-          <ProjectIssues :issues="data.issues" />
+          <ProjectGallery
+            :files="data.files"
+            :projectId="projectId"
+            class="flex-grow"
+            @file-uploaded="reload"
+          />
+          <ProjectIssues :issues="data.issues" :projectId="projectId" @changed="reload" />
         </div>
       </template>
     </PageWrapper>

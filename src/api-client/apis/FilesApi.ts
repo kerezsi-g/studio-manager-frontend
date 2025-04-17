@@ -16,7 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   CreateUploadUrl200Response,
-  GetAccessUrl200Response,
+  GetResource200Response,
   SignIn200Response,
 } from '../models/index';
 
@@ -26,9 +26,10 @@ export interface CreateUploadUrlRequest {
     sha256: string;
 }
 
-export interface GetAccessUrlRequest {
+export interface GetResourceRequest {
     sha256: string;
     preview?: boolean;
+    noRedirect?: boolean;
 }
 
 export interface MarkForDeletionRequest {
@@ -61,19 +62,20 @@ export interface FilesApiInterface {
 
     /**
      * 
-     * @summary getAccessUrl
+     * @summary getResource
      * @param {string} sha256 
      * @param {boolean} [preview] 
+     * @param {boolean} [noRedirect] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApiInterface
      */
-    getAccessUrlRaw(requestParameters: GetAccessUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetAccessUrl200Response>>;
+    getResourceRaw(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetResource200Response>>;
 
     /**
-     * getAccessUrl
+     * getResource
      */
-    getAccessUrl(requestParameters: GetAccessUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetAccessUrl200Response>;
+    getResource(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetResource200Response>;
 
     /**
      * 
@@ -153,13 +155,13 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
     }
 
     /**
-     * getAccessUrl
+     * getResource
      */
-    async getAccessUrlRaw(requestParameters: GetAccessUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetAccessUrl200Response>> {
+    async getResourceRaw(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetResource200Response>> {
         if (requestParameters['sha256'] == null) {
             throw new runtime.RequiredError(
                 'sha256',
-                'Required parameter "sha256" was null or undefined when calling getAccessUrl().'
+                'Required parameter "sha256" was null or undefined when calling getResource().'
             );
         }
 
@@ -167,6 +169,10 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
 
         if (requestParameters['preview'] != null) {
             queryParameters['preview'] = requestParameters['preview'];
+        }
+
+        if (requestParameters['noRedirect'] != null) {
+            queryParameters['noRedirect'] = requestParameters['noRedirect'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -182,10 +188,10 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
     }
 
     /**
-     * getAccessUrl
+     * getResource
      */
-    async getAccessUrl(requestParameters: GetAccessUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetAccessUrl200Response> {
-        const response = await this.getAccessUrlRaw(requestParameters, initOverrides);
+    async getResource(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetResource200Response> {
+        const response = await this.getResourceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

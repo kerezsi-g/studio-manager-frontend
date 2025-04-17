@@ -3,6 +3,49 @@
 /**
  * 
  * @export
+ * @interface AudioPeaks
+ */
+export interface AudioPeaks {
+    /**
+     * 
+     * @type {number}
+     * @memberof AudioPeaks
+     */
+    sampleRate: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AudioPeaks
+     */
+    samplesPerPixel: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AudioPeaks
+     */
+    length: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AudioPeaks
+     */
+    bits: number;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof AudioPeaks
+     */
+    peaks: Array<Array<number>>;
+    /**
+     * 
+     * @type {number}
+     * @memberof AudioPeaks
+     */
+    channels: number;
+}
+/**
+ * 
+ * @export
  * @interface AuthParams
  */
 export interface AuthParams {
@@ -106,6 +149,12 @@ export interface CreateIssueRequest {
      * @type {string}
      * @memberof CreateIssueRequest
      */
+    file: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateIssueRequest
+     */
     description: string;
     /**
      * 
@@ -168,13 +217,13 @@ export interface CreateUploadUrl200Response {
 /**
  * 
  * @export
- * @interface GetAccessUrl200Response
+ * @interface GetResource200Response
  */
-export interface GetAccessUrl200Response {
+export interface GetResource200Response {
     /**
      * 
      * @type {string}
-     * @memberof GetAccessUrl200Response
+     * @memberof GetResource200Response
      */
     url: string;
 }
@@ -190,6 +239,12 @@ export interface Issue {
      * @memberof Issue
      */
     issueId: string;
+    /**
+     * SHA-256 hash of the linked file
+     * @type {string}
+     * @memberof Issue
+     */
+    file: string;
     /**
      * 
      * @type {string}

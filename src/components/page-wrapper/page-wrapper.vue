@@ -31,6 +31,7 @@ defineProps<{
   align-items: center;
   gap: 4rem;
   padding: 1rem 4rem;
+  /* background-color: rgba(8 10 12 / 95%); */
 }
 
 .page-title {

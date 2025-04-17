@@ -22,9 +22,7 @@ async function handleAddFile(e: MouseEvent) {
       projectId: props.projectId,
       tag: 'gallery',
     },
-    {
-      e,
-    },
+    { e },
   )
 
   if (result) {

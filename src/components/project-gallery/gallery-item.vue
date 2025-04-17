@@ -1,36 +1,23 @@
 <script setup lang="ts">
-import { API } from '@/api'
 import type { ProjectMedia } from '@/api-client'
-import { computed, onMounted, ref } from 'vue'
-import { VSpinner } from '../ui/Spinner'
+import { computed } from 'vue'
 import SolarIcon from '../SolarIcon.vue'
 
 const props = defineProps<ProjectMedia>()
 
-const src = ref('')
-
-async function getUrl() {
-  const { url } = await API.Files.getAccessUrl({
-    sha256: props.sha256,
-    preview: true,
-  })
-
-  src.value = url
-}
+const src = computed(() => {
+  return `/api/files/${props.sha256}?preview=true`
+})
 
 const contentType = computed(() => {
   const [contentType] = props.contentType.split('/')
   return contentType as 'video' | 'image' | 'audio'
 })
-
-onMounted(() => {
-  getUrl()
-})
 </script>
 <template>
   <figure class="gallery-item">
-    <span v-if="src" class="gallery-item-main">
-      <img :src="src" />
+    <span class="gallery-item-main">
+      <img class="gallery-item-img" :src="src" />
       <SolarIcon
         v-if="contentType === 'video'"
         variant="bold-duotone"
@@ -44,11 +31,12 @@ onMounted(() => {
         icon="camera"
       />
     </span>
-    <VSpinner v-else />
     <figcaption class="gallery-item-caption">{{ props.fileName }}</figcaption>
   </figure>
 </template>
-<style lang="scss">
+<style lang="css">
+@reference 'tailwindcss';
+
 .gallery-item {
   position: relative;
 
@@ -59,8 +47,8 @@ onMounted(() => {
   align-items: center;
   justify-content: flex-start;
 
-  opacity: 0.9;
-  // overflow: hidden;
+  opacity: 0.75;
+  cursor: pointer;
 }
 
 .gallery-item:hover {
@@ -72,15 +60,17 @@ onMounted(() => {
 }
 
 .gallery-item-icon {
-  position: absolute;
-  top: 4px;
-  right: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 5);
+
+  position: absolute;
+  top: 4px;
+  right: 4px;
 
   z-index: 100;
+
+  /* color: rgba(var(--color-main)); */
 }
 
 .gallery-item-main {
@@ -88,13 +78,15 @@ onMounted(() => {
   position: relative;
   width: var(--item-width);
   height: var(--item-height);
+}
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background-color: rgba(0 0 0 / 50%);
-    border-radius: 3px;
-  }
+.gallery-item-img {
+  @apply shadow-md;
+
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: rgba(0 0 0 / 50%);
+  border-radius: 3px;
 }
 </style>
