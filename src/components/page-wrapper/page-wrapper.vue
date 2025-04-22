@@ -19,6 +19,7 @@ defineProps<{
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  background-color: rgba(0 0 0 / 50%);
 }
 
 .page-divider {
@@ -35,7 +36,8 @@ defineProps<{
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: 3rem;
   flex-grow: 1;
+  font-weight: 400;
 }
 </style>
