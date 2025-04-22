@@ -113,8 +113,8 @@ watchEffect(() => {
 }
 
 #v-modal-root::backdrop {
-  background-color: rgba(0 0 0 / 15%);
-  backdrop-filter: grayscale(50%);
+  background-color: rgba(0 0 0 / 60%);
+  /* backdrop-filter: grayscale(50%); */
 }
 
 .v-dialog {
