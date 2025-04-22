@@ -50,8 +50,8 @@ const props = defineProps<{
   // border-top: 8px solid rgba(var(--color-main) / 40%);
 
   // backdrop-filter: blur(24px);
-
   border-radius: 3px;
+  background-color: rgba(var(--surface) / var(--surface-opacity));
 
   .v-dialog-title {
     font-weight: 500;
@@ -59,7 +59,13 @@ const props = defineProps<{
     text-transform: uppercase;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
+
+    // background-color: rgba(0 0 0 / 30%);
+    width: 100%;
+    // padding: 0.5rem 4rem;
+    // text-align: center;
   }
 
   .v-dialog-divider {
@@ -68,8 +74,6 @@ const props = defineProps<{
     // color: rgba(var(--color-main) / 100%);
     opacity: 25%;
   }
-
-  background-color: rgba(8 8 12 / 95%);
 
   .v-dialog-body {
     display: flex;

@@ -2,6 +2,9 @@
 
 :root {
   --color-disabled: 144 144 144;
+
+  --surface: 28 32 40;
+  --surface-opacity: 95%;
 }
 
 .palette-success {
