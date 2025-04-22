@@ -95,15 +95,4 @@ async function handleCreateProject(e?: MouseEvent) {
   grid-template-columns: repeat(auto-fill, minmax(var(--width), 1fr));
   place-items: start center;
 }
-
-.grid-list-item {
-  display: block;
-  width: var(--width);
-  /* height: 100%; */
-}
-
-.grid-list-item:hover {
-  color: rgb(var(--color-accent));
-  --bg-opacity: 25%;
-}
 </style>

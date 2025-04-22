@@ -58,7 +58,9 @@ const data = computed(() => {
   --item-width: 160px;
   --item-height: 120px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--item-width), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
+  justify-items: flex-start;
+  // justify-content: flex-start;
   // padding: 1rem;
   gap: 1rem;
 }

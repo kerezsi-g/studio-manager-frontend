@@ -2,6 +2,7 @@
 import type { ProjectMedia } from '@/api-client'
 import { computed } from 'vue'
 import SolarIcon from '../SolarIcon.vue'
+import icons from '../icons'
 
 const props = defineProps<ProjectMedia>()
 
@@ -13,23 +14,26 @@ const contentType = computed(() => {
   const [contentType] = props.contentType.split('/')
   return contentType as 'video' | 'image' | 'audio'
 })
+
+const icon = computed(() => {
+  if (contentType.value === 'video') {
+    return icons.fileType.video
+  }
+  if (contentType.value === 'image') {
+    return icons.fileType.image
+  }
+  if (contentType.value === 'audio') {
+    return icons.fileType.audio
+  }
+
+  return 'folder'
+})
 </script>
 <template>
   <figure class="gallery-item">
     <span class="gallery-item-main">
       <img class="gallery-item-img" :src="src" />
-      <SolarIcon
-        v-if="contentType === 'video'"
-        variant="bold-duotone"
-        class="icon-base gallery-item-icon"
-        icon="video-frame-play-vertical"
-      />
-      <SolarIcon
-        v-if="contentType === 'image'"
-        variant="bold-duotone"
-        class="icon-base gallery-item-icon"
-        icon="camera"
-      />
+      <SolarIcon variant="bold-duotone" class="icon-base gallery-item-icon" :icon="icon" />
     </span>
     <figcaption class="gallery-item-caption">{{ props.fileName }}</figcaption>
   </figure>
