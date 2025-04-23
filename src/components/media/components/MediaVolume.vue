@@ -48,7 +48,7 @@ function handleMute() {
 }
 
 .volume-slider {
-  --size: 6px;
+  --size: 8px;
 
   width: 240px;
   height: var(--size);
@@ -65,7 +65,7 @@ function handleMute() {
 
   background-color: rgba(var(--color-main) / 25%);
 
-  box-shadow: 0 0 0 1px rgba(var(--color-main) / 50%);
+  // box-shadow: 0 0 0 1px rgba(var(--color-main) / 50%);
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;

@@ -6,7 +6,7 @@ import { API } from '@/api'
 import { generateSha256Hash } from '@/utils/gen-hash'
 
 export async function useS3Upload(file: File) {
-  const progress = ref(0)
+  const progress = ref<number>(0)
   const error = ref<Error | null>(null)
 
   const pending = ref(false)
@@ -86,15 +86,6 @@ export async function useS3Upload(file: File) {
     response,
     start,
   }
-}
-
-async function genHash(buffer: ArrayBuffer) {
-  const hashBuffer = await window.crypto.subtle.digest('SHA-256', buffer)
-
-  const hexString = Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('')
-  return hexString
 }
 
 export type S3Upload = Awaited<ReturnType<typeof useS3Upload>>

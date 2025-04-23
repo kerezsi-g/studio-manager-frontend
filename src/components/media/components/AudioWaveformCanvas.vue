@@ -10,8 +10,9 @@ const canvas = ref<HTMLCanvasElement>()
 const renderer = ref<WaveformRenderer>()
 
 onMounted(() => {
+  console.log('Mounted')
+
   renderer.value = new WaveformRenderer(props, canvas.value!)
-  // drawWaveform(0, props.length)
 })
 
 onUnmounted(() => {
@@ -30,20 +31,20 @@ onUnmounted(() => {
   width: 100%;
   position: relative;
   box-sizing: content-box;
-  height: 128px;
-  /* padding-block: 4px; */
-
-  border-block: 1px solid rgba(var(--color-main) / 100%);
+  height: 96px;
+  /* border: 1px solid rgba(var(--color-main) / 100%); */
+  border-radius: 3px;
   /* background-color: red; */
   /* height: 100%; */
-  background-color: rgba(0 0 0 / 50%);
+  background-color: rgba(0 0 0 / 25%);
+  overflow: hidden;
 }
 
 .waveform {
   width: 100%;
   height: 100%;
 
-  background: linear-gradient(180deg, transparent, rgba(var(--color-main) / 40%), transparent);
+  /* background: linear-gradient(180deg, transparent, rgba(var(--color-main) / 40%), transparent); */
 
   /* box-shadow: inset 0px 0px 64px rgba(255 255 255 / 10%); */
   /* background-color: rgba(0 0 0 / 50%); */

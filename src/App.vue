@@ -38,6 +38,7 @@ import { VModalGlide, VModalOutlet } from './components/modal'
   );
 
   background-size: 10px 10px;
+  overflow: hidden;
 }
 
 #app {

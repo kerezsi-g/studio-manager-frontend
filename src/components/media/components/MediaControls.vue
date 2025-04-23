@@ -9,7 +9,7 @@ const emit = defineEmits<{
   (c: 'seek', value: number): void
 }>()
 
-const iconVariant = 'bold-duotone'
+const iconVariant = 'bold'
 
 const seek = {
   forward: [
@@ -34,6 +34,12 @@ function handlePlay() {
       <SolarIcon :icon="item.icon" :variant="iconVariant" width="32" />
     </button>
 
+    <!--
+    <button @click="emit('seek', -Infinity)">
+      <SolarIcon icon="rewind-back-circle" :variant="iconVariant" width="48" />
+    </button>
+    -->
+
     <button @click="handlePlay">
       <SolarIcon
         :icon="playing ? 'pause-circle' : 'play-circle'"
@@ -56,10 +62,10 @@ function handlePlay() {
   gap: 4px;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0 0 0 / 90%);
+
   padding-inline: 64px;
 
-  --btn-size: 64px;
+  --btn-size: 56px;
 }
 
 .media-controls button {
@@ -75,6 +81,7 @@ function handlePlay() {
 }
 
 .media-controls button:hover {
-  background-color: rgba(var(--color-main) / 75%);
+  background-color: rgba(var(--color-main) / 15%);
+  color: rgba(var(--color-main) / 100%);
 }
 </style>

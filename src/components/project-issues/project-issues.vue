@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Issue } from '@/api-client'
 import { VDialog } from '../dialog'
-import { IssueListItem } from '.'
+import ListItem from './project-issues-list-item.vue'
 import SolarIcon from '../SolarIcon.vue'
 
 defineProps<{
@@ -15,13 +15,15 @@ defineEmits<{ (c: 'changed'): void }>()
   <VDialog title="Issues" color="info">
     <template #body>
       <ul v-if="issues.length > 0" class="issues-list">
-        <IssueListItem
-          v-for="issue in issues"
-          :key="issue.issueId"
-          v-bind="issue"
-          :project-id="projectId"
-          @issue-resolved="$emit('changed')"
-        />
+        <slot v-for="issue in issues" :key="issue.issueId" v-bind="issue" :project-id="projectId">
+          <ListItem
+            v-for="issue in issues"
+            :key="issue.issueId"
+            v-bind="issue"
+            :project-id="projectId"
+            @issue-resolved="$emit('changed')"
+          />
+        </slot>
       </ul>
       <div v-else class="no-data-s">
         <SolarIcon icon="check-read" class="icon-lg" />

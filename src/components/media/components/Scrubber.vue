@@ -7,17 +7,18 @@
  * TODO: should refactor probably
  */
 import { useEventListener, useMouseInElement } from '@vueuse/core'
-import { ref as deepRef, shallowRef, watch } from 'vue'
+import { ref as deepRef, ref, watch } from 'vue'
 
-const props = defineProps({
-  min: { type: Number, default: 0 },
-  max: { type: Number, default: 100 },
-  secondary: { type: Number, default: 0 },
-})
+const props = defineProps<{
+  min: number
+  max: number
+  buffered: number
+}>()
 
 const scrubber = deepRef()
-const scrubbing = shallowRef(false)
-const pendingValue = shallowRef(0)
+const scrubbing = ref(false)
+
+const pendingValue = ref(0)
 
 useEventListener('mouseup', () => (scrubbing.value = false), { passive: true })
 
@@ -35,29 +36,39 @@ watch([scrubbing, elementX], () => {
 })
 </script>
 <template>
-  <div ref="scrubber" class="scrubber-outer" @mousedown="scrubbing = true">
-    <div class="scrubber-inner">
-      <div
-        class="scrubber-buffered"
-        :style="{ transform: `translateX(${(secondary / max) * 100 - 100}%)` }"
-      />
-      <div
-        class="scrubber-current"
-        :style="{ transform: `translateX(${(currentTime / max) * 100 - 100}%)` }"
-      />
-    </div>
-    <div
-      class="absolute inset-0 hover:opacity-100 opacity-0"
-      :class="{ '!opacity-100': scrubbing }"
-    >
-      <slot
-        :pending-value="pendingValue"
-        :position="`${Math.max(0, Math.min(elementX, elementWidth))}px`"
-      />
-    </div>
+  <div
+    ref="scrubber"
+    class="scrubber-container"
+    @mousedown="scrubbing = true"
+    :class="{
+      active: scrubbing,
+    }"
+  >
+    <div class="scrubber-progress" :style="{ '--progress': currentTime / max }" />
   </div>
 </template>
 <style lang="css">
+.scrubber-container {
+  position: absolute;
+  inset: 0;
+
+  /* background-color: rgba(var(--color-main) / var(--bg-opacity, 100%)); */
+  /* transform-origin: left; */
+  cursor: pointer;
+}
+
+.scrubber-progress {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: calc(100% - var(--progress) * 100%);
+  background-color: rgba(var(--color-main) / 25%);
+  border-right: 1px solid rgba(255 255 255 / 75%);
+
+  /* opacity: 0.3; */
+}
+
 .scrubber-inner {
   position: relative;
   height: 100%;
@@ -72,13 +83,8 @@ watch([scrubbing, elementX], () => {
   cursor: pointer;
   user-select: none;
   background-color: rgba(0 0 0 / 20%);
-}
 
-.scrubber-current {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(var(--color-main) / var(--bg-opacity, 100%));
+  /* box-shadow: inset 0px 0px 128px 0px red; */
 }
 
 .scrubber-buffered {
@@ -87,8 +93,6 @@ watch([scrubbing, elementX], () => {
   width: 100%;
   left: 0;
   top: 0;
-
-  opacity: 0.3;
-  background-color: rgba(var(--color-main) / 100%);
+  /* background-color: rgba(var(--color-main) / 10%); */
 }
 </style>

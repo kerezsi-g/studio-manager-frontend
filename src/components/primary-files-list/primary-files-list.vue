@@ -41,7 +41,9 @@ const data = computed(() => {
   <VDialog title="Primary Media" color="primary" class="w-fit">
     <template #body>
       <ul class="file-list" v-auto-animate>
-        <PrimaryFilesListItem v-for="file in data" :key="file.sha256" v-bind="file" />
+        <slot v-for="file in data" :key="file.sha256" v-bind="file">
+          <PrimaryFilesListItem v-bind="file" />
+        </slot>
       </ul>
     </template>
     <template #actions>

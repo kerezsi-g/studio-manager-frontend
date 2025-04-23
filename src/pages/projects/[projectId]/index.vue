@@ -13,6 +13,7 @@ import ProjectIssues from '@/components/project-issues/project-issues.vue'
 import SolarIcon from '@/components/SolarIcon.vue'
 import { VButton } from '@/components/ui/Button'
 import PageWrapper from '@/components/page-wrapper/page-wrapper.vue'
+import AudioProject from '@/components/project/audio-project.vue'
 
 defineProps<{
   projectId: string
@@ -20,7 +21,9 @@ defineProps<{
 </script>
 <template>
   <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
-    <PageWrapper :title="data.projectName">
+    <AudioProject v-bind="data" v-if="data.projectType === 'audio'" @changed="reload" />
+
+    <!-- <PageWrapper :title="data.projectName">
       <template #actions>
         <VButton @click="() => $router.back()" class="sm" variant="subdued" color="error">
           <SolarIcon icon="undo-left" class="icon-base" />
@@ -38,7 +41,7 @@ defineProps<{
           <ProjectIssues :issues="data.issues" :projectId="projectId" @changed="reload" />
         </div>
       </template>
-    </PageWrapper>
+    </PageWrapper> -->
   </ProjectDetailsProvider>
 </template>
 <style lang="scss">

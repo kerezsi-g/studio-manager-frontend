@@ -56,23 +56,25 @@ async function handleResolveIssue() {
         </span>
         <span class="file-id"> File: {{ fileId }} </span>
       </h3>
+
+      <VButton
+        v-if="status === 'open'"
+        @click="handleResolveIssue"
+        variant="subdued"
+        color="success"
+        size="sm"
+      >
+        Resolve
+        <template #suffix>
+          <SolarIcon icon="check-circle" class="icon-sm" variant="line-duotone" />
+        </template>
+      </VButton>
+
       <span class="issue-id"> #{{ id }} </span>
     </header>
     <p class="issue-description">
       {{ description }}
     </p>
-    <VButton
-      v-if="status === 'open'"
-      @click="handleResolveIssue"
-      class="sm"
-      variant="subdued"
-      color="success"
-    >
-      Resolve
-      <template #suffix>
-        <SolarIcon icon="check-circle" class="icon-sm" variant="line-duotone" />
-      </template>
-    </VButton>
   </div>
 </template>
 <style lang="css">
@@ -83,7 +85,7 @@ async function handleResolveIssue() {
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 
   border-left: 6px solid rgba(var(--color-main) / 100%);
   background-color: rgba(var(--color-main) / 20%);

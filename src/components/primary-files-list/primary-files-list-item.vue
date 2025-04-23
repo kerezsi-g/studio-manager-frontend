@@ -32,36 +32,40 @@ const icon = computed(() => {
 </script>
 <template>
   <li class="file-list-item">
-    <router-link :to="{ name: 'file', params: { sha256: props.sha256 } }" class="">
-      <SolarIcon :icon="icon" class="icon-base" variant="bold-duotone" />
+    <SolarIcon :icon="icon" class="icon-base" variant="bold-duotone" />
 
-      <div class="flex flex-col flex-grow">
-        <span class="file-name">
-          {{ fileName }}
-        </span>
+    <div class="flex flex-col flex-grow">
+      <span class="file-name">
+        {{ fileName }}
+      </span>
 
-        <span class="file-type">
-          {{ contentType }}
-        </span>
+      <span class="file-type">
+        {{ contentType }}
+      </span>
 
-        <span class="file-hash" v-if="SHOW_HASH">
-          {{ sha256.slice(0, 16) }}
-        </span>
-      </div>
+      <span class="file-hash" v-if="SHOW_HASH">
+        {{ sha256.slice(0, 16) }}
+      </span>
+    </div>
 
-      <div class="file-date">
-        {{ formattedDate }}
-      </div>
-    </router-link>
+    <div class="file-date">
+      {{ formattedDate }}
+    </div>
   </li>
 </template>
 <style lang="css">
 @reference "tailwindcss";
 
 .file-list-item {
-  a {
-    @apply flex gap-4 items-center px-4 py-2 hover:bg-sky-500/30;
-  }
+  --bg-opacity: 0;
+
+  cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+
+  background-color: rgba(var(--color-main) / var(--bg-opacity));
 
   line-height: normal;
 
@@ -83,5 +87,13 @@ const icon = computed(() => {
     border-radius: 2px;
     padding: 2px 8px;
   }
+}
+
+.file-list-item.selected {
+  --bg-opacity: 30%;
+}
+
+.file-list-item:hover {
+  --bg-opacity: 20%;
 }
 </style>

@@ -1,2 +1,2 @@
-export { default as ProjectIssues } from './project-issues.vue'
-export { default as IssueListItem } from './issue-list-item.vue'
+export { default as ProjectIssuesList } from './project-issues.vue'
+export { default as ProjectIssue } from './project-issues-list-item.vue'

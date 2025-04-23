@@ -81,6 +81,7 @@ const props = defineProps<{
     align-items: stretch;
     gap: 1.5rem;
     width: 100%;
+    overflow: auto;
   }
 
   .v-dialog-footer {
