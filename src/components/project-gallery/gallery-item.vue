@@ -32,10 +32,12 @@ const icon = computed(() => {
 <template>
   <figure class="gallery-item">
     <span class="gallery-item-main">
-      <img class="gallery-item-img" :src="src" />
-      <SolarIcon variant="bold-duotone" class="icon-base gallery-item-icon" :icon="icon" />
+      <img class="gallery-item-img" :src="src" :title="props.fileName" />
+      <SolarIcon variant="bold" class="icon-base gallery-item-icon" :icon="icon" />
     </span>
-    <figcaption class="gallery-item-caption">{{ props.fileName }}</figcaption>
+    <figcaption class="gallery-item-caption" :title="props.fileName">
+      {{ props.fileName }}
+    </figcaption>
   </figure>
 </template>
 <style lang="css">
@@ -51,8 +53,11 @@ const icon = computed(() => {
   align-items: center;
   justify-content: flex-start;
 
-  opacity: 0.75;
+  opacity: 0.9;
   cursor: pointer;
+
+  background-color: rgba(0 0 0 / 50%);
+  /* padding: 16px; */
 }
 
 .gallery-item:hover {
@@ -61,6 +66,10 @@ const icon = computed(() => {
 
 .gallery-item-caption {
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: var(--item-width);
 }
 
 .gallery-item-icon {
@@ -80,8 +89,8 @@ const icon = computed(() => {
 .gallery-item-main {
   display: block;
   position: relative;
-  width: var(--item-width);
   height: var(--item-height);
+  width: var(--item-width);
 }
 
 .gallery-item-img {
@@ -89,6 +98,7 @@ const icon = computed(() => {
 
   width: 100%;
   height: 100%;
+  opacity: 0.75;
   object-fit: cover;
   background-color: rgba(0 0 0 / 50%);
   border-radius: 3px;

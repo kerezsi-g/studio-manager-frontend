@@ -35,6 +35,7 @@ defineEmits<{ (c: 'changed'): void }>()
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: auto;
 }
 
 .no-data-s {

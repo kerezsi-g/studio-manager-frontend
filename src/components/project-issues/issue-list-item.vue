@@ -42,6 +42,7 @@ async function handleResolveIssue() {
       'palette-error': status == 'open',
       'palette-success': status == 'resolved',
     }"
+    v-auto-animate
   >
     <header class="issue-header">
       <SolarIcon
@@ -74,8 +75,12 @@ async function handleResolveIssue() {
     </VButton>
   </div>
 </template>
-<style lang="scss">
+<style lang="css">
+@reference "tailwindcss";
+
 .issue {
+  @apply transition-all;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -109,8 +114,7 @@ async function handleResolveIssue() {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    // gap: 0.5rem;
-    // align-items: center;
+
     line-height: normal;
 
     .file-id {
@@ -129,8 +133,6 @@ async function handleResolveIssue() {
     font-family: 'Roboto Mono';
     font-size: 10px;
     opacity: 0.85;
-    // font-weight: 400;
-    // color: rgba(var(--color-main) / 100%);
   }
 }
 

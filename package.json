@@ -20,6 +20,7 @@
     "@tailwindcss/postcss": "^4.1.3",
     "@tailwindcss/vite": "^4.1.3",
     "@vueuse/core": "^13.1.0",
+    "@vueuse/motion": "^3.0.3",
     "dayjs": "^1.11.13",
     "mime-detect": "^1.3.0",
     "postcss": "^8.5.3",

@@ -50,7 +50,7 @@ const icon = 'solar:shield-user-line-duotone'
 <template>
   <slot v-if="currentUser" />
 
-  <form v-else-if="initialized" class="sign-in" @submit.prevent="handleSubmit">
+  <form v-else-if="initialized" class="sign-in" @submit.prevent="handleSubmit" v-motion-pop>
     <header>Your Brand Goes Here</header>
     <hr />
     <Icon :icon="icon" class="icon-xl apply-palette palette-info" />

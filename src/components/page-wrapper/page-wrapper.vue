@@ -20,6 +20,7 @@ defineProps<{
   flex-direction: column;
   flex-grow: 1;
   background-color: rgba(0 0 0 / 50%);
+  overflow: hidden;
 }
 
 .page-divider {

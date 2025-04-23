@@ -27,7 +27,7 @@ defineProps<{
         </VButton>
       </template>
       <template #body>
-        <div class="flex gap-4 py-2 flex-grow">
+        <div class="flex gap-4 py-2 flex-grow overflow-hidden">
           <PrimaryFilesList :files="data.files" :projectId="projectId" @file-uploaded="reload" />
           <ProjectGallery
             :files="data.files"

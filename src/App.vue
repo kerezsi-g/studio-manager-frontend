@@ -42,7 +42,7 @@ import { VModalGlide, VModalOutlet } from './components/modal'
 
 #app {
   @apply transition-all;
-  --blur: 4px;
+  --blur: 0px;
 
   position: relative;
 
@@ -55,6 +55,16 @@ import { VModalGlide, VModalOutlet } from './components/modal'
 
   backdrop-filter: blur(var(--blur));
 }
+
+/* #app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/backgrounds/texture-1390442.jpg');
+} */
 
 #app:has(.sign-in) {
   --blur: 0px;
