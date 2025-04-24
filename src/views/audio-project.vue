@@ -69,7 +69,7 @@ const pendingIssues = computed(() => {
 
   <hr class="divider" />
 
-  <div class="flex flex-grow overflow-hidden">
+  <div class="flex-grow overflow-hidden grid grid-cols-2">
     <PrimaryFilesList
       :files="files"
       :projectId="projectId"
@@ -83,7 +83,7 @@ const pendingIssues = computed(() => {
       />
     </PrimaryFilesList>
 
-    <ProjectIssuesList :issues="issues" :project-id="projectId" v-slot="issue" class="flex-grow">
+    <ProjectIssuesList :issues="issues" :project-id="projectId" v-slot="issue">
       <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
     </ProjectIssuesList>
   </div>

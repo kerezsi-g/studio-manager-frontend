@@ -22,6 +22,10 @@ section.list {
   padding: 1rem 2rem;
   gap: 0.5rem;
 
+  overflow: hidden;
+
+  scrollbar-gutter: stable;
+
   > header {
     display: flex;
     align-items: center;
