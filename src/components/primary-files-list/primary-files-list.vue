@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { ProjectMedia } from '@/api-client'
-import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
-import { useModal } from '../modal'
-import dayjs from 'dayjs'
-import { VButton } from '@/components/ui/Button'
-import SolarIcon from '@/components/SolarIcon.vue'
-import { VDialog } from '../dialog'
 import { computed } from 'vue'
+
+import SolarIcon from '@/components/SolarIcon.vue'
+import { useModal } from '../modal'
+import { VButton } from '@/components/ui/Button'
+import { VList } from '../ui/List'
+
+import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
 import PrimaryFilesListItem from './primary-files-list-item.vue'
 
 const props = defineProps<{
@@ -38,34 +39,21 @@ const data = computed(() => {
 })
 </script>
 <template>
-  <VDialog title="Primary Media" color="primary" class="w-fit">
-    <template #body>
-      <ul class="file-list" v-auto-animate>
-        <slot v-for="file in data" :key="file.sha256" v-bind="file">
-          <PrimaryFilesListItem v-bind="file" />
-        </slot>
-      </ul>
-    </template>
+  <VList title="Uploads:">
     <template #actions>
-      <VButton @click="handleAddFile">
+      <VButton @click="handleAddFile" size="sm" variant="subdued">
         <template #suffix>
-          <SolarIcon icon="add-circle" class="icon-base" />
+          <SolarIcon icon="add-circle" width="20" variant="bold" />
         </template>
         Add File
       </VButton>
     </template>
-  </VDialog>
-</template>
-<style>
-.file-list {
-  --bg-opacity: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  /* background-color: rgba(16 16 16 / var(--bg-opacity)); */
-}
 
-.file-list-item:nth-child(even) {
-  /* background-color: rgba(32 32 32 / var(--bg-opacity)); */
-}
-</style>
+    <template #items>
+      <slot v-for="file in data" :key="file.sha256" v-bind="file">
+        <PrimaryFilesListItem v-bind="file" />
+      </slot>
+    </template>
+  </VList>
+</template>
+<style lang="css"></style>

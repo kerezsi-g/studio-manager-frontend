@@ -10,7 +10,7 @@ import SolarIcon from '@/components/SolarIcon.vue'
 const props = defineProps<ProjectMedia>()
 
 const formattedDate = computed(() => {
-  return dayjs(props.addedAt).format('YYYY-MM-DD')
+  return dayjs(props.addedAt).format('YYYY-MM-DD HH:mm')
 })
 
 const icon = computed(() => {
@@ -32,7 +32,7 @@ const icon = computed(() => {
 </script>
 <template>
   <li class="file-list-item">
-    <SolarIcon :icon="icon" class="icon-base" variant="bold-duotone" />
+    <SolarIcon :icon="icon" width="24" variant="bold-duotone" />
 
     <div class="flex flex-col flex-grow">
       <span class="file-name">
@@ -63,14 +63,15 @@ const icon = computed(() => {
   display: flex;
   gap: 1rem;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.75rem;
 
-  background-color: rgba(var(--color-main) / var(--bg-opacity));
+  /* border-radius: 2px; */
 
   line-height: normal;
 
   .file-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
+    margin-right: 1rem;
   }
 
   .file-hash,
@@ -81,19 +82,30 @@ const icon = computed(() => {
   }
 
   .file-date {
-    background-color: rgba(var(--color-main) / 50%);
+    /* color: rgba(var(--color-main) / 100%); */
     font-size: 12px;
     font-weight: 500;
-    border-radius: 2px;
-    padding: 2px 8px;
+    /* border-radius: 2px; */
+    /* padding: 4px 8px; */
+    opacity: 0.8;
   }
+
+  border-left: 4px solid transparent;
+
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  transition-property: all;
 }
 
 .file-list-item.selected {
-  --bg-opacity: 30%;
+  border-color: rgba(var(--color-main) / 100%);
+  background-color: rgba(var(--color-main) / 30%);
+  /* transform: translateX(4px); */
 }
 
 .file-list-item:hover {
-  --bg-opacity: 20%;
+  /* color: rgb(var(--color-accent)); */
+  /* transform: translateX(4px); */
+  /* box-shadow: 0px 0px 0px 1px rgba(var(--color-main) / 75%); */
 }
 </style>

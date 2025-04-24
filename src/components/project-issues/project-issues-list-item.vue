@@ -70,7 +70,7 @@ async function handleResolveIssue() {
         </template>
       </VButton>
 
-      <span class="issue-id"> #{{ id }} </span>
+      <!-- <span class="issue-id"> #{{ id }} </span> -->
     </header>
     <p class="issue-description">
       {{ description }}
@@ -88,7 +88,7 @@ async function handleResolveIssue() {
   gap: 4px;
 
   border-left: 6px solid rgba(var(--color-main) / 100%);
-  background-color: rgba(var(--color-main) / 20%);
+  background-color: rgba(var(--color-main) / 25%);
   border-radius: 2px;
 
   padding: 0.5rem 1.5rem;
