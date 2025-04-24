@@ -53,21 +53,5 @@ import { VModalGlide, VModalOutlet } from './components/modal'
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  backdrop-filter: blur(var(--blur));
-}
-
-/* #app::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/backgrounds/texture-1390442.jpg');
-} */
-
-#app:has(.sign-in) {
-  --blur: 0px;
 }
 </style>
