@@ -1,11 +1,37 @@
 import type { AudioPeaks } from '@/api-client'
 
-import type { InitEvent, RenderEvent } from './waveform-renderer.worker'
+import type {
+  WaveformRendererEmit,
+  InitEvent,
+  RenderCompletedEvent,
+} from './waveform-renderer.worker'
+
+type EventHandler<T extends WaveformRendererEmit['data']> = (event: T) => void
 
 export class WaveformRenderer {
   private offscreenCanvas: OffscreenCanvas
 
   private worker = new Worker(new URL('./waveform-renderer.worker.ts', import.meta.url))
+
+  private eventHandlers: EventHandler<RenderCompletedEvent>[] = []
+
+  public onRendered(this: WaveformRenderer, handler: (event: RenderCompletedEvent) => void) {
+    this.eventHandlers.push(handler)
+
+    return () => {
+      this.eventHandlers = this.eventHandlers.filter((h) => h !== handler)
+    }
+  }
+
+  private handleWorkerEvents(this: WaveformRenderer, { data }: WaveformRendererEmit) {
+    switch (data.type) {
+      case 'render-completed':
+        for (const handler of this.eventHandlers) {
+          handler(data)
+        }
+        break
+    }
+  }
 
   constructor({ bits, peaks }: AudioPeaks, canvas: HTMLCanvasElement) {
     // console.log('Initializing `WaveformRenderer`')
@@ -17,6 +43,8 @@ export class WaveformRenderer {
     const buffers = peaks.map((channel) => new Int8Array(channel).buffer)
 
     this.offscreenCanvas = canvas.transferControlToOffscreen()
+
+    this.worker.addEventListener('message', (event) => this.handleWorkerEvents(event))
 
     const initEvent: InitEvent = {
       type: 'init',

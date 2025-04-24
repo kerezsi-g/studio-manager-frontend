@@ -1,3 +1,6 @@
+export type WaveformRendererPostMessage = MessageEvent<InitEvent | RenderEvent>
+export type WaveformRendererEmit = MessageEvent<RenderCompletedEvent>
+
 export interface InitEvent {
   type: 'init'
   canvas: OffscreenCanvas
@@ -12,13 +15,17 @@ export interface RenderEvent {
   sampleEnd: number
 }
 
+export interface RenderCompletedEvent {
+  type: 'render-completed'
+}
+
 let canvas: OffscreenCanvas
 let color: string
 let channels: Int8Array[]
 
 const averagedPeaks: number[] = []
 
-self.addEventListener('message', (event: MessageEvent<InitEvent | RenderEvent>) => {
+self.addEventListener('message', (event: WaveformRendererPostMessage) => {
   if (event.data.type === 'init') {
     initialize(event.data)
   }
@@ -46,7 +53,7 @@ function initialize(evt: InitEvent) {
 }
 
 let animationFrameId: number | null = null
-const chunkSize = 1000
+const chunkSize = 500
 
 function render(sampleStart: number, sampleEnd: number) {
   const ctx = canvas.getContext('2d')
@@ -65,7 +72,7 @@ function render(sampleStart: number, sampleEnd: number) {
     if (drawnSamples < totalSamples) {
       ctx.beginPath()
       ctx.strokeStyle = color
-      ctx.lineWidth = 2
+      ctx.lineWidth = 3
 
       const start = sampleStart + drawnSamples
       const end = Math.min(sampleStart + drawnSamples + chunkSize, sampleEnd)
@@ -76,7 +83,7 @@ function render(sampleStart: number, sampleEnd: number) {
         const y = peak + height / 2
 
         if (i === sampleStart) {
-          ctx.moveTo(x - 1, y)
+          ctx.moveTo(x, y)
         } else {
           ctx.lineTo(x, y)
         }
@@ -87,7 +94,7 @@ function render(sampleStart: number, sampleEnd: number) {
       drawnSamples += chunkSize
       animationFrameId = requestAnimationFrame(drawChunk)
     } else {
-      console.log('Waveform chunk rendered in worker.')
+      self.postMessage({ type: 'render-completed' })
     }
   }
 
