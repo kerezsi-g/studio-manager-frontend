@@ -4,8 +4,9 @@
   --color-disabled: 144 144 144;
 
   --surface: 28 32 40;
-  --surface-opacity: 95%;
-  --surface-dark: 14 16 20;
+  /* --surface: 28 32 32; */
+  --surface-opacity: 90%;
+  --surface-dark: 14 16 16;
 }
 
 .palette-success {
@@ -38,7 +39,7 @@
 }
 
 .palette-secondary {
-  --color-main: 14 165 233; /* sky-500 */
+  --color-main: 132 204 22; /* sky-500 */
   --color-accent: 56 189 248; /* sky-400 */
   --color-text: 255 255 255; /* white */
 }
