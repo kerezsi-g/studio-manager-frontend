@@ -1,0 +1,7 @@
+export { default as MediaControls } from './MediaControls.vue'
+export { default as MediaDuration } from './MediaDuration.vue'
+export { default as MediaVolume } from './MediaVolume.vue'
+export { default as MediaInfo } from './MediaInfo.vue'
+export { default as Scrubber } from './Scrubber.vue'
+export { default as TimestampMarker } from './TimestampMarker.vue'
+export { default as AudioWaveformCanvas } from './AudioWaveformCanvas.vue'

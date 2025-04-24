@@ -41,7 +41,7 @@ watch([scrubbing, elementX], () => {
     class="scrubber-container"
     @mousedown="scrubbing = true"
     :class="{
-      active: scrubbing,
+      // active: scrubbing,
     }"
   >
     <div class="scrubber-progress" :style="{ '--progress': currentTime / max }" />

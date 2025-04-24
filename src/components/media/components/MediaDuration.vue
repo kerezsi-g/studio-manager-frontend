@@ -27,13 +27,14 @@ function formatDuration(seconds: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
+  line-height: normal;
 
-  padding: 4px 8px;
+  /* padding: 0px 8px; */
 
-  font-size: 16px;
+  font-size: 12px;
   font-family: 'Roboto Mono';
-  font-weight: 300;
+  font-weight: 400;
 
   /* background-color: rgba(0 0 0 / 85%); */
 }

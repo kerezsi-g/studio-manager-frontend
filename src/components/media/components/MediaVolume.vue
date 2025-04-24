@@ -26,7 +26,7 @@ function handleMute() {
 <template>
   <div class="media-volume-ctrl">
     <button @click="handleMute" :style="{ opacity: muted ? 0.5 : 1 }">
-      <SolarIcon width="32" :icon="volumeIcon" variant="line-duotone" />
+      <SolarIcon width="24" :icon="volumeIcon" variant="bold-duotone" />
     </button>
 
     <span class="flex flex-col relative">
@@ -42,6 +42,7 @@ function handleMute() {
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: normal;
   gap: 8px;
   padding-inline: 12px;
   padding-block: 8px;
@@ -50,7 +51,7 @@ function handleMute() {
 .volume-slider {
   --size: 8px;
 
-  width: 240px;
+  width: 128px;
   height: var(--size);
 
   border-radius: 8px;

@@ -13,14 +13,14 @@ const iconVariant = 'bold'
 
 const seek = {
   forward: [
-    { value: 5, icon: 'rewind-5-seconds-forward' },
+    // { value: 5, icon: 'rewind-5-seconds-forward' },
     { value: 10, icon: 'rewind-10-seconds-forward' },
-    { value: 15, icon: 'rewind-15-seconds-forward' },
+    // { value: 15, icon: 'rewind-15-seconds-forward' },
   ],
   back: [
-    { value: -15, icon: 'rewind-15-seconds-back' },
+    // { value: -15, icon: 'rewind-15-seconds-back' },
     { value: -10, icon: 'rewind-10-seconds-back' },
-    { value: -5, icon: 'rewind-5-seconds-back' },
+    // { value: -5, icon: 'rewind-5-seconds-back' },
   ],
 }
 
@@ -59,11 +59,10 @@ function handlePlay() {
 .media-controls {
   display: flex;
   flex-direction: row;
-  gap: 4px;
   align-items: center;
   justify-content: center;
 
-  padding-inline: 64px;
+  /* padding-inline: 64px; */
 
   --btn-size: 56px;
 }
