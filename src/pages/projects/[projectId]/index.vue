@@ -5,15 +5,11 @@
 }
 </route>
 <script setup lang="ts">
+import { VAlert } from '@/components/alert'
 import ProjectDetailsProvider from '@/components/api/ProjectDetailsProvider.vue'
+import ProjectPage from '@/components/project-page/project-page.vue'
 
-import PrimaryFilesList from '@/components/primary-files-list/primary-files-list.vue'
-import ProjectGallery from '@/components/project-gallery/project-gallery.vue'
-import ProjectIssues from '@/components/project-issues/project-issues.vue'
-import SolarIcon from '@/components/SolarIcon.vue'
-import { VButton } from '@/components/ui/Button'
-import PageWrapper from '@/components/page-wrapper/page-wrapper.vue'
-import AudioProject from '@/components/project/audio-project.vue'
+import AudioProject from '@/views/audio-project.vue'
 
 defineProps<{
   projectId: string
@@ -21,7 +17,21 @@ defineProps<{
 </script>
 <template>
   <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
-    <AudioProject v-bind="data" v-if="data.projectType === 'audio'" @changed="reload" />
+    <ProjectPage v-bind="data" style="--page-width: 1280px">
+      <AudioProject v-if="data.projectType === 'audio'" v-bind="data" @changed="reload" />
+
+      <div v-if="data.projectType === 'video'" class="py-16 px-24">
+        <VAlert icon="confounded-circle" color="error" title="Unsupported project type">
+          User interface for video projects are not supported yet.
+        </VAlert>
+      </div>
+
+      <div v-if="data.projectType === 'image'" class="py-16 px-24">
+        <VAlert icon="confounded-circle" color="error" title="Unsupported project type">
+          User interface for photography projects are not supported yet.
+        </VAlert>
+      </div>
+    </ProjectPage>
 
     <!-- <PageWrapper :title="data.projectName">
       <template #actions>
