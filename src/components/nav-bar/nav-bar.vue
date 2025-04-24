@@ -16,7 +16,7 @@ const { currentUser, signOut } = useAuthentication()
         <span class="email">{{ currentUser!.email }}</span>
       </div>
     </div>
-    <VButton color="error" variant="filled" @click="signOut">
+    <VButton color="error" variant="filled" @click="signOut" size="sm">
       Sign Out
       <template #suffix>
         <SolarIcon icon="logout" class="icon-base" />
@@ -25,33 +25,11 @@ const { currentUser, signOut } = useAuthentication()
   </nav>
 </template>
 <style lang="scss">
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.user-info-details {
-  display: flex;
-  flex-direction: column;
-  line-height: normal;
-}
-
-.username {
-  font-weight: 500;
-  line-height: normal;
-}
-
-.email {
-  font-size: 0.875rem;
-  opacity: 0.75;
-}
-
 #navbar {
   --border: rgba(32 32 32 / 80%);
   width: 100%;
-  padding: 1rem 3rem;
-  background-color: rgba(3 3 3 / 75%);
+  padding: 0.75rem 3rem;
+  background-color: rgba(var(--surface-dark));
   backdrop-filter: blur(16px);
   gap: 4rem;
 
@@ -66,5 +44,27 @@ const { currentUser, signOut } = useAuthentication()
   header {
     flex-grow: 1;
   }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-info-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.username {
+  font-weight: 500;
+  line-height: normal;
+}
+
+.email {
+  font-size: 0.875rem;
+  opacity: 0.75;
 }
 </style>

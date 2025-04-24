@@ -12,7 +12,7 @@ const props = defineProps<{
     <div class="v-alert-icon">
       <SolarIcon :icon="props.icon" class="icon-32" variant="bold-duotone" />
     </div>
-    <h3 class="v-alert-title">{{ props.title }}</h3>
+    <h1 class="v-alert-title">{{ props.title }}</h1>
     <div class="v-alert-message">
       <slot />
     </div>
@@ -61,16 +61,17 @@ const props = defineProps<{
 }
 
 .v-alert-title {
-  // font-weight: 600;
-  font-size: 1.25rem;
+  font-weight: 500;
+  font-size: 1.5rem;
   color: rgba(var(--color-main));
   text-shadow: 0 0 0.25rem rgba(var(--color-main) / 25%);
+  text-transform: capitalize;
 }
 
 .v-alert-message {
   display: flex;
   flex-direction: column;
-  font-size: 0.825rem;
+  font-size: 0.9rem;
   grid-column: 2;
 }
 </style>
