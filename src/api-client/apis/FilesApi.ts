@@ -26,6 +26,10 @@ export interface CreateUploadUrlRequest {
     sha256: string;
 }
 
+export interface GetMetadataRequest {
+    sha256: string;
+}
+
 export interface GetResourceRequest {
     sha256: string;
     preview?: boolean;
@@ -59,6 +63,21 @@ export interface FilesApiInterface {
      * createUploadUrl
      */
     createUploadUrl(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateUploadUrl200Response>;
+
+    /**
+     * 
+     * @summary getMetadata
+     * @param {string} sha256 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApiInterface
+     */
+    getMetadataRaw(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
+
+    /**
+     * getMetadata
+     */
+    getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
 
     /**
      * 
@@ -151,6 +170,39 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
      */
     async createUploadUrl(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateUploadUrl200Response> {
         const response = await this.createUploadUrlRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * getMetadata
+     */
+    async getMetadataRaw(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters['sha256'] == null) {
+            throw new runtime.RequiredError(
+                'sha256',
+                'Required parameter "sha256" was null or undefined when calling getMetadata().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/files/{sha256}/metadata`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * getMetadata
+     */
+    async getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
+        const response = await this.getMetadataRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

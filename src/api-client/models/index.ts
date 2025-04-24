@@ -336,7 +336,7 @@ export interface ProjectDetails {
      * @type {string}
      * @memberof ProjectDetails
      */
-    projectType: string;
+    projectType: ProjectDetailsProjectTypeEnum;
     /**
      * 
      * @type {number}
@@ -356,6 +356,18 @@ export interface ProjectDetails {
      */
     issues: Array<Issue>;
 }
+
+
+/**
+ * @export
+ */
+export const ProjectDetailsProjectTypeEnum = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type ProjectDetailsProjectTypeEnum = typeof ProjectDetailsProjectTypeEnum[keyof typeof ProjectDetailsProjectTypeEnum];
+
 /**
  * 
  * @export
@@ -399,6 +411,18 @@ export interface ProjectMedia {
      */
     addedAt: number;
 }
+
+/**
+ * 
+ * @export
+ */
+export const ProjectType = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type ProjectType = typeof ProjectType[keyof typeof ProjectType];
+
 /**
  * 
  * @export
