@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import SolarIcon from '../SolarIcon.vue'
 import { VButton } from '@/components/ui/Button'
 import { API } from '@/api'
+import { formatTime } from '@/utils/formatting'
 
 const props = defineProps<Issue & { projectId: string }>()
 
@@ -54,8 +55,19 @@ async function handleResolveIssue() {
         <span class="title">
           {{ created }}
         </span>
-        <span class="file-id"> File: {{ fileId }} </span>
+        <div class="subtitle">
+          <span class=""> File: {{ fileId }}</span>
+        </div>
       </h3>
+
+      <span v-if="timestamp" class="timestamp">
+        <template v-if="duration">
+          {{ formatTime(timestamp) }} - {{ formatTime(timestamp + duration) }}
+        </template>
+        <template v-else>
+          {{ formatTime(timestamp) }}
+        </template>
+      </span>
 
       <VButton
         v-if="status === 'open'"
@@ -119,11 +131,18 @@ async function handleResolveIssue() {
 
     line-height: normal;
 
-    .file-id {
+    .subtitle {
+      display: flex;
+      gap: 4px;
       opacity: 0.5;
       font-size: 12px;
       font-family: 'Roboto Mono';
     }
+  }
+
+  .timestamp {
+    font-size: 16px;
+    opacity: 0.9;
   }
 
   .issue-icon {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatTime } from '@/utils/formatting'
+
 // import { computed } from 'vue'
 
 defineProps<{
@@ -7,18 +9,14 @@ defineProps<{
 }>()
 
 // const remainingTime = computed(() => props.duration - props.currentTime)
-
-function formatDuration(seconds: number) {
-  return new Date(1000 * seconds).toISOString().slice(14, 19)
-}
 </script>
 <template>
   <div class="media-duration">
     <span>
-      {{ formatDuration(currentTime) }}
+      {{ formatTime(currentTime) }}
     </span>
     <span>/</span>
-    <span> {{ formatDuration(duration) }} </span>
+    <span> {{ formatTime(duration) }} </span>
     <!-- <span> (-{{ formatDuration(remainingTime) }}) </span> -->
   </div>
 </template>
