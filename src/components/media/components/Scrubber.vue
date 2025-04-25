@@ -44,7 +44,7 @@ watch([scrubbing, elementX], () => {
       // active: scrubbing,
     }"
   >
-    <div class="scrubber-progress" :style="{ '--progress': currentTime / max }" />
+    <div class="scrubber-progress palette-primary" :style="{ '--progress': currentTime / max }" />
   </div>
 </template>
 <style lang="css">
@@ -55,16 +55,27 @@ watch([scrubbing, elementX], () => {
   /* background-color: rgba(var(--color-main) / var(--bg-opacity, 100%)); */
   /* transform-origin: left; */
   cursor: pointer;
+
+  z-index: 1;
 }
 
 .scrubber-progress {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  /* left: 0; */
   right: calc(100% - var(--progress) * 100%);
-  background-color: rgba(var(--color-main) / 25%);
-  border-right: 1px solid rgba(255 255 255 / 75%);
+  /* background-color: rgba(var(--color-main) / 25%); */
+
+  outline: 1px solid rgba(255 255 255 / 80%);
+  /* outline-offset: 1px; */
+
+  width: 0px;
+  /* margin-block: -3px; */
+
+  background-color: white;
+
+  /* background-blend-mode: overlay; */
 
   /* opacity: 0.3; */
 }
