@@ -54,15 +54,16 @@ const pendingIssues = computed(() => {
 </script>
 <template>
   <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
-    <template #markers="{ currentTime, duration }">
+    <template #markers-back="{ currentTime, duration }">
       <TimestampMarker
         v-for="issue in pendingIssues"
         :key="issue.issueId"
         :at="issue.timestamp!"
         :currentTime="currentTime"
         :duration="duration"
+        class="color-issue"
       >
-        {{ issue.description }}
+        <template #label-bottom> {{ issue.description }} </template>
       </TimestampMarker>
     </template>
   </AudioPlayer>
@@ -88,4 +89,8 @@ const pendingIssues = computed(() => {
     </ProjectIssuesList>
   </div>
 </template>
-<style lang="css"></style>
+<style lang="css">
+.color-issue {
+  --color-main: 185 28 46;
+}
+</style>
