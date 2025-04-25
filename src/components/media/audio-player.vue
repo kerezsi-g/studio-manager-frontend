@@ -19,12 +19,11 @@ import {
 } from './components'
 import TrackOverlay from './components/TrackOverlay.vue'
 
-const audio = ref<HTMLAudioElement>()
-// const loop = shallowRef(false)
-
 const props = defineProps<ProjectMedia>()
 
 const srcUrl = computed(() => `/api/files/${props.sha256}`)
+
+const audio = ref<HTMLAudioElement>()
 
 const controls = useMediaControls(audio, {
   src: {
@@ -32,22 +31,17 @@ const controls = useMediaControls(audio, {
   },
 })
 
-const { playing, buffered, currentTime, duration, volume, muted } = controls
+const { playing, /* buffered, */ currentTime, duration, volume, muted } = controls
 
-const endBuffer = computed(() =>
-  buffered.value.length > 0 ? buffered.value[buffered.value.length - 1][1] : 0,
-)
-
-const minTime = computed(() => regionMarker.value[0] ?? 0)
-const maxTime = computed(() => regionMarker.value[1] ?? duration.value)
+// // No real practical use for now
+// const endBuffer = computed(() =>
+//   buffered.value.length > 0 ? buffered.value[buffered.value.length - 1][1] : 0,
+// )
 
 const loop = ref(false)
-
-function handleSeek(value: number) {
-  const target = currentTime.value + value
-
-  currentTime.value = clamp(target, minTime.value, maxTime.value)
-}
+const loopRegion = ref<(number | null)[]>([null, null])
+const minTime = computed(() => loopRegion.value[0] ?? 0)
+const maxTime = computed(() => loopRegion.value[1] ?? duration.value)
 
 async function fetchWaveform(args: { sha256: string }) {
   const response = await fetch(`/api/files/${args.sha256}?preview=true`)
@@ -59,128 +53,106 @@ defineEmits<{
   (c: 'submit-issue', evt: MouseEvent, timestamp?: number, length?: number): void
 }>()
 
-const regionMarker = ref<(number | null)[]>([null, null])
-
-function markRegionStart(timestamp: number) {
-  regionMarker.value = [timestamp, regionMarker.value[1]]
+function markLoopRegionStart(timestamp: number) {
+  loopRegion.value[0] = timestamp
 }
 
-function markRegionEnd(timestamp: number) {
-  regionMarker.value = [regionMarker.value[0] ?? 0, timestamp]
+function markLoopRegionEnd(timestamp: number) {
+  loopRegion.value[1] = timestamp
 }
 
 function markRegion(name: string) {
   if (name === 'regionStart') {
-    markRegionStart(currentTime.value)
+    markLoopRegionStart(currentTime.value)
   }
 
   if (name === 'regionEnd') {
-    markRegionEnd(currentTime.value)
+    markLoopRegionEnd(currentTime.value)
   }
-
-  if (name === 'regionClear') {
-    clearRegion()
-    return
-  }
-
-  regionMarker.value.sort()
 }
 
-function clearRegion() {
-  regionMarker.value = [null, null]
+function clearLoopRegion() {
+  loopRegion.value = [null, null]
 }
 
-function handleChangeForward() {
-  if (currentTime.value > maxTime.value) {
-    if (!loop.value) {
-      currentTime.value = maxTime.value
-      playing.value = false
-    }
-
-    if (loop.value) {
-      currentTime.value = minTime.value
-    }
-  }
+function handleSeek(value: number) {
+  const target = currentTime.value + value
+  currentTime.value = clamp(target, minTime.value, maxTime.value)
 }
 
 watch(currentTime, (current, previous) => {
-  if (current > previous) {
-    handleChangeForward()
+  // Check if the current time has reached the end of the loop region by natural means ie. playback
+  if (playing.value && current >= maxTime.value && previous < maxTime.value) {
+    // Reset back to the start of the loop region if looping enabled
+    if (loop.value) {
+      currentTime.value = minTime.value
+    }
+
+    // Stop the player if not looping
+    if (!loop.value) {
+      playing.value = false
+    }
   }
 })
 </script>
 <template>
-  <DataLoader :fn="fetchWaveform" :args="{ sha256: props.sha256 }" v-slot="{ data }">
-    <div class="audio-player" :style="{ '--duration': duration }">
-      <audio ref="audio" />
+  <div class="audio-player" :style="{ '--duration': duration }">
+    <audio ref="audio" />
 
-      <nav class="flex items-center justify-center gap-4">
-        <MediaInfo v-bind="props" />
+    <nav class="flex items-center justify-center gap-4">
+      <MediaInfo v-bind="props" />
 
-        <MediaControls
-          v-model:playing="playing"
-          v-model:loop="loop"
-          @seek="handleSeek"
-          @place-marker="markRegion"
-          @clear-markers="clearRegion"
-        />
+      <MediaControls
+        v-model:playing="playing"
+        v-model:loop="loop"
+        @place-marker="markRegion"
+        @clear-markers="clearLoopRegion"
+        @seek="(value) => handleSeek(value)"
+      />
 
-        <MediaVolume v-model:volume="volume" v-model:muted="muted" />
+      <MediaVolume v-model:volume="volume" v-model:muted="muted" />
 
-        <MediaDuration :current-time="currentTime" :duration="duration" />
+      <MediaDuration :current-time="currentTime" :duration="duration" />
 
-        <VButton size="sm" color="error" @click="(e) => $emit('submit-issue', e, currentTime)">
-          Submit issue
-        </VButton>
-        <a :href="srcUrl + '?download=true'" :download="props.fileName">
-          <VButton size="sm"> Download </VButton>
-        </a>
-      </nav>
+      <VButton size="sm" color="error" @click="(e) => $emit('submit-issue', e, currentTime)">
+        Submit issue
+      </VButton>
+      <a :href="srcUrl + '?download=true'" :download="props.fileName">
+        <VButton size="sm"> Download </VButton>
+      </a>
+    </nav>
 
-      <div class="waveform-container palette-secondary">
+    <div class="waveform-container palette-secondary">
+      <DataLoader :fn="fetchWaveform" :args="{ sha256: props.sha256 }" v-slot="{ data }">
         <AudioWaveformCanvas v-if="data" v-bind="data" :key="sha256" />
+      </DataLoader>
 
-        <TrackOverlay
-          class="progress-overlay"
-          v-if="duration > 0"
-          :start="minTime"
-          :end="currentTime"
-        />
+      <TrackOverlay
+        class="progress-overlay"
+        v-if="duration > 0"
+        :start="minTime"
+        :end="currentTime"
+      />
 
-        <template v-if="duration > 0">
-          <slot name="markers-back" v-bind="{ currentTime, duration }" />
-        </template>
+      <template v-if="duration > 0">
+        <slot name="markers-back" v-bind="{ currentTime, duration }" />
+      </template>
 
-        <TimestampMarker
-          v-if="regionMarker[0] !== null"
-          :at="regionMarker[0]"
-          class="marker-region"
-        >
-          <template #label-top> A </template>
-        </TimestampMarker>
+      <TimestampMarker v-if="loopRegion[0] !== null" :at="loopRegion[0]" class="marker-region">
+        <template #label-top> A </template>
+      </TimestampMarker>
 
-        <TimestampMarker
-          v-if="regionMarker[1] !== null"
-          :at="regionMarker[1]"
-          class="marker-region"
-        >
-          <template #label-top> B </template>
-        </TimestampMarker>
+      <TimestampMarker v-if="loopRegion[1] !== null" :at="loopRegion[1]" class="marker-region">
+        <template #label-top> B </template>
+      </TimestampMarker>
 
-        <template v-if="duration > 0">
-          <slot name="markers-front" v-bind="{ currentTime, duration }" />
-        </template>
+      <template v-if="duration > 0">
+        <slot name="markers-front" v-bind="{ currentTime, duration }" />
+      </template>
 
-        <Scrubber
-          v-if="duration > 0"
-          v-model:current-time="currentTime"
-          :min="0"
-          :max="duration"
-          :buffered="endBuffer"
-        />
-      </div>
+      <Scrubber v-if="duration > 0" v-model:current-time="currentTime" :min="0" :max="duration" />
     </div>
-  </DataLoader>
+  </div>
 </template>
 <style lang="css">
 .progress-overlay {
