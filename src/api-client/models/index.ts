@@ -410,6 +410,18 @@ export interface ProjectMedia {
      * @memberof ProjectMedia
      */
     addedAt: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectMedia
+     */
+    uploadedAt: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectMedia
+     */
+    createdAt: number;
 }
 
 /**
