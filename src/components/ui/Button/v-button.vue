@@ -75,7 +75,7 @@ button.v-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-padding, 0.5em 1em);
+  padding: var(--btn-padding, 0.35em 1em);
 
   user-select: none;
   cursor: pointer;
