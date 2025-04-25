@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { LoaderOptions } from './composables/useLoader'
+import { inject } from 'vue'
 
 export interface LoaderProps<R, P> extends LoaderOptions<R, P> {
   args: P
@@ -8,10 +9,27 @@ export interface LoaderProps<R, P> extends LoaderOptions<R, P> {
    */
   poll?: number | null
   debounce?: number
+  injectKey?: string
+}
+
+interface DataLoaderContext<T> {
+  data: T | null
+  pending?: boolean
+  reload: () => PromiseLike<void> | void
+}
+
+export function useDataLoader<T>(injectKey: string) {
+  const ctx = inject<DataLoaderContext<T>>(injectKey)
+
+  if (!ctx) {
+    throw new Error(`No context found for key: ${injectKey}`)
+  }
+
+  return ctx
 }
 </script>
 <script setup lang="ts" generic="Results, Parameters">
-import { onMounted, watch, computed } from 'vue'
+import { onMounted, watch, computed, provide } from 'vue'
 import { shallowEquals } from '@/utils/object'
 import { debounce as debounceFn } from '@/utils/debounce'
 import { useLoader } from './composables/useLoader'
@@ -38,6 +56,13 @@ const reload = computed(() => {
   const debouncedFn = props.debounce ? debounceFn(baseFn, props.debounce) : baseFn
   return debouncedFn
 })
+if (props.injectKey) {
+  provide<DataLoaderContext<Results>>(props.injectKey, {
+    data: data.value,
+    pending: pending.value,
+    reload: reload.value,
+  })
+}
 
 watch(
   () => props.args,
