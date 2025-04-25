@@ -1,44 +1,36 @@
-<script lang="ts">
-const HIGHLIGHT_THRESHOLD = 2
-</script>
 <script setup lang="ts">
-import { computed } from 'vue'
 import MarkerArrow from './MarkerArrow.vue'
 
-const props = defineProps<{
+defineProps<{
   at: number
-  currentTime: number
-  duration: number
+  active?: boolean
 }>()
-
-const isActive = computed(() => {
-  return Math.abs(props.currentTime - props.at) <= HIGHLIGHT_THRESHOLD
-})
-
-const position = computed(() => {
-  return (props.at / props.duration) * 100 + '%'
-})
 </script>
 <template>
-  <span
-    class="marker-single palette-error"
-    :class="{ active: isActive }"
-    :style="{ '--position': position }"
-  >
-    <MarkerArrow class="marker-arrow bottom" width="12" />
+  <span class="marker" :class="{ active }" :style="{ '--position': at }">
+    <div class="marker-decoration top">
+      <span class="marker-decoration-content" v-if="$slots['label-top']">
+        <slot name="label-top" />
+      </span>
+      <MarkerArrow direction="down" width="12" />
+    </div>
 
-    <MarkerArrow class="marker-arrow top" width="12" />
-
-    <div v-if="isActive" class="marker-content">
-      <slot />
+    <div class="marker-decoration bottom">
+      <span class="marker-decoration-content" v-if="$slots['label-bottom']">
+        <slot name="label-bottom" />
+      </span>
+      <MarkerArrow direction="up" width="12" />
     </div>
   </span>
 </template>
 <style lang="css">
 @reference "tailwindcss";
 
-.marker-single {
-  @apply transition-all;
+.marker {
+  /* @apply transition-all; */
+
+  --opacity: 85%;
+  z-index: 1;
 
   anchor-name: --marker-single;
   anchor-scope: all;
@@ -46,40 +38,62 @@ const position = computed(() => {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: calc(100% - var(--position));
+  right: calc(100% - calc(var(--position) / var(--duration)) * 100%);
 
   outline: 1px solid rgba(var(--color-main) / 100%);
+  width: 0px;
+  /* background-color: rgba(var(--color-main) / 50%); */
 
   /* box-sizing: border-box; */
   box-shadow: 0px 0px 0px 2px rgba(var(--color-main) / 25%);
+
+  opacity: var(--opacity);
 }
 
-.marker-single.active {
+.marker.active {
   box-shadow: 0px 0px 0px 2px rgba(var(--color-main) / 50%);
 
   --shadow-opacity: 50%;
-  --arrow-opacity: 100%;
+  --opacity: 100%;
 }
 
 .marker-arrow {
-  fill: rgba(var(--color-main) / var(--arrow-opacity, 75%));
+  fill: rgb(var(--color-main));
+}
 
+.marker-decoration {
   position: fixed;
   position-anchor: --marker-single;
-
   justify-self: anchor-center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &.top {
     bottom: anchor(top);
-    transform: rotate(180deg);
   }
 
   &.bottom {
     top: anchor(bottom);
+    flex-direction: column-reverse;
   }
+
+  filter: drop-shadow(0px 0px 2px rgba(0 0 0 / 100%));
 }
 
-.marker-content {
+.marker-decoration-content {
+  background-color: rgb(var(--color-main));
+  text-shadow: 0px 1px 2px rgba(0 0 0 / 50%);
+  padding: 0px 8px;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: -4px;
+  z-index: 2;
+}
+
+/* .marker-content {
   pointer-events: none;
   user-select: none;
 
@@ -96,9 +110,8 @@ const position = computed(() => {
 
   left: anchor(right);
   top: anchor(top);
-  /* justify-self: anchor-center; */
   border-radius: 3px;
 
   margin: 3px;
-}
+} */
 </style>
