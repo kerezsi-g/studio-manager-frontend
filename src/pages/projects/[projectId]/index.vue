@@ -17,7 +17,7 @@ defineProps<{
 </script>
 <template>
   <ProjectDetailsProvider :projectId="projectId" v-slot="{ data, reload }">
-    <ProjectPage v-bind="data" style="--page-width: 1280px">
+    <ProjectPage v-bind="data">
       <AudioProject v-if="data.projectType === 'audio'" v-bind="data" @changed="reload" />
 
       <div v-if="data.projectType === 'video'" class="py-16 px-24">

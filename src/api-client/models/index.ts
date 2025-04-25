@@ -217,19 +217,6 @@ export interface CreateUploadUrl200Response {
 /**
  * 
  * @export
- * @interface GetResource200Response
- */
-export interface GetResource200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetResource200Response
-     */
-    url: string;
-}
-/**
- * 
- * @export
  * @interface Issue
  */
 export interface Issue {
@@ -337,6 +324,18 @@ export interface ProjectDetails {
      * @memberof ProjectDetails
      */
     projectType: ProjectDetailsProjectTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectDetails
+     */
+    avatar: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectDetails
+     */
+    wallpaper: string | null;
     /**
      * 
      * @type {number}

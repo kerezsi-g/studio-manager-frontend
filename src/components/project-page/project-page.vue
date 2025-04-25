@@ -7,9 +7,19 @@ import { VButton } from '../ui/Button'
 defineProps<ProjectDetails>()
 </script>
 <template>
+  <div
+    v-if="wallpaper"
+    class="project-wallpaper"
+    :style="{ 'background-image': wallpaper ? `url('/api/files/${wallpaper}')` : undefined }"
+  />
   <div class="project-page">
     <header class="project-page-header">
-      <div class="project-avatar">
+      <div
+        class="project-avatar"
+        :style="{
+          'background-image': avatar ? `url('/api/files/${avatar}?preview=true')` : undefined,
+        }"
+      >
         <SolarIcon :icon="icons.projectType[projectType]" variant="bold-duotone" width="48" />
       </div>
       <div class="project-title">
@@ -41,7 +51,7 @@ defineProps<ProjectDetails>()
 .project-page {
   display: flex;
   flex-direction: column;
-  max-width: var(--page-width);
+  max-width: var(--page-width, 1280px);
   width: 100%;
   margin-inline: auto;
   flex-grow: 1;
@@ -51,6 +61,9 @@ defineProps<ProjectDetails>()
 
   overflow: hidden;
   /* background-color: rgba(0 0 0 / 70%); */
+
+  background-size: cover;
+  background-position: center;
 }
 
 hr.divider {
@@ -86,6 +99,15 @@ hr.divider {
 .project-avatar {
   @apply shadow-xl;
   /* border: 1px solid rgba(var(--color-text) / 50%); */
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  background-position: center;
+  background-size: cover;
 
   width: 96px;
   height: 96px;
@@ -149,5 +171,16 @@ hr.divider {
     border-color: rgba(var(--color-main) / 100%);
     /* background-color: rgba(var(--color-main) / 25%); */
   }
+}
+
+.project-wallpaper {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: fixed;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  z-index: -1;
 }
 </style>

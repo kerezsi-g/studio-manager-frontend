@@ -16,7 +16,6 @@
 import * as runtime from '../runtime';
 import type {
   CreateUploadUrl200Response,
-  GetResource200Response,
   SignIn200Response,
 } from '../models/index';
 
@@ -29,12 +28,6 @@ export interface CreateUploadUrlRequest {
 
 export interface GetMetadataRequest {
     sha256: string;
-}
-
-export interface GetResourceRequest {
-    sha256: string;
-    preview?: boolean;
-    noRedirect?: boolean;
 }
 
 export interface MarkForDeletionRequest {
@@ -80,23 +73,6 @@ export interface FilesApiInterface {
      * getMetadata
      */
     getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
-
-    /**
-     * 
-     * @summary getResource
-     * @param {string} sha256 
-     * @param {boolean} [preview] 
-     * @param {boolean} [noRedirect] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FilesApiInterface
-     */
-    getResourceRaw(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetResource200Response>>;
-
-    /**
-     * getResource
-     */
-    getResource(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetResource200Response>;
 
     /**
      * 
@@ -216,47 +192,6 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
      */
     async getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
         const response = await this.getMetadataRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * getResource
-     */
-    async getResourceRaw(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetResource200Response>> {
-        if (requestParameters['sha256'] == null) {
-            throw new runtime.RequiredError(
-                'sha256',
-                'Required parameter "sha256" was null or undefined when calling getResource().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['preview'] != null) {
-            queryParameters['preview'] = requestParameters['preview'];
-        }
-
-        if (requestParameters['noRedirect'] != null) {
-            queryParameters['noRedirect'] = requestParameters['noRedirect'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/files/{sha256}`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * getResource
-     */
-    async getResource(requestParameters: GetResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetResource200Response> {
-        const response = await this.getResourceRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
