@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProjectDetails, ProjectMedia } from '@/api-client'
+import type { Issue, ProjectDetails, ProjectMedia } from '@/api-client'
 import { computed, onMounted, ref } from 'vue'
 
 import PrimaryFilesList from '@/components/primary-files-list/primary-files-list.vue'
@@ -10,6 +10,7 @@ import { ProjectIssuesList, ProjectIssue } from '@/components/project-issues'
 import { useModal } from '@/components/modal'
 import SubmitIssueDialog from '@/components/submit-issue-dialog/submit-issue-dialog.vue'
 import TimestampMarker from '@/components/media/components/TimestampMarker.vue'
+import ProjectGallery from '@/components/project-gallery/project-gallery.vue'
 
 const props = defineProps<ProjectDetails>()
 
@@ -29,7 +30,11 @@ onMounted(() => {
   }
 })
 
+const issueToCreate = ref<number | null>()
+
 async function handleSubmitIssue(e: MouseEvent, timestamp?: number, length?: number) {
+  issueToCreate.value = timestamp
+
   const result = await useModal(
     SubmitIssueDialog,
     {
@@ -43,6 +48,8 @@ async function handleSubmitIssue(e: MouseEvent, timestamp?: number, length?: num
     },
   )
 
+  issueToCreate.value = null
+
   if (result) {
     emit('changed')
   }
@@ -51,43 +58,79 @@ async function handleSubmitIssue(e: MouseEvent, timestamp?: number, length?: num
 const pendingIssues = computed(() => {
   return props.issues.filter((issue) => !issue.resolvedAt)
 })
+
+/**
+ * Filters issues to the currently selected file
+ */
+function issueFilter(issue: Issue) {
+  return issue.file === selectedFile.value?.sha256
+}
+
+const view = ref<'main' | 'gallery'>('main')
 </script>
 <template>
-  <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
-    <template #markers-back="{ currentTime, duration }">
-      <TimestampMarker
-        v-for="issue in pendingIssues"
-        :key="issue.issueId"
-        :at="issue.timestamp!"
-        :currentTime="currentTime"
-        :duration="duration"
-        class="color-issue"
-      >
-        <template #label-bottom> {{ issue.description }} </template>
-      </TimestampMarker>
-    </template>
-  </AudioPlayer>
-
-  <hr class="divider" />
-
-  <div class="flex-grow overflow-hidden grid grid-cols-2">
-    <PrimaryFilesList
-      :files="files"
-      :projectId="projectId"
-      @file-uploaded="$emit('changed')"
-      v-slot="file"
+  <nav class="project-navigation">
+    <span class="project-nav-link" @click="view = 'main'" :class="{ active: view === 'main' }">
+      Main
+    </span>
+    <span
+      class="project-nav-link"
+      @click="view = 'gallery'"
+      :class="{ active: view === 'gallery' }"
     >
-      <PrimaryFilesListItem
-        v-bind="file"
-        @click="() => handleSelectFile(file)"
-        :class="{ selected: file.sha256 === selectedFile?.sha256 }"
-      />
-    </PrimaryFilesList>
+      Gallery
+    </span>
+  </nav>
 
-    <ProjectIssuesList :issues="issues" :project-id="projectId" v-slot="issue">
-      <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
-    </ProjectIssuesList>
-  </div>
+  <template v-if="view === 'main'">
+    <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
+      <template #markers-back>
+        <TimestampMarker
+          v-for="issue in pendingIssues.filter(issueFilter)"
+          :key="issue.issueId"
+          :at="issue.timestamp!"
+          class="color-issue"
+        >
+          <template #label-bottom> {{ issue.description }} </template>
+        </TimestampMarker>
+      </template>
+
+      <template #markers-front>
+        <TimestampMarker v-if="issueToCreate" :at="issueToCreate" class="color-issue">
+          <!-- <template #label-top> {{ formatTime(issueToCreate) }} </template> -->
+        </TimestampMarker>
+      </template>
+    </AudioPlayer>
+
+    <hr class="divider" />
+
+    <div class="flex-grow overflow-hidden grid grid-cols-2">
+      <PrimaryFilesList
+        :files="files"
+        :projectId="projectId"
+        @file-uploaded="$emit('changed')"
+        v-slot="file"
+      >
+        <PrimaryFilesListItem
+          v-bind="file"
+          @click="() => handleSelectFile(file)"
+          :class="{ selected: file.sha256 === selectedFile?.sha256 }"
+        />
+      </PrimaryFilesList>
+
+      <ProjectIssuesList
+        :issues="issues.filter(issueFilter)"
+        :project-id="projectId"
+        v-slot="issue"
+      >
+        <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
+      </ProjectIssuesList>
+    </div>
+  </template>
+
+  <template v-if="view === 'gallery'">
+    <ProjectGallery :files="files" :projectId="projectId" @file-uploaded="$emit('changed')" />
+  </template>
 </template>
 <style lang="css">
 .color-issue {

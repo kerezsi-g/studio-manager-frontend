@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ProjectMedia } from '@/api-client'
 import GalleryItem from './gallery-item.vue'
-import { VDialog } from '../dialog'
 import { useModal } from '../modal'
 import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
 import SolarIcon from '@/components/SolarIcon.vue'
@@ -52,85 +51,102 @@ function stepImage(step: number) {
 }
 </script>
 <template>
-  <VDialog title="Gallery" color="primary">
-    <template #body>
-      <ul class="gallery-grid">
-        <li v-for="file in data" :key="file.sha256">
-          <GalleryItem v-bind="file" @click="handleGalleryClick(file)" />
-        </li>
-      </ul>
-      <Teleport to="body" v-if="selectedMedia">
-        <div class="gallery-overlay" v-auto-animate>
-          <header class="gallery-overlay-header">
-            <h3>{{ selectedMedia.fileName }}</h3>
-            <span>
-              {{ selectedMedia.contentType }}
-            </span>
-          </header>
-
-          <div
-            :key="selectedMedia?.sha256"
-            class="flex-grow flex items-center justify-center overflow-hidden"
-          >
-            <img
-              :src="`/api/files/${selectedMedia?.sha256}`"
-              class="w-full h-full object-scale-down"
-            />
-          </div>
-
-          <footer class="gallery-overlay-footer">
-            <VButton @click="stepImage(-1)">
-              <template #prefix>
-                <SolarIcon width="24" icon="alt-arrow-left" variant="bold-duotone" />
-              </template>
-              Previous
-            </VButton>
-
-            <VButton @click="stepImage(1)">
-              <template #suffix>
-                <SolarIcon width="24" icon="alt-arrow-right" variant="bold-duotone" />
-              </template>
-              Next
-            </VButton>
-
-            <a :href="`/api/files/${selectedMedia?.sha256}`" :download="selectedMedia?.fileName">
-              <VButton>
-                <template #suffix>
-                  <SolarIcon width="24" icon="file-download" variant="bold-duotone" />
-                </template>
-                Download
-              </VButton>
-            </a>
-
-            <VButton @click="selectedMedia = null" variant="subdued">
-              <template #suffix>
-                <SolarIcon width="24" icon="close-circle" variant="bold-duotone" />
-              </template>
-              Close
-            </VButton>
-          </footer>
-        </div>
-      </Teleport>
-    </template>
-    <template #actions>
-      <VButton @click="handleAddFile">
+  <div class="project-gallery">
+    <nav>
+      <VButton @click="handleAddFile" variant="subdued">
         <template #suffix>
           <SolarIcon icon="add-circle" class="icon-base" />
         </template>
         Add File
       </VButton>
-    </template>
-  </VDialog>
+    </nav>
+    <ul class="gallery-grid">
+      <li v-for="file in data" :key="file.sha256">
+        <GalleryItem v-bind="file" @click="handleGalleryClick(file)" />
+      </li>
+    </ul>
+  </div>
+
+  <Teleport to="body" v-if="selectedMedia">
+    <div class="gallery-overlay" v-auto-animate>
+      <header class="gallery-overlay-header">
+        <h3>{{ selectedMedia.fileName }}</h3>
+        <span>
+          {{ selectedMedia.contentType }}
+        </span>
+      </header>
+
+      <div
+        :key="selectedMedia?.sha256"
+        class="flex-grow flex items-center justify-center overflow-hidden"
+      >
+        <img :src="`/api/files/${selectedMedia?.sha256}`" class="w-full h-full object-scale-down" />
+      </div>
+
+      <footer class="gallery-overlay-footer">
+        <VButton @click="stepImage(-1)">
+          <template #prefix>
+            <SolarIcon width="24" icon="alt-arrow-left" variant="bold-duotone" />
+          </template>
+          Previous
+        </VButton>
+
+        <VButton @click="stepImage(1)">
+          <template #suffix>
+            <SolarIcon width="24" icon="alt-arrow-right" variant="bold-duotone" />
+          </template>
+          Next
+        </VButton>
+
+        <a
+          :href="`/api/files/${selectedMedia?.sha256}?download=true`"
+          :download="selectedMedia?.fileName"
+        >
+          <VButton>
+            <template #suffix>
+              <SolarIcon width="24" icon="file-download" variant="bold-duotone" />
+            </template>
+            Download
+          </VButton>
+        </a>
+
+        <VButton @click="selectedMedia = null" variant="subdued">
+          <template #suffix>
+            <SolarIcon width="24" icon="close-circle" variant="bold-duotone" />
+          </template>
+          Close
+        </VButton>
+      </footer>
+    </div>
+  </Teleport>
 </template>
 <style lang="css">
+.project-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 4rem;
+  overflow: hidden;
+  flex-grow: 1;
+
+  > nav {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .gallery-grid {
   --item-width: 160px;
   --item-height: 120px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
-  justify-items: flex-start;
-
+  grid-template-columns: repeat(auto-fit, minmax(var(--item-width), 1fr));
+  justify-items: center;
+  /* justify-content: flex-start; */
+  align-content: flex-start;
+  /* align-items: center; */
   gap: 1rem;
+  flex-grow: 1;
+  overflow: auto;
 }
 
 .gallery-overlay {
@@ -153,7 +169,7 @@ function stepImage(step: number) {
   align-items: center;
   gap: 1rem;
   padding: 2rem 3rem;
-  background-color: rgba(var(--surface) / 95%);
+  background-color: rgba(var(--surface) / 75%);
 
   h3 {
     font-size: 3rem;

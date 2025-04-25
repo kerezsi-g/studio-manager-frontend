@@ -12,7 +12,6 @@ import { ref as deepRef, ref, watch } from 'vue'
 const props = defineProps<{
   min: number
   max: number
-  buffered: number
 }>()
 
 const scrubber = deepRef()

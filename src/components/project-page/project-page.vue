@@ -73,11 +73,14 @@ hr.divider {
   display: flex;
   align-items: center;
 
-  padding: 1rem 2rem;
+  padding: 1rem 3rem;
+  padding-bottom: 3rem;
   gap: 1rem;
 
   /* background-color: rgba(var(--surface-dark) / 98%); */
   /* backdrop-filter: blur(64px); */
+
+  anchor-name: --project-navigation-anchor;
 }
 
 .project-avatar {
@@ -113,9 +116,14 @@ hr.divider {
   display: flex;
   /* padding: 1rem 2rem; */
   padding-inline: 2rem;
-  gap: 4px;
+  gap: 8px;
+  position: absolute;
+  position-anchor: --project-navigation-anchor;
+  bottom: anchor(bottom);
+  margin-bottom: -1px;
+  /* justify-content: center; */
 
-  margin-bottom: -3px;
+  /* margin-bottom: -3px; */
 }
 
 .project-nav-link {
@@ -139,7 +147,7 @@ hr.divider {
   &.active {
     color: rgba(var(--color-main) / 100%);
     border-color: rgba(var(--color-main) / 100%);
-    background-color: rgba(var(--color-main) / 25%);
+    /* background-color: rgba(var(--color-main) / 25%); */
   }
 }
 </style>
