@@ -23,6 +23,7 @@ import type {
 export interface CreateUploadUrlRequest {
     fileName: string;
     contentType: string;
+    createdAt: number;
     sha256: string;
 }
 
@@ -52,6 +53,7 @@ export interface FilesApiInterface {
      * @summary createUploadUrl
      * @param {string} fileName 
      * @param {string} contentType 
+     * @param {number} createdAt 
      * @param {string} sha256 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -136,6 +138,13 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
             );
         }
 
+        if (requestParameters['createdAt'] == null) {
+            throw new runtime.RequiredError(
+                'createdAt',
+                'Required parameter "createdAt" was null or undefined when calling createUploadUrl().'
+            );
+        }
+
         if (requestParameters['sha256'] == null) {
             throw new runtime.RequiredError(
                 'sha256',
@@ -151,6 +160,10 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
 
         if (requestParameters['contentType'] != null) {
             queryParameters['contentType'] = requestParameters['contentType'];
+        }
+
+        if (requestParameters['createdAt'] != null) {
+            queryParameters['createdAt'] = requestParameters['createdAt'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

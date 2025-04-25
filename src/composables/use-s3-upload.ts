@@ -64,6 +64,7 @@ export async function useS3Upload(file: File) {
     pending.value = true
 
     const { uploadUrl } = await API.Files.createUploadUrl({
+      createdAt: file.lastModified,
       fileName: file.name,
       contentType: detectedMime,
       sha256,
