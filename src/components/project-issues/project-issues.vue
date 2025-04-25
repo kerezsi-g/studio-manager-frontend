@@ -3,7 +3,7 @@ import type { Issue } from '@/api-client'
 import ListItem from './project-issues-list-item.vue'
 import SolarIcon from '../SolarIcon.vue'
 import { VList } from '../ui/List'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
   issues: Issue[]
@@ -17,15 +17,26 @@ const pending = computed(() => {
 })
 
 const resolved = computed(() => {
+  if (hideResolved.value) {
+    return []
+  }
   return props.issues.filter((issue) => issue.resolvedAt)
 })
 
 const sorted = computed(() => {
   return [...pending.value, ...resolved.value]
 })
+
+const hideResolved = ref(true)
 </script>
 <template>
   <VList title="Issues:">
+    <template #actions>
+      <label class="flex items-center gap-2">
+        <input type="checkbox" v-model="hideResolved" />
+        <span>Hide resolved</span>
+      </label>
+    </template>
     <template #items v-if="sorted.length > 0">
       <slot v-for="issue in sorted" :key="issue.issueId" v-bind="issue" :project-id="projectId">
         <ListItem v-bind="issue" :project-id="projectId" @issue-resolved="$emit('changed')" />
