@@ -32,12 +32,20 @@ const icon = computed(() => {
 
   return 'folder'
 })
+
+const thumbnailUrl = computed(() => {
+  if (props.thumbnail) {
+    return `url('/api/files/${props.thumbnail}?preview=true')`
+  }
+
+  return undefined
+})
 </script>
 <template>
   <li class="project-list-item">
     <router-link :to="routeTo" class="folder-link">
-      <span>
-        <SolarIcon :icon="icon" class="icon-xl" variant="bold-duotone" />
+      <span class="project-thumbnail" :style="{ backgroundImage: thumbnailUrl }">
+        <SolarIcon :icon="icon" class="icon-xl" variant="bold-duotone" v-if="!thumbnailUrl" />
       </span>
       <h4 class="project-timestamp">
         <SolarIcon icon="calendar-minimalistic" class="icon-sm" />
@@ -48,6 +56,24 @@ const icon = computed(() => {
   </li>
 </template>
 <style lang="css">
+@reference 'tailwindcss';
+
+.project-thumbnail {
+  width: 128px;
+  height: 128px;
+
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* @apply shadow-xl; */
+  /* box-shadow: inset 0px 0px 3px rgba(255 255 255 / 25%); */
+}
+
 .project-list-item {
   display: block;
   width: var(--width);
@@ -71,5 +97,35 @@ const icon = computed(() => {
 .project-list-item:hover {
   color: rgb(var(--color-accent));
   --bg-opacity: 25%;
+}
+
+.folder-link {
+  @apply transition-all;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 3px;
+  border: 1px solid rgba(var(--color-main) / var(--bg-opacity, 0%));
+
+  cursor: pointer;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 300;
+    text-align: center;
+  }
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  background-color: rgba(var(--color-main) / var(--bg-opacity, 0%));
 }
 </style>

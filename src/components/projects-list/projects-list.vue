@@ -46,35 +46,6 @@ async function handleCreateProject(e?: MouseEvent) {
 <style lang="css">
 @reference 'tailwindcss';
 
-.folder-link {
-  @apply transition-all;
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--color-main) / var(--bg-opacity, 0%));
-
-  cursor: pointer;
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 300;
-    text-align: center;
-  }
-
-  h4 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  background-color: rgba(var(--color-main) / var(--bg-opacity, 0%));
-}
-
 .no-data {
   display: flex;
   flex-direction: column;

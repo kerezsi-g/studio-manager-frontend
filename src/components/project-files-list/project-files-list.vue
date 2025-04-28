@@ -8,7 +8,7 @@ import { VButton } from '@/components/ui/Button'
 import { VList } from '../ui/List'
 
 import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
-import PrimaryFilesListItem from './primary-files-list-item.vue'
+import PrimaryFilesListItem from './project-files-list-item.vue'
 
 const props = defineProps<{
   files: ProjectMedia[]
@@ -39,7 +39,7 @@ const data = computed(() => {
 })
 </script>
 <template>
-  <VList title="Uploads:">
+  <VList title="Uploads:" class="project-files-list">
     <template #actions>
       <VButton @click="handleAddFile" size="sm" variant="subdued">
         <template #suffix>
@@ -51,7 +51,7 @@ const data = computed(() => {
 
     <template #items>
       <slot v-for="file in data" :key="file.sha256" v-bind="file">
-        <PrimaryFilesListItem v-bind="file" />
+        <PrimaryFilesListItem :data="file" />
       </slot>
     </template>
   </VList>

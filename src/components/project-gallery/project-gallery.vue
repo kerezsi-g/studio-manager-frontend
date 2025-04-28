@@ -7,6 +7,7 @@ import SolarIcon from '@/components/SolarIcon.vue'
 import { VButton } from '@/components/ui/Button'
 import { computed, ref } from 'vue'
 import { clamp } from '@vueuse/core'
+import { API } from '@/api'
 
 const props = defineProps<{
   files: ProjectMedia[]
@@ -26,7 +27,7 @@ async function handleAddFile(e: MouseEvent) {
   )
 
   if (result) {
-    emit('file-uploaded', result)
+    emit('file-uploaded')
   }
 }
 
@@ -48,6 +49,16 @@ function stepImage(step: number) {
   const nextIndex = clamp(index + step, 0, data.value.length - 1)
 
   selectedMedia.value = data.value[nextIndex]
+}
+
+async function setFileAs(file: ProjectMedia, tag: 'thumbnail' | 'background-image') {
+  await API.Projects.addFileToProject({
+    projectId: props.projectId,
+    sha256: file.sha256,
+    tag,
+  })
+
+  emit('file-uploaded')
 }
 </script>
 <template>
@@ -77,10 +88,10 @@ function stepImage(step: number) {
       </header>
 
       <div
-        :key="selectedMedia?.sha256"
+        :key="selectedMedia.sha256"
         class="flex-grow flex items-center justify-center overflow-hidden"
       >
-        <img :src="`/api/files/${selectedMedia?.sha256}`" class="w-full h-full object-scale-down" />
+        <img :src="`/api/files/${selectedMedia.sha256}`" class="w-full h-full object-scale-down" />
       </div>
 
       <footer class="gallery-overlay-footer">
@@ -99,8 +110,8 @@ function stepImage(step: number) {
         </VButton>
 
         <a
-          :href="`/api/files/${selectedMedia?.sha256}?download=true`"
-          :download="selectedMedia?.fileName"
+          :href="`/api/files/${selectedMedia.sha256}?download=true`"
+          :download="selectedMedia.fileName"
         >
           <VButton>
             <template #suffix>
@@ -115,6 +126,20 @@ function stepImage(step: number) {
             <SolarIcon width="24" icon="close-circle" variant="bold-duotone" />
           </template>
           Close
+        </VButton>
+
+        <VButton :action="() => setFileAs(selectedMedia!, 'background-image')" variant="subdued">
+          <template #suffix>
+            <SolarIcon width="24" icon="gallery-check" variant="bold-duotone" />
+          </template>
+          Make Background
+        </VButton>
+
+        <VButton :action="() => setFileAs(selectedMedia!, 'thumbnail')" variant="subdued">
+          <template #suffix>
+            <SolarIcon width="24" icon="gallery-check" variant="bold-duotone" />
+          </template>
+          Make Thumbnail
         </VButton>
       </footer>
     </div>

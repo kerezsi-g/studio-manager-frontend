@@ -1,20 +1,30 @@
-<script lang="ts">
-const SHOW_HASH = ref(false)
-</script>
 <script setup lang="ts">
 import type { ProjectMedia } from '@/api-client'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import dayjs from 'dayjs'
 import SolarIcon from '@/components/SolarIcon.vue'
 
-const props = defineProps<ProjectMedia>()
+interface Props {
+  data: ProjectMedia
+  showHash?: boolean
+  showTag?: boolean
+  showContentType?: boolean
+  showCreationDate?: boolean
+  showUploadDate?: boolean
+  showActions?: boolean
+}
 
-const formattedDate = computed(() => {
-  return dayjs(props.addedAt).format('YYYY-MM-DD HH:mm')
+const props = withDefaults(defineProps<Props>(), {
+  showCreationDate: true,
+  showContentType: true,
 })
 
+function formatDate(d: number) {
+  return dayjs(d).format('YYYY-MM-DD HH:mm')
+}
+
 const icon = computed(() => {
-  const [contentType] = props.contentType.split('/')
+  const [contentType] = props.data.contentType.split('/')
   if (contentType === 'image') {
     return 'image'
   }
@@ -36,20 +46,20 @@ const icon = computed(() => {
 
     <div class="flex flex-col flex-grow">
       <span class="file-name">
-        {{ fileName }}
+        {{ data.fileName }}
       </span>
 
-      <span class="file-type">
-        {{ contentType }}
+      <span class="file-type" v-if="showContentType">
+        {{ data.contentType }}
       </span>
 
-      <span class="file-hash" v-if="SHOW_HASH">
-        {{ sha256.slice(0, 16) }}
+      <span class="file-hash" v-if="showHash">
+        {{ data.sha256.slice(0, 16) }}
       </span>
     </div>
 
-    <div class="file-date">
-      {{ formattedDate }}
+    <div class="file-date" v-if="showCreationDate">
+      {{ formatDate(data.createdAt) }}
     </div>
   </li>
 </template>

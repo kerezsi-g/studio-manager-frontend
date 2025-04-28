@@ -72,7 +72,7 @@ export async function useModal<T extends Component>(
   })
 
   return promise.then((result: any[]) => {
-    if (result.length === 1) {
+    if (result?.length === 1) {
       return result[0]
     } else {
       return result

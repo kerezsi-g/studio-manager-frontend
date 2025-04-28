@@ -27,11 +27,11 @@ import type {
 } from '../models/index';
 
 export interface AddFileToProjectRequest {
-    tag: string;
-    fileName: string;
     projectId: string;
+    tag: string;
     sha256: string;
     path?: string;
+    fileName?: string;
 }
 
 export interface AddUserToProjectRequest {
@@ -69,8 +69,8 @@ export interface GetProjectMembersRequest {
 }
 
 export interface RemoveFileFromProjectRequest {
-    tag: string;
     projectId: string;
+    tag: string;
     sha256: string;
 }
 
@@ -99,11 +99,11 @@ export interface ProjectsApiInterface {
     /**
      * 
      * @summary addFileToProject
-     * @param {string} tag 
-     * @param {string} fileName 
      * @param {string} projectId 
+     * @param {string} tag 
      * @param {string} sha256 
      * @param {string} [path] 
+     * @param {string} [fileName] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
@@ -254,8 +254,8 @@ export interface ProjectsApiInterface {
     /**
      * 
      * @summary removeFileFromProject
-     * @param {string} tag 
      * @param {string} projectId 
+     * @param {string} tag 
      * @param {string} sha256 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -327,24 +327,17 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
      * addFileToProject
      */
     async addFileToProjectRaw(requestParameters: AddFileToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['tag'] == null) {
-            throw new runtime.RequiredError(
-                'tag',
-                'Required parameter "tag" was null or undefined when calling addFileToProject().'
-            );
-        }
-
-        if (requestParameters['fileName'] == null) {
-            throw new runtime.RequiredError(
-                'fileName',
-                'Required parameter "fileName" was null or undefined when calling addFileToProject().'
-            );
-        }
-
         if (requestParameters['projectId'] == null) {
             throw new runtime.RequiredError(
                 'projectId',
                 'Required parameter "projectId" was null or undefined when calling addFileToProject().'
+            );
+        }
+
+        if (requestParameters['tag'] == null) {
+            throw new runtime.RequiredError(
+                'tag',
+                'Required parameter "tag" was null or undefined when calling addFileToProject().'
             );
         }
 
@@ -357,10 +350,6 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
         const queryParameters: any = {};
 
-        if (requestParameters['tag'] != null) {
-            queryParameters['tag'] = requestParameters['tag'];
-        }
-
         if (requestParameters['path'] != null) {
             queryParameters['path'] = requestParameters['path'];
         }
@@ -372,7 +361,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            path: `/projects/{projectId}/files/{tag}/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"tag"}}`, encodeURIComponent(String(requestParameters['tag']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -701,17 +690,17 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
      * removeFileFromProject
      */
     async removeFileFromProjectRaw(requestParameters: RemoveFileFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['tag'] == null) {
-            throw new runtime.RequiredError(
-                'tag',
-                'Required parameter "tag" was null or undefined when calling removeFileFromProject().'
-            );
-        }
-
         if (requestParameters['projectId'] == null) {
             throw new runtime.RequiredError(
                 'projectId',
                 'Required parameter "projectId" was null or undefined when calling removeFileFromProject().'
+            );
+        }
+
+        if (requestParameters['tag'] == null) {
+            throw new runtime.RequiredError(
+                'tag',
+                'Required parameter "tag" was null or undefined when calling removeFileFromProject().'
             );
         }
 
@@ -724,14 +713,10 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
         const queryParameters: any = {};
 
-        if (requestParameters['tag'] != null) {
-            queryParameters['tag'] = requestParameters['tag'];
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            path: `/projects/{projectId}/files/{tag}/{sha256}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"tag"}}`, encodeURIComponent(String(requestParameters['tag']))).replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,

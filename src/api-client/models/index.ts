@@ -299,6 +299,12 @@ export interface Project {
      * @memberof Project
      */
     createdAt: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
+    thumbnail: string | null;
 }
 /**
  * 
@@ -324,18 +330,6 @@ export interface ProjectDetails {
      * @memberof ProjectDetails
      */
     projectType: ProjectDetailsProjectTypeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectDetails
-     */
-    avatar: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectDetails
-     */
-    wallpaper: string | null;
     /**
      * 
      * @type {number}

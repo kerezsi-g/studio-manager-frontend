@@ -2,8 +2,8 @@
 import type { Issue, ProjectDetails, ProjectMedia } from '@/api-client'
 import { computed, onMounted, ref } from 'vue'
 
-import PrimaryFilesList from '@/components/primary-files-list/primary-files-list.vue'
-import PrimaryFilesListItem from '@/components/primary-files-list/primary-files-list-item.vue'
+import ProjectFilesList from '@/components/project-files-list/project-files-list.vue'
+import ProjectFilesListItem from '@/components/project-files-list/project-files-list-item.vue'
 
 import AudioPlayer from '@/components/media/audio-player.vue'
 import { ProjectIssuesList, ProjectIssue } from '@/components/project-issues'
@@ -82,6 +82,8 @@ const view = ref<'main' | 'gallery'>('main')
     </span>
   </nav>
 
+  <hr class="divider" />
+
   <template v-if="view === 'main'">
     <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
       <template #markers-back>
@@ -105,18 +107,18 @@ const view = ref<'main' | 'gallery'>('main')
     <hr class="divider" />
 
     <div class="flex-grow overflow-hidden grid grid-cols-2">
-      <PrimaryFilesList
+      <ProjectFilesList
         :files="files"
         :projectId="projectId"
         @file-uploaded="$emit('changed')"
         v-slot="file"
       >
-        <PrimaryFilesListItem
-          v-bind="file"
+        <ProjectFilesListItem
+          :data="file"
           @click="() => handleSelectFile(file)"
           :class="{ selected: file.sha256 === selectedFile?.sha256 }"
         />
-      </PrimaryFilesList>
+      </ProjectFilesList>
 
       <ProjectIssuesList
         :issues="issues.filter(issueFilter)"

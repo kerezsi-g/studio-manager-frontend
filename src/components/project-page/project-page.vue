@@ -3,21 +3,38 @@ import type { ProjectDetails } from '@/api-client'
 import icons from '@/components/icons'
 import SolarIcon from '../SolarIcon.vue'
 import { VButton } from '../ui/Button'
+import { computed } from 'vue'
 
-defineProps<ProjectDetails>()
+const props = defineProps<ProjectDetails>()
+
+function wrapUrl(url: string) {
+  return `url('${url}')`
+}
+
+const thumbnailUrl = computed(() => {
+  const file = props.files.find((f) => f.tag === 'thumbnail')
+
+  return file ? wrapUrl(`/api/files/${file.sha256}`) : undefined
+})
+
+const backgroundImageUrl = computed(() => {
+  const file = props.files.find((f) => f.tag === 'background-image')
+
+  return file ? wrapUrl(`/api/files/${file.sha256}`) : undefined
+})
 </script>
 <template>
   <div
-    v-if="wallpaper"
-    class="project-wallpaper"
-    :style="{ 'background-image': wallpaper ? `url('/api/files/${wallpaper}')` : undefined }"
+    v-if="backgroundImageUrl"
+    class="project-custom-bg"
+    :style="{ 'background-image': backgroundImageUrl }"
   />
   <div class="project-page">
     <header class="project-page-header">
       <div
         class="project-avatar"
         :style="{
-          'background-image': avatar ? `url('/api/files/${avatar}?preview=true')` : undefined,
+          'background-image': thumbnailUrl,
         }"
       >
         <SolarIcon :icon="icons.projectType[projectType]" variant="bold-duotone" width="48" />
@@ -57,7 +74,6 @@ defineProps<ProjectDetails>()
   flex-grow: 1;
   box-shadow: 0 0 64px black;
   backdrop-filter: blur(8px);
-  background-color: rgba(var(--surface) / 80%);
 
   overflow: hidden;
   /* background-color: rgba(0 0 0 / 70%); */
@@ -80,6 +96,7 @@ hr.divider {
 
 .project-page-header {
   max-width: var(--page-width);
+  background-color: rgba(var(--surface) / 50%);
 
   /* justify-content: center; */
 
@@ -87,7 +104,7 @@ hr.divider {
   align-items: center;
 
   padding: 1rem 3rem;
-  padding-bottom: 3rem;
+  /* padding-bottom: 4rem; */
   gap: 1rem;
 
   /* background-color: rgba(var(--surface-dark) / 98%); */
@@ -136,13 +153,14 @@ hr.divider {
 
 .project-navigation {
   display: flex;
-  /* padding: 1rem 2rem; */
+  /* justify-content: center; */
   padding-inline: 2rem;
   gap: 8px;
-  position: absolute;
+  /* position: absolute; */
   position-anchor: --project-navigation-anchor;
   bottom: anchor(bottom);
-  margin-bottom: -1px;
+
+  /* margin-bottom: -1px; */
   /* justify-content: center; */
 
   /* margin-bottom: -3px; */
@@ -150,9 +168,9 @@ hr.divider {
 
 .project-nav-link {
   padding: 0.25rem 2rem;
-  font-weight: 400;
-  letter-spacing: 1px;
-  font-size: 1.25rem;
+  font-weight: 500;
+  /* letter-spacing: 1px; */
+  font-size: 1.125rem;
 
   cursor: pointer;
 
@@ -173,7 +191,7 @@ hr.divider {
   }
 }
 
-.project-wallpaper {
+.project-custom-bg {
   width: 100%;
   height: 100%;
   object-fit: cover;
