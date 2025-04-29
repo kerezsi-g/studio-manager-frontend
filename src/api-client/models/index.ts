@@ -295,6 +295,12 @@ export interface Project {
     projectType: string;
     /**
      * 
+     * @type {string}
+     * @memberof Project
+     */
+    subject: string;
+    /**
+     * 
      * @type {number}
      * @memberof Project
      */
@@ -330,6 +336,12 @@ export interface ProjectDetails {
      * @memberof ProjectDetails
      */
     projectType: ProjectDetailsProjectTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectDetails
+     */
+    subject: string;
     /**
      * 
      * @type {number}
@@ -415,6 +427,12 @@ export interface ProjectMedia {
      * @memberof ProjectMedia
      */
     createdAt: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectMedia
+     */
+    size: number;
 }
 
 /**

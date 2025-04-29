@@ -34,6 +34,10 @@ export interface MarkForDeletionRequest {
     sha256: string;
 }
 
+export interface ValidateFileRequest {
+    sha256: string;
+}
+
 /**
  * FilesApi - interface
  * 
@@ -88,6 +92,21 @@ export interface FilesApiInterface {
      * markForDeletion
      */
     markForDeletion(requestParameters: MarkForDeletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+
+    /**
+     * 
+     * @summary validateFile
+     * @param {string} sha256 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FilesApiInterface
+     */
+    validateFileRaw(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+
+    /**
+     * validateFile
+     */
+    validateFile(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
 }
 
@@ -225,6 +244,39 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
      */
     async markForDeletion(requestParameters: MarkForDeletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
         const response = await this.markForDeletionRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * validateFile
+     */
+    async validateFileRaw(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+        if (requestParameters['sha256'] == null) {
+            throw new runtime.RequiredError(
+                'sha256',
+                'Required parameter "sha256" was null or undefined when calling validateFile().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/files/{sha256}`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * validateFile
+     */
+    async validateFile(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+        const response = await this.validateFileRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
