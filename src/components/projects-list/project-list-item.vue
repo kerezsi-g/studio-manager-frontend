@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import type { Project } from '@/api-client'
 import { computed } from 'vue'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 
 import SolarIcon from '../SolarIcon.vue'
 import icons from '../icons'
 
 const props = defineProps<Project>()
 
-const formattedDate = computed(() => {
-  return dayjs(props.createdAt).format('YYYY-MM-DD')
-})
+// const formattedDate = computed(() => {
+//   return dayjs(props.createdAt).format('YYYY-MM-DD')
+// })
 
 const routeTo = computed(() => {
   return {
-    name: 'project',
+    name: 'project-root',
     params: { projectId: props.projectId },
   }
 })
@@ -42,27 +42,29 @@ const thumbnailUrl = computed(() => {
 })
 </script>
 <template>
-  <li class="project-list-item">
-    <router-link :to="routeTo" class="folder-link">
+  <router-link :to="routeTo" class="folder-link">
+    <li class="project-list-item">
       <span class="project-thumbnail" :style="{ backgroundImage: thumbnailUrl }">
         <SolarIcon :icon="icon" class="icon-xl" variant="bold-duotone" v-if="!thumbnailUrl" />
       </span>
-      <h4 class="project-timestamp">
-        <SolarIcon icon="calendar-minimalistic" class="icon-sm" />
-        <span>{{ formattedDate }}</span>
-      </h4>
-      <h3>{{ projectName }}</h3>
-    </router-link>
-  </li>
+      <h1>
+        {{ projectName }}
+      </h1>
+      <hr class="divider" />
+      <h2>{{ subject }}</h2>
+    </li>
+  </router-link>
 </template>
 <style lang="css">
 @reference 'tailwindcss';
 
 .project-thumbnail {
-  width: 128px;
-  height: 128px;
+  --size: 192px;
 
-  border-radius: 5px;
+  width: var(--size);
+  height: var(--size);
+
+  border-radius: 2px;
   background-size: cover;
   background-position: center;
 
@@ -70,16 +72,35 @@ const thumbnailUrl = computed(() => {
   align-items: center;
   justify-content: center;
 
+  background-color: rgba(var(--surface-dark) / 2575%);
+
   /* @apply shadow-xl; */
   /* box-shadow: inset 0px 0px 3px rgba(255 255 255 / 25%); */
 }
 
 .project-list-item {
-  display: block;
-  width: var(--width);
+  /* @apply shadow-lg; */
 
-  h3 {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+
+  background-color: rgba(var(--surface-dark) / 50%);
+  backdrop-filter: blur(8px);
+  border-radius: 6px;
+
+  h1 {
+    text-shadow: 0 0 2px rgba(0 0 0 / 25%);
     font-weight: 500;
+    font-size: 1.25rem;
+    padding: 4px;
+  }
+
+  h2 {
+    font-size: 1rem;
+    opacity: 0.8;
+    padding-inline: 0.25rem;
+    font-weight: 400;
   }
 
   .project-timestamp {
@@ -97,35 +118,5 @@ const thumbnailUrl = computed(() => {
 .project-list-item:hover {
   color: rgb(var(--color-accent));
   --bg-opacity: 25%;
-}
-
-.folder-link {
-  @apply transition-all;
-  height: 100%;
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  gap: 4px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  border-radius: 3px;
-  border: 1px solid rgba(var(--color-main) / var(--bg-opacity, 0%));
-
-  cursor: pointer;
-
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 300;
-    text-align: center;
-  }
-
-  h4 {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  background-color: rgba(var(--color-main) / var(--bg-opacity, 0%));
 }
 </style>

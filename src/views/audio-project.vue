@@ -16,6 +16,10 @@ const props = defineProps<ProjectDetails>()
 
 const selectedFile = ref<ProjectMedia | null>(null)
 
+const primaryFiles = computed(() => {
+  return props.files.filter((file) => file.tag === 'primary')
+})
+
 function handleSelectFile(file: ProjectMedia) {
   selectedFile.value = file
 }
@@ -25,8 +29,8 @@ const emit = defineEmits<{
 }>()
 
 onMounted(() => {
-  if (props.files.length > 0) {
-    handleSelectFile(props.files[0])
+  if (primaryFiles.value.length > 0) {
+    handleSelectFile(primaryFiles.value[0])
   }
 })
 
@@ -69,21 +73,6 @@ function issueFilter(issue: Issue) {
 const view = ref<'main' | 'gallery'>('main')
 </script>
 <template>
-  <nav class="project-navigation">
-    <span class="project-nav-link" @click="view = 'main'" :class="{ active: view === 'main' }">
-      Main
-    </span>
-    <span
-      class="project-nav-link"
-      @click="view = 'gallery'"
-      :class="{ active: view === 'gallery' }"
-    >
-      Gallery
-    </span>
-  </nav>
-
-  <hr class="divider" />
-
   <template v-if="view === 'main'">
     <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
       <template #markers-back>

@@ -51,7 +51,7 @@ const props = defineProps<{
 
   // backdrop-filter: blur(24px);
   border-radius: 3px;
-  background-color: rgba(var(--surface) / var(--surface-opacity));
+  background-color: rgba(0 0 0 / 95%);
 
   .v-dialog-title {
     font-weight: 500;

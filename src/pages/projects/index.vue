@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <route lang="json">
 {
-  "name": "app-home"
+  "name": "projects-list"
 }
 </route>
 <script setup lang="ts">

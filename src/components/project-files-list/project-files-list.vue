@@ -39,7 +39,7 @@ const data = computed(() => {
 })
 </script>
 <template>
-  <VList title="Uploads:" class="project-files-list">
+  <VList title="Uploads:" class="project-file-selector">
     <template #actions>
       <VButton @click="handleAddFile" size="sm" variant="subdued">
         <template #suffix>
@@ -56,4 +56,9 @@ const data = computed(() => {
     </template>
   </VList>
 </template>
-<style lang="css"></style>
+<style lang="css">
+.project-file-selector {
+  display: flex;
+  flex-direction: column;
+}
+</style>
