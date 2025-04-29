@@ -37,6 +37,8 @@ async function handleSubmit() {
     return
   }
 
+  await API.Files.validateFile({ sha256 })
+
   await API.Projects.addFileToProject({
     tag: props.tag,
     projectId: props.projectId,
