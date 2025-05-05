@@ -1,5 +1,7 @@
+apis/AssetsApi.ts
 apis/AuthApi.ts
 apis/CollectionsApi.ts
+apis/DefaultApi.ts
 apis/FilesApi.ts
 apis/ProjectsApi.ts
 apis/index.ts

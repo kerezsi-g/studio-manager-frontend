@@ -2,7 +2,7 @@
 import { clamp, useMediaControls } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
-import type { AudioPeaks, ProjectMedia } from '@/api-client'
+import type { AudioPeaks, ProjectAsset } from '@/api-client'
 
 import { VButton } from '@/components/ui/Button'
 
@@ -19,9 +19,9 @@ import {
 } from './components'
 import TrackOverlay from './components/TrackOverlay.vue'
 
-const props = defineProps<ProjectMedia>()
+const props = defineProps<ProjectAsset>()
 
-const srcUrl = computed(() => `/api/files/${props.sha256}`)
+const srcUrl = computed(() => `/api/assets/${props.assetId}/files/base`)
 
 const audio = ref<HTMLAudioElement>()
 
@@ -43,8 +43,8 @@ const loopRegion = ref<(number | null)[]>([null, null])
 const minTime = computed(() => loopRegion.value[0] ?? 0)
 const maxTime = computed(() => loopRegion.value[1] ?? duration.value)
 
-async function fetchWaveform(args: { sha256: string }) {
-  const response = await fetch(`/api/files/${args.sha256}?preview=true`)
+async function fetchWaveform(args: { assetId: string }) {
+  const response = await fetch(`/api/assets/${args.assetId}/files/peaks`)
   const json = await response.json()
   return json as AudioPeaks
 }
@@ -117,14 +117,14 @@ watch(currentTime, (current, previous) => {
       <VButton size="sm" color="error" @click="(e) => $emit('submit-issue', e, currentTime)">
         Submit issue
       </VButton>
-      <a :href="srcUrl + '?download=true'" :download="props.fileName">
+      <a :href="srcUrl + '?download=true'" :download="props.assetName">
         <VButton size="sm"> Download </VButton>
       </a>
     </nav>
 
     <div class="waveform-container palette-secondary">
-      <DataLoader :fn="fetchWaveform" :args="{ sha256: props.sha256 }" v-slot="{ data }">
-        <AudioWaveformCanvas v-if="data" v-bind="data" :key="sha256" />
+      <DataLoader :fn="fetchWaveform" :args="{ assetId: props.assetId }" v-slot="{ data }">
+        <AudioWaveformCanvas v-if="data" v-bind="data" :key="props.assetId" />
       </DataLoader>
 
       <TrackOverlay

@@ -14,12 +14,14 @@ const props = defineProps<{
 
 const projectName = ref('')
 const projectType = ref('audio')
+const subject = ref('')
 
 async function handleSubmit() {
   const { projectId } = await API.Projects.createProject({
     CreateProjectRequest: {
       projectName: projectName.value,
       projectType: projectType.value,
+      subject: subject.value,
     },
   })
 
@@ -61,11 +63,8 @@ const options = [
         <p>Feature is currently made available only as a part the demo.</p>
         <p>Creating new projects will be an administrator responsibility.</p>
       </VAlert>
-      <VTextInput v-model="projectName" placeholder="Project name">
-        <template #prefix>
-          <SolarIcon icon="file-text" class="icon-base" />
-        </template>
-      </VTextInput>
+      <VTextInput v-model="projectName" placeholder="Project name" />
+      <VTextInput v-model="subject" placeholder="Subject" />
       <div class="flex gap-4">
         <label class="project-type-select" v-for="option in options" :key="option.value">
           <input name="project-type" type="radio" :value="option.value" v-model="projectType" />
@@ -81,7 +80,7 @@ const options = [
           <!-- <SolarIcon icon="x" class="icon-base" /> -->
         </template>
       </VButton>
-      <VButton :action="handleSubmit">
+      <VButton :action="handleSubmit" :disabled="!projectName || !subject || !projectType">
         Create
         <template #suffix>
           <SolarIcon icon="archive" class="icon-base" />

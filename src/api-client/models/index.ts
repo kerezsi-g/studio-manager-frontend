@@ -1,5 +1,30 @@
 /* tslint:disable */
 /* eslint-disable */
+
+/**
+ * 
+ * @export
+ */
+export const AssetTag = {
+    accepted: 'accepted',
+    rejected: 'rejected',
+    pending_review: 'pending-review',
+    misc: 'misc'
+} as const;
+export type AssetTag = typeof AssetTag[keyof typeof AssetTag];
+
+
+/**
+ * 
+ * @export
+ */
+export const AssetType = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type AssetType = typeof AssetType[keyof typeof AssetType];
+
 /**
  * 
  * @export
@@ -102,6 +127,80 @@ export interface Collection {
 /**
  * 
  * @export
+ * @interface CreateAsset200Response
+ */
+export interface CreateAsset200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAsset200Response
+     */
+    assetId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAsset200Response
+     */
+    assetName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAsset200Response
+     */
+    assetType: CreateAsset200ResponseAssetTypeEnum;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateAsset200Response
+     */
+    createdAt: number;
+}
+
+
+/**
+ * @export
+ */
+export const CreateAsset200ResponseAssetTypeEnum = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type CreateAsset200ResponseAssetTypeEnum = typeof CreateAsset200ResponseAssetTypeEnum[keyof typeof CreateAsset200ResponseAssetTypeEnum];
+
+/**
+ * 
+ * @export
+ * @interface CreateAssetRequest
+ */
+export interface CreateAssetRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAssetRequest
+     */
+    assetName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateAssetRequest
+     */
+    assetType: CreateAssetRequestAssetTypeEnum;
+}
+
+
+/**
+ * @export
+ */
+export const CreateAssetRequestAssetTypeEnum = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type CreateAssetRequestAssetTypeEnum = typeof CreateAssetRequestAssetTypeEnum[keyof typeof CreateAssetRequestAssetTypeEnum];
+
+/**
+ * 
+ * @export
  * @interface CreateCollection200Response
  */
 export interface CreateCollection200Response {
@@ -149,7 +248,7 @@ export interface CreateIssueRequest {
      * @type {string}
      * @memberof CreateIssueRequest
      */
-    file: string;
+    assetId: string;
     /**
      * 
      * @type {string}
@@ -200,6 +299,12 @@ export interface CreateProjectRequest {
      * @memberof CreateProjectRequest
      */
     projectType: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectRequest
+     */
+    subject: string;
 }
 /**
  * 
@@ -217,6 +322,19 @@ export interface CreateUploadUrl200Response {
 /**
  * 
  * @export
+ * @interface GetPublicAccessUrl200Response
+ */
+export interface GetPublicAccessUrl200Response {
+    /**
+     * 
+     * @type {string}
+     * @memberof GetPublicAccessUrl200Response
+     */
+    url: string;
+}
+/**
+ * 
+ * @export
  * @interface Issue
  */
 export interface Issue {
@@ -227,11 +345,11 @@ export interface Issue {
      */
     issueId: string;
     /**
-     * SHA-256 hash of the linked file
+     * 
      * @type {string}
      * @memberof Issue
      */
-    file: string;
+    assetId: string;
     /**
      * 
      * @type {string}
@@ -315,6 +433,63 @@ export interface Project {
 /**
  * 
  * @export
+ * @interface ProjectAsset
+ */
+export interface ProjectAsset {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectAsset
+     */
+    assetId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectAsset
+     */
+    assetName: string;
+    /**
+     * 
+     * @type {AssetTag}
+     * @memberof ProjectAsset
+     */
+    tag: AssetTag;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectAsset
+     */
+    addedAt: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectAsset
+     */
+    uploadedAt: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectAsset
+     */
+    createdAt: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectAsset
+     */
+    contentType: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProjectAsset
+     */
+    size: number;
+}
+
+
+/**
+ * 
+ * @export
  * @interface ProjectDetails
  */
 export interface ProjectDetails {
@@ -350,10 +525,10 @@ export interface ProjectDetails {
     createdAt: number;
     /**
      * 
-     * @type {Array<ProjectMedia>}
+     * @type {Array<ProjectAsset>}
      * @memberof ProjectDetails
      */
-    files: Array<ProjectMedia>;
+    assets: Array<ProjectAsset>;
     /**
      * 
      * @type {Array<Issue>}
@@ -373,67 +548,6 @@ export const ProjectDetailsProjectTypeEnum = {
 } as const;
 export type ProjectDetailsProjectTypeEnum = typeof ProjectDetailsProjectTypeEnum[keyof typeof ProjectDetailsProjectTypeEnum];
 
-/**
- * 
- * @export
- * @interface ProjectMedia
- */
-export interface ProjectMedia {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectMedia
-     */
-    sha256: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectMedia
-     */
-    contentType: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectMedia
-     */
-    fileName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectMedia
-     */
-    path: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjectMedia
-     */
-    tag: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjectMedia
-     */
-    addedAt: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjectMedia
-     */
-    uploadedAt: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjectMedia
-     */
-    createdAt: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjectMedia
-     */
-    size: number;
-}
 
 /**
  * 
@@ -462,6 +576,19 @@ export interface SignIn200Response {
 /**
  * 
  * @export
+ * @interface UpdateCollectionRequest
+ */
+export interface UpdateCollectionRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateCollectionRequest
+     */
+    collectionName: string;
+}
+/**
+ * 
+ * @export
  * @interface UpdateProjectRequest
  */
 export interface UpdateProjectRequest {
@@ -470,7 +597,13 @@ export interface UpdateProjectRequest {
      * @type {string}
      * @memberof UpdateProjectRequest
      */
-    projectName: string;
+    projectName?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateProjectRequest
+     */
+    subject?: string;
 }
 /**
  * 

@@ -55,7 +55,7 @@ export async function useS3Upload(file: File) {
     }
   }
 
-  async function start() {
+  async function start(assetId: string) {
     if (pending.value) {
       console.warn('Upload already in progress.')
       return
@@ -63,14 +63,16 @@ export async function useS3Upload(file: File) {
 
     pending.value = true
 
-    const { uploadUrl } = await API.Files.createUploadUrl({
-      createdAt: file.lastModified,
+    const { url } = await API.Assets.getFileUploadUrl({
+      assetId,
       fileName: file.name,
+      sha256: sha256,
       contentType: detectedMime,
-      sha256,
+      createdAt: file.lastModified,
+      fileClass: 'base',
     })
 
-    xhr.open('PUT', uploadUrl)
+    xhr.open('PUT', url)
 
     xhr.setRequestHeader('Content-Type', detectedMime)
 
@@ -86,6 +88,7 @@ export async function useS3Upload(file: File) {
     success,
     response,
     start,
+    detectedMime,
   }
 }
 

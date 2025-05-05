@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProjectMedia } from '@/api-client'
+import type { ProjectAsset } from '@/api-client'
 import GalleryItem from './gallery-item.vue'
 import { useModal } from '../modal'
 import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
@@ -10,7 +10,7 @@ import { clamp } from '@vueuse/core'
 import { API } from '@/api'
 
 const props = defineProps<{
-  files: ProjectMedia[]
+  assets: ProjectAsset[]
   projectId: string
 }>()
 
@@ -21,7 +21,7 @@ async function handleAddFile(e: MouseEvent) {
     UploadFileDialog,
     {
       projectId: props.projectId,
-      tag: 'gallery',
+      tag: 'misc',
     },
     { e },
   )
@@ -32,17 +32,20 @@ async function handleAddFile(e: MouseEvent) {
 }
 
 const data = computed(() => {
-  return props.files.filter((file) => file.tag === 'gallery')
+  /**
+   * TODO: Fix
+   */
+  return props.assets.filter((file) => file.tag === 'misc')
 })
 
-const selectedMedia = ref<ProjectMedia | null>(null)
+const selectedMedia = ref<ProjectAsset | null>(null)
 
-function handleGalleryClick(file: ProjectMedia) {
+function handleGalleryClick(file: ProjectAsset) {
   selectedMedia.value = file
 }
 
 function stepImage(step: number) {
-  const index = data.value.findIndex((file) => file.sha256 === selectedMedia.value?.sha256)
+  const index = data.value.findIndex((file) => file.assetId === selectedMedia.value?.assetId)
 
   if (index === -1) return
 
@@ -51,10 +54,10 @@ function stepImage(step: number) {
   selectedMedia.value = data.value[nextIndex]
 }
 
-async function setFileAs(file: ProjectMedia, tag: 'thumbnail' | 'background-image') {
-  await API.Projects.addFileToProject({
+async function setFileAs(file: ProjectAsset, tag: 'thumbnail' | 'background-image') {
+  await API.Projects.addAssetToProject({
     projectId: props.projectId,
-    sha256: file.sha256,
+    assetId: file.assetId,
     tag,
   })
 
@@ -72,7 +75,7 @@ async function setFileAs(file: ProjectMedia, tag: 'thumbnail' | 'background-imag
       </VButton>
     </nav>
     <ul class="gallery-grid">
-      <li v-for="file in data" :key="file.sha256">
+      <li v-for="file in data" :key="file.assetId">
         <GalleryItem v-bind="file" @click="handleGalleryClick(file)" />
       </li>
     </ul>
@@ -81,17 +84,20 @@ async function setFileAs(file: ProjectMedia, tag: 'thumbnail' | 'background-imag
   <Teleport to="body" v-if="selectedMedia">
     <div class="gallery-overlay" v-auto-animate>
       <header class="gallery-overlay-header">
-        <h3>{{ selectedMedia.fileName }}</h3>
+        <h3>{{ selectedMedia.assetName }}</h3>
         <span>
           {{ selectedMedia.contentType }}
         </span>
       </header>
 
       <div
-        :key="selectedMedia.sha256"
+        :key="selectedMedia.assetId"
         class="flex-grow flex items-center justify-center overflow-hidden"
       >
-        <img :src="`/api/files/${selectedMedia.sha256}`" class="w-full h-full object-scale-down" />
+        <img
+          :src="`/api/assets/${selectedMedia.assetId}/files/base`"
+          class="w-full h-full object-scale-down"
+        />
       </div>
 
       <footer class="gallery-overlay-footer">
@@ -110,8 +116,8 @@ async function setFileAs(file: ProjectMedia, tag: 'thumbnail' | 'background-imag
         </VButton>
 
         <a
-          :href="`/api/files/${selectedMedia.sha256}?download=true`"
-          :download="selectedMedia.fileName"
+          :href="`/api/files/${selectedMedia.assetId}?download=true`"
+          :download="selectedMedia.assetName"
         >
           <VButton>
             <template #suffix>

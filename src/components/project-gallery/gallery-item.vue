@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { ProjectMedia } from '@/api-client'
+import type { ProjectAsset } from '@/api-client'
 import { computed } from 'vue'
 import SolarIcon from '../SolarIcon.vue'
 import icons from '../icons'
 
-const props = defineProps<ProjectMedia>()
+const props = defineProps<ProjectAsset>()
 
 const src = computed(() => {
-  return `/api/files/${props.sha256}?preview=true`
+  return `/api/assets/${props.assetId}/files/thumbnail`
 })
 
 const contentType = computed(() => {
@@ -32,11 +32,11 @@ const icon = computed(() => {
 <template>
   <figure class="gallery-item">
     <span class="gallery-item-main">
-      <img class="gallery-item-img" :src="src" :title="props.fileName" />
+      <img class="gallery-item-img" :src="src" :title="assetName" />
       <SolarIcon variant="bold" class="icon-base gallery-item-icon" :icon="icon" />
     </span>
-    <figcaption class="gallery-item-caption" :title="props.fileName">
-      {{ props.fileName }}
+    <figcaption class="gallery-item-caption" :title="assetName">
+      {{ assetName }}
     </figcaption>
   </figure>
 </template>

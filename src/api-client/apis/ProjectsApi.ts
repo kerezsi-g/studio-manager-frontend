@@ -26,6 +26,12 @@ import type {
   UserData,
 } from '../models/index';
 
+export interface AddAssetToProjectRequest {
+    tag: AddAssetToProjectTagEnum;
+    projectId: string;
+    assetId: string;
+}
+
 export interface AddFileToProjectRequest {
     projectId: string;
     tag: string;
@@ -68,6 +74,12 @@ export interface GetProjectMembersRequest {
     projectId: string;
 }
 
+export interface RemoveAssetFromProjectRequest {
+    tag: RemoveAssetFromProjectTagEnum;
+    projectId: string;
+    assetId: string;
+}
+
 export interface RemoveFileFromProjectRequest {
     projectId: string;
     tag: string;
@@ -86,7 +98,7 @@ export interface ResolveIssueRequest {
 
 export interface UpdateProjectOperationRequest {
     projectId: string;
-    UpdateProjectRequest: UpdateProjectRequest;
+    UpdateProjectRequest?: UpdateProjectRequest;
 }
 
 /**
@@ -98,6 +110,23 @@ export interface UpdateProjectOperationRequest {
 export interface ProjectsApiInterface {
     /**
      * 
+     * @summary addAssetToProject
+     * @param {'accepted' | 'rejected' | 'pending-review' | 'misc'} tag 
+     * @param {string} projectId 
+     * @param {string} assetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectsApiInterface
+     */
+    addAssetToProjectRaw(requestParameters: AddAssetToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+
+    /**
+     * addAssetToProject
+     */
+    addAssetToProject(requestParameters: AddAssetToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+
+    /**
+     * 
      * @summary addFileToProject
      * @param {string} projectId 
      * @param {string} tag 
@@ -105,6 +134,7 @@ export interface ProjectsApiInterface {
      * @param {string} [path] 
      * @param {string} [fileName] 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
      */
@@ -112,6 +142,7 @@ export interface ProjectsApiInterface {
 
     /**
      * addFileToProject
+     * @deprecated
      */
     addFileToProject(requestParameters: AddFileToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
@@ -212,6 +243,7 @@ export interface ProjectsApiInterface {
      * @summary getProjectFiles
      * @param {string} projectId 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
      */
@@ -219,6 +251,7 @@ export interface ProjectsApiInterface {
 
     /**
      * getProjectFiles
+     * @deprecated
      */
     getProjectFiles(requestParameters: GetProjectFilesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
 
@@ -253,11 +286,29 @@ export interface ProjectsApiInterface {
 
     /**
      * 
+     * @summary removeAssetFromProject
+     * @param {'accepted' | 'rejected' | 'pending-review' | 'misc'} tag 
+     * @param {string} projectId 
+     * @param {string} assetId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectsApiInterface
+     */
+    removeAssetFromProjectRaw(requestParameters: RemoveAssetFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+
+    /**
+     * removeAssetFromProject
+     */
+    removeAssetFromProject(requestParameters: RemoveAssetFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+
+    /**
+     * 
      * @summary removeFileFromProject
      * @param {string} projectId 
      * @param {string} tag 
      * @param {string} sha256 
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
      */
@@ -265,6 +316,7 @@ export interface ProjectsApiInterface {
 
     /**
      * removeFileFromProject
+     * @deprecated
      */
     removeFileFromProject(requestParameters: RemoveFileFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
@@ -304,7 +356,7 @@ export interface ProjectsApiInterface {
      * 
      * @summary updateProject
      * @param {string} projectId 
-     * @param {UpdateProjectRequest} UpdateProjectRequest 
+     * @param {UpdateProjectRequest} [UpdateProjectRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
@@ -324,7 +376,59 @@ export interface ProjectsApiInterface {
 export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface {
 
     /**
+     * addAssetToProject
+     */
+    async addAssetToProjectRaw(requestParameters: AddAssetToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+        if (requestParameters['tag'] == null) {
+            throw new runtime.RequiredError(
+                'tag',
+                'Required parameter "tag" was null or undefined when calling addAssetToProject().'
+            );
+        }
+
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling addAssetToProject().'
+            );
+        }
+
+        if (requestParameters['assetId'] == null) {
+            throw new runtime.RequiredError(
+                'assetId',
+                'Required parameter "assetId" was null or undefined when calling addAssetToProject().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['tag'] != null) {
+            queryParameters['tag'] = requestParameters['tag'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/projects/{projectId}/assets/{assetId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetId"}}`, encodeURIComponent(String(requestParameters['assetId']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * addAssetToProject
+     */
+    async addAssetToProject(requestParameters: AddAssetToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+        const response = await this.addAssetToProjectRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * addFileToProject
+     * @deprecated
      */
     async addFileToProjectRaw(requestParameters: AddFileToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
         if (requestParameters['projectId'] == null) {
@@ -372,6 +476,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
     /**
      * addFileToProject
+     * @deprecated
      */
     async addFileToProject(requestParameters: AddFileToProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
         const response = await this.addFileToProjectRaw(requestParameters, initOverrides);
@@ -597,6 +702,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
     /**
      * getProjectFiles
+     * @deprecated
      */
     async getProjectFilesRaw(requestParameters: GetProjectFilesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['projectId'] == null) {
@@ -622,6 +728,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
     /**
      * getProjectFiles
+     * @deprecated
      */
     async getProjectFiles(requestParameters: GetProjectFilesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.getProjectFilesRaw(requestParameters, initOverrides);
@@ -687,7 +794,59 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
     /**
+     * removeAssetFromProject
+     */
+    async removeAssetFromProjectRaw(requestParameters: RemoveAssetFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+        if (requestParameters['tag'] == null) {
+            throw new runtime.RequiredError(
+                'tag',
+                'Required parameter "tag" was null or undefined when calling removeAssetFromProject().'
+            );
+        }
+
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling removeAssetFromProject().'
+            );
+        }
+
+        if (requestParameters['assetId'] == null) {
+            throw new runtime.RequiredError(
+                'assetId',
+                'Required parameter "assetId" was null or undefined when calling removeAssetFromProject().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['tag'] != null) {
+            queryParameters['tag'] = requestParameters['tag'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/projects/{projectId}/assets/{assetId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetId"}}`, encodeURIComponent(String(requestParameters['assetId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * removeAssetFromProject
+     */
+    async removeAssetFromProject(requestParameters: RemoveAssetFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+        const response = await this.removeAssetFromProjectRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * removeFileFromProject
+     * @deprecated
      */
     async removeFileFromProjectRaw(requestParameters: RemoveFileFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
         if (requestParameters['projectId'] == null) {
@@ -727,6 +886,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
 
     /**
      * removeFileFromProject
+     * @deprecated
      */
     async removeFileFromProject(requestParameters: RemoveFileFromProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
         const response = await this.removeFileFromProjectRaw(requestParameters, initOverrides);
@@ -824,13 +984,6 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
             );
         }
 
-        if (requestParameters['UpdateProjectRequest'] == null) {
-            throw new runtime.RequiredError(
-                'UpdateProjectRequest',
-                'Required parameter "UpdateProjectRequest" was null or undefined when calling updateProject().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -857,3 +1010,24 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
 }
+
+/**
+ * @export
+ */
+export const AddAssetToProjectTagEnum = {
+    accepted: 'accepted',
+    rejected: 'rejected',
+    pending_review: 'pending-review',
+    misc: 'misc'
+} as const;
+export type AddAssetToProjectTagEnum = typeof AddAssetToProjectTagEnum[keyof typeof AddAssetToProjectTagEnum];
+/**
+ * @export
+ */
+export const RemoveAssetFromProjectTagEnum = {
+    accepted: 'accepted',
+    rejected: 'rejected',
+    pending_review: 'pending-review',
+    misc: 'misc'
+} as const;
+export type RemoveAssetFromProjectTagEnum = typeof RemoveAssetFromProjectTagEnum[keyof typeof RemoveAssetFromProjectTagEnum];

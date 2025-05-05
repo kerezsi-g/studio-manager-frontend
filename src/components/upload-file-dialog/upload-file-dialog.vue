@@ -8,6 +8,7 @@ import { ref } from 'vue'
 import { useS3Upload, type S3Upload } from '@/composables/use-s3-upload'
 import { VAlert } from '../alert'
 import VFileInput from '../file-input/v-file-input.vue'
+// import type { AssetType } from '@/api-client'
 
 const props = defineProps<{
   projectId: string
@@ -27,23 +28,42 @@ const uploadFileName = ref('')
 const upload = ref<S3Upload | null>(null)
 
 async function handleSubmit() {
+  if (!fileRef.value) {
+    return
+  }
+
   const uploadController = await useS3Upload(fileRef.value!)
+
+  const [mime] = uploadController.detectedMime.split('/')
+
+  if (mime !== 'audio' && mime !== 'video' && mime !== 'image') {
+    throw new Error('Unsupported file type')
+  }
+
+  const asset = await API.Assets.createAsset({
+    CreateAssetRequest: {
+      assetName: fileRef.value!.name,
+      assetType: mime,
+    },
+  })
 
   upload.value = uploadController
 
-  const sha256 = await uploadController.start()
+  const sha256 = await uploadController.start(asset.assetId)
 
   if (!sha256) {
     return
   }
 
-  await API.Files.validateFile({ sha256 })
-
-  await API.Projects.addFileToProject({
-    tag: props.tag,
+  await API.Projects.addAssetToProject({
     projectId: props.projectId,
-    fileName: uploadFileName.value,
-    sha256,
+    tag: props.tag,
+    assetId: asset.assetId,
+  })
+
+  await API.Assets.markFileAsUploaded({
+    assetId: asset.assetId,
+    fileClass: 'base',
   })
 
   props.onResolve(sha256)
@@ -76,11 +96,6 @@ function extractDefaultName() {
       <VTextInput v-model="uploadFileName" type="text">
         <template #prefix>
           <span class="text-white opacity-50 text-sm">Filename:</span>
-        </template>
-      </VTextInput>
-      <VTextInput :model-value="tag" type="text" readonly>
-        <template #prefix>
-          <span class="text-white opacity-50 text-sm">Tag:</span>
         </template>
       </VTextInput>
       <VTextInput v-model="path" type="text">

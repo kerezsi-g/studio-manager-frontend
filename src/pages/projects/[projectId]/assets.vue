@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <route lang="json">
 {
-  "name": "project-files"
+  "name": "project-assets"
 }
 </route>
 <script setup lang="ts">
@@ -11,14 +11,13 @@ import { useProjectData } from '../[projectId].vue'
 import { VButton } from '@/components/ui/Button'
 import SolarIcon from '@/components/SolarIcon.vue'
 import dayjs from 'dayjs'
-
-// const props = defineProps<{}>()
+import { API } from '@/api'
 
 const { data, isLoading } = useProjectData()
 
-const files = computed(() => {
+const assets = computed(() => {
   if (isLoading.value) return []
-  if (data.value) return data.value.files
+  if (data.value) return data.value.assets
   return []
 })
 
@@ -26,7 +25,7 @@ const files = computed(() => {
  * ! TODO: Fix handling of duplicate entries (eg. thumbnail)
  */
 const totalSize = computed(() => {
-  const size = files.value.reduce((acc, file) => acc + file.size, 0)
+  const size = assets.value.reduce((acc, file) => acc + file.size, 0)
   return size
 })
 
@@ -72,6 +71,13 @@ function getIcon(contentType: string) {
 
   return 'file'
 }
+
+async function markFileAsUploaded(assetId: string) {
+  API.Assets.markFileAsUploaded({
+    assetId,
+    fileClass: 'base',
+  })
+}
 </script>
 <template>
   <div class="flex flex-col">
@@ -89,25 +95,25 @@ function getIcon(contentType: string) {
       <strong>Created</strong>
       <strong>Uploaded</strong>
     </header>
-    <li v-for="file in files" :key="file.sha256" class="file-list-item">
-      <SolarIcon :icon="getIcon(file.contentType)" width="24" variant="bold-duotone" />
+    <li v-for="asset in assets" :key="asset.assetId" class="file-list-item">
+      <SolarIcon :icon="getIcon(asset.contentType)" width="24" variant="bold-duotone" />
 
       <header>
         <h1 class="file-name">
-          {{ file.fileName }}
+          {{ asset.assetName }}
         </h1>
         <h2 class="file-type">
-          {{ file.contentType }}
+          {{ asset.contentType }}
         </h2>
       </header>
 
-      <span class="file-tag">{{ file.tag }}</span>
+      <span class="file-tag">{{ asset.tag }}</span>
 
-      <span class="file-size">{{ formatSize(file.size) }}</span>
+      <span class="file-size">{{ formatSize(asset.size) }}</span>
 
-      <span class="file-date">{{ formatDate(file.createdAt) }}</span>
+      <span class="file-date">{{ formatDate(asset.createdAt) }}</span>
 
-      <span class="file-date">{{ formatDate(file.uploadedAt) }}</span>
+      <span class="file-date">{{ formatDate(asset.uploadedAt) }}</span>
 
       <span class="flex gap-2">
         <VButton size="sm" color="error" variant="subdued" disabled>
@@ -116,11 +122,19 @@ function getIcon(contentType: string) {
             <SolarIcon icon="trash-bin-2" variant="bold-duotone" width="24" />
           </template>
         </VButton>
-        <VButton size="sm" color="info" variant="subdued" disabled>
+        <VButton
+          size="sm"
+          color="info"
+          variant="subdued"
+          @click="markFileAsUploaded(asset.assetId, asset.tag)"
+        >
           Download
           <template #suffix>
             <SolarIcon icon="download" variant="bold-duotone" width="24" />
           </template>
+        </VButton>
+        <VButton size="sm" color="success" @click="markFileAsUploaded(asset.assetId)">
+          postprocess
         </VButton>
       </span>
     </li>

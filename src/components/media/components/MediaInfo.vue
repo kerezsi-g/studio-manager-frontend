@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { ProjectMedia } from '@/api-client'
+import type { ProjectAsset } from '@/api-client'
 import SolarIcon from '@/components/SolarIcon.vue'
 
-defineProps<ProjectMedia>()
+defineProps<ProjectAsset>()
 </script>
 <template>
   <header class="media-player-info">
     <SolarIcon icon="music-note" variant="bold-duotone" width="24" />
     <div class="media-player-title">
-      <h1>{{ fileName }}</h1>
+      <h1>{{ assetName }}</h1>
       <h2>{{ contentType }}</h2>
     </div>
   </header>

@@ -23,7 +23,7 @@ defineProps<{
 <template>
   <ProjectGallery
     v-if="data"
-    :files="data.files"
+    :assets="data.assets"
     :projectId="data.projectId"
     @file-uploaded="reload"
   />

@@ -3,12 +3,12 @@ import { API } from '@/api'
 import { VDialog } from '../dialog'
 import { VTextInput } from '../ui/TextInput'
 import { VButton } from '../ui/Button'
-import SolarIcon from '../SolarIcon.vue'
+// import SolarIcon from '../SolarIcon.vue'
 import { ref } from 'vue'
 
 const props = defineProps<{
   projectId: string
-  sha256: string
+  assetId: string
   onResolve(result: string | null): void
   timestamp?: number
   duration?: number
@@ -20,7 +20,7 @@ async function handleSubmit() {
   const { issueId } = await API.Projects.createIssue({
     projectId: props.projectId,
     CreateIssueRequest: {
-      file: props.sha256,
+      assetId: props.assetId,
       description: issueText.value,
       timestamp: props.timestamp,
       duration: props.duration,

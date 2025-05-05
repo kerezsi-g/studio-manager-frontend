@@ -24,7 +24,7 @@ const status = computed(() => {
   }
 })
 
-const fileId = computed(() => props.file.slice(0, 16))
+const assetIdShort = computed(() => props.assetId.slice(0, 8))
 
 async function handleResolveIssue() {
   await API.Projects.resolveIssue({
@@ -56,7 +56,7 @@ async function handleResolveIssue() {
           {{ created }}
         </span>
         <div class="subtitle">
-          <span class=""> File: {{ fileId }}</span>
+          <span class=""> File: {{ assetIdShort }}</span>
         </div>
       </h3>
 

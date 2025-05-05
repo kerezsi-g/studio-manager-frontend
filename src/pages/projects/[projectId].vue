@@ -14,21 +14,6 @@ export { useProjectData }
 </script>
 <script setup lang="ts">
 import ProjectPage from '@/components/project-page/project-page.vue'
-// import { onMounted } from 'vue'
-// import { useRoute, useRouter } from 'vue-router'
-
-// const props = defineProps<{
-//   projectId: string
-// }>()
-
-// onMounted(() => {
-//   if (useRoute().name === 'project-root') {
-//   }
-
-//   useRouter().replace({ name: 'project-main', params: { projectId: props.projectId } })
-// })
-
-// const { isLoading } = useProjectData()
 </script>
 <template>
   <ProjectPage>

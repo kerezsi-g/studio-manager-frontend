@@ -14,15 +14,21 @@ function wrapUrl(url: string) {
 }
 
 const thumbnailUrl = computed(() => {
-  const file = data.value?.files.find((f) => f.tag === 'thumbnail')
+  /**
+   * TODO: Fix
+   */
+  const asset = data.value?.assets.find((f) => f.tag === 'thumbnail')
 
-  return file ? wrapUrl(`/api/files/${file.sha256}?preview=true`) : undefined
+  return asset ? wrapUrl(`/api/assets/${asset.assetId}/thumbnail`) : undefined
 })
 
 const backgroundImageUrl = computed(() => {
-  const file = data.value?.files.find((f) => f.tag === 'background-image')
+  /**
+   * TODO: Fix
+   */
+  const asset = data.value?.assets.find((f) => f.tag === 'background-image')
 
-  return file ? `/api/files/${file.sha256}` : undefined
+  return asset ? `/api/files/${asset.assetId}` : undefined
 })
 
 async function handleRename(e: MouseEvent) {
@@ -63,7 +69,7 @@ const navLinks = computed(() => {
       label: 'Gallery',
     },
     {
-      name: 'project-files',
+      name: 'project-assets',
       icon: 'folder-path-connect',
       label: 'Storage',
     },

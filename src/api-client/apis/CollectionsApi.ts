@@ -20,6 +20,7 @@ import type {
   CreateCollectionRequest,
   Project,
   SignIn200Response,
+  UpdateCollectionRequest,
 } from '../models/index';
 
 export interface AddProjectToCollectionRequest {
@@ -40,9 +41,9 @@ export interface RemoveProjectFromCollectionRequest {
     projectId: string;
 }
 
-export interface UpdateCollectionRequest {
+export interface UpdateCollectionOperationRequest {
     collectionId: string;
-    CreateCollectionRequest: CreateCollectionRequest;
+    UpdateCollectionRequest: UpdateCollectionRequest;
 }
 
 /**
@@ -132,17 +133,17 @@ export interface CollectionsApiInterface {
      * 
      * @summary updateCollection
      * @param {string} collectionId 
-     * @param {CreateCollectionRequest} CreateCollectionRequest 
+     * @param {UpdateCollectionRequest} UpdateCollectionRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof CollectionsApiInterface
      */
-    updateCollectionRaw(requestParameters: UpdateCollectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+    updateCollectionRaw(requestParameters: UpdateCollectionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
 
     /**
      * updateCollection
      */
-    updateCollection(requestParameters: UpdateCollectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+    updateCollection(requestParameters: UpdateCollectionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
 }
 
@@ -329,7 +330,7 @@ export class CollectionsApi extends runtime.BaseAPI implements CollectionsApiInt
     /**
      * updateCollection
      */
-    async updateCollectionRaw(requestParameters: UpdateCollectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+    async updateCollectionRaw(requestParameters: UpdateCollectionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
         if (requestParameters['collectionId'] == null) {
             throw new runtime.RequiredError(
                 'collectionId',
@@ -337,10 +338,10 @@ export class CollectionsApi extends runtime.BaseAPI implements CollectionsApiInt
             );
         }
 
-        if (requestParameters['CreateCollectionRequest'] == null) {
+        if (requestParameters['UpdateCollectionRequest'] == null) {
             throw new runtime.RequiredError(
-                'CreateCollectionRequest',
-                'Required parameter "CreateCollectionRequest" was null or undefined when calling updateCollection().'
+                'UpdateCollectionRequest',
+                'Required parameter "UpdateCollectionRequest" was null or undefined when calling updateCollection().'
             );
         }
 
@@ -355,7 +356,7 @@ export class CollectionsApi extends runtime.BaseAPI implements CollectionsApiInt
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: requestParameters['CreateCollectionRequest'],
+            body: requestParameters['UpdateCollectionRequest'],
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response);
@@ -364,7 +365,7 @@ export class CollectionsApi extends runtime.BaseAPI implements CollectionsApiInt
     /**
      * updateCollection
      */
-    async updateCollection(requestParameters: UpdateCollectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+    async updateCollection(requestParameters: UpdateCollectionOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
         const response = await this.updateCollectionRaw(requestParameters, initOverrides);
         return await response.value();
     }

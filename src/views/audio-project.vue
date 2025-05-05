@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Issue, ProjectDetails, ProjectMedia } from '@/api-client'
+import type { Issue, ProjectDetails, ProjectAsset } from '@/api-client'
 import { computed, onMounted, ref } from 'vue'
 
 import ProjectFilesList from '@/components/project-files-list/project-files-list.vue'
@@ -10,18 +10,17 @@ import { ProjectIssuesList, ProjectIssue } from '@/components/project-issues'
 import { useModal } from '@/components/modal'
 import SubmitIssueDialog from '@/components/submit-issue-dialog/submit-issue-dialog.vue'
 import TimestampMarker from '@/components/media/components/TimestampMarker.vue'
-import ProjectGallery from '@/components/project-gallery/project-gallery.vue'
 
 const props = defineProps<ProjectDetails>()
 
-const selectedFile = ref<ProjectMedia | null>(null)
+const selectedAsset = ref<ProjectAsset | null>(null)
 
-const primaryFiles = computed(() => {
-  return props.files.filter((file) => file.tag === 'primary')
+const primaryAssets = computed(() => {
+  return props.assets.filter((asset) => asset.tag === 'pending-review')
 })
 
-function handleSelectFile(file: ProjectMedia) {
-  selectedFile.value = file
+function handleSelectAsset(asset: ProjectAsset) {
+  selectedAsset.value = asset
 }
 
 const emit = defineEmits<{
@@ -29,8 +28,8 @@ const emit = defineEmits<{
 }>()
 
 onMounted(() => {
-  if (primaryFiles.value.length > 0) {
-    handleSelectFile(primaryFiles.value[0])
+  if (primaryAssets.value.length > 0) {
+    handleSelectAsset(primaryAssets.value[0])
   }
 })
 
@@ -43,7 +42,7 @@ async function handleSubmitIssue(e: MouseEvent, timestamp?: number, length?: num
     SubmitIssueDialog,
     {
       projectId: props.projectId,
-      sha256: selectedFile.value!.sha256,
+      assetId: selectedAsset.value!.assetId,
       timestamp,
       duration: length,
     },
@@ -67,14 +66,14 @@ const pendingIssues = computed(() => {
  * Filters issues to the currently selected file
  */
 function issueFilter(issue: Issue) {
-  return issue.file === selectedFile.value?.sha256
+  return issue.assetId === selectedAsset.value?.assetId
 }
 
 const view = ref<'main' | 'gallery'>('main')
 </script>
 <template>
   <template v-if="view === 'main'">
-    <AudioPlayer v-if="selectedFile" v-bind="selectedFile" @submit-issue="handleSubmitIssue">
+    <AudioPlayer v-if="selectedAsset" v-bind="selectedAsset" @submit-issue="handleSubmitIssue">
       <template #markers-back>
         <TimestampMarker
           v-for="issue in pendingIssues.filter(issueFilter)"
@@ -97,15 +96,15 @@ const view = ref<'main' | 'gallery'>('main')
 
     <div class="flex-grow overflow-hidden grid grid-cols-2">
       <ProjectFilesList
-        :files="files"
+        :assets="assets"
         :projectId="projectId"
         @file-uploaded="$emit('changed')"
-        v-slot="file"
+        v-slot="asset"
       >
         <ProjectFilesListItem
-          :data="file"
-          @click="() => handleSelectFile(file)"
-          :class="{ selected: file.sha256 === selectedFile?.sha256 }"
+          :data="asset"
+          @click="() => handleSelectAsset(asset)"
+          :class="{ selected: asset.assetId === selectedAsset?.assetId }"
         />
       </ProjectFilesList>
 
@@ -117,10 +116,6 @@ const view = ref<'main' | 'gallery'>('main')
         <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
       </ProjectIssuesList>
     </div>
-  </template>
-
-  <template v-if="view === 'gallery'">
-    <ProjectGallery :files="files" :projectId="projectId" @file-uploaded="$emit('changed')" />
   </template>
 </template>
 <style lang="css">

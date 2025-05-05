@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { ProjectMedia } from '@/api-client'
+import type { ProjectAsset } from '@/api-client'
 import { computed } from 'vue'
 import dayjs from 'dayjs'
 import SolarIcon from '@/components/SolarIcon.vue'
 
 interface Props {
-  data: ProjectMedia
+  data: ProjectAsset
 }
 
 const props = defineProps<Props>()
@@ -37,7 +37,7 @@ const icon = computed(() => {
 
     <div class="flex flex-col flex-grow">
       <span class="file-name">
-        {{ data.fileName }}
+        {{ data.assetName }}
       </span>
 
       <span class="file-type">
