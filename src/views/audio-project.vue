@@ -68,56 +68,49 @@ const pendingIssues = computed(() => {
 function issueFilter(issue: Issue) {
   return issue.assetId === selectedAsset.value?.assetId
 }
-
-const view = ref<'main' | 'gallery'>('main')
 </script>
 <template>
-  <template v-if="view === 'main'">
-    <AudioPlayer v-if="selectedAsset" v-bind="selectedAsset" @submit-issue="handleSubmitIssue">
-      <template #markers-back>
-        <TimestampMarker
-          v-for="issue in pendingIssues.filter(issueFilter)"
-          :key="issue.issueId"
-          :at="issue.timestamp!"
-          class="color-issue"
-        >
-          <template #label-bottom> {{ issue.description }} </template>
-        </TimestampMarker>
-      </template>
-
-      <template #markers-front>
-        <TimestampMarker v-if="issueToCreate" :at="issueToCreate" class="color-issue">
-          <!-- <template #label-top> {{ formatTime(issueToCreate) }} </template> -->
-        </TimestampMarker>
-      </template>
-    </AudioPlayer>
-
-    <hr class="divider" />
-
-    <div class="flex-grow overflow-hidden grid grid-cols-2">
-      <ProjectFilesList
-        :assets="assets"
-        :projectId="projectId"
-        @file-uploaded="$emit('changed')"
-        v-slot="asset"
+  <AudioPlayer v-if="selectedAsset" v-bind="selectedAsset" @submit-issue="handleSubmitIssue">
+    <template #markers-back>
+      <TimestampMarker
+        v-for="issue in pendingIssues.filter(issueFilter)"
+        :key="issue.issueId"
+        :at="issue.timestamp!"
+        class="color-issue"
       >
-        <ProjectFilesListItem
-          :data="asset"
-          @click="() => handleSelectAsset(asset)"
-          :class="{ selected: asset.assetId === selectedAsset?.assetId }"
-        />
-      </ProjectFilesList>
+        <template #label-bottom> {{ issue.description }} </template>
+      </TimestampMarker>
+    </template>
 
-      <ProjectIssuesList
-        :issues="issues.filter(issueFilter)"
-        :project-id="projectId"
-        v-slot="issue"
-      >
-        <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
-      </ProjectIssuesList>
-    </div>
-  </template>
+    <template #markers-front>
+      <TimestampMarker v-if="issueToCreate" :at="issueToCreate" class="color-issue">
+        <!-- <template #label-top> {{ formatTime(issueToCreate) }} </template> -->
+      </TimestampMarker>
+    </template>
+  </AudioPlayer>
+
+  <hr class="divider" />
+
+  <div class="flex-grow overflow-hidden grid grid-cols-2">
+    <ProjectFilesList
+      :assets="assets"
+      :projectId="projectId"
+      @file-uploaded="$emit('changed')"
+      v-slot="asset"
+    >
+      <ProjectFilesListItem
+        :data="asset"
+        @click="() => handleSelectAsset(asset)"
+        :class="{ selected: asset.assetId === selectedAsset?.assetId }"
+      />
+    </ProjectFilesList>
+
+    <ProjectIssuesList :issues="issues.filter(issueFilter)" :project-id="projectId" v-slot="issue">
+      <ProjectIssue v-bind="issue" @issue-resolved="() => $emit('changed')" />
+    </ProjectIssuesList>
+  </div>
 </template>
+
 <style lang="css">
 .color-issue {
   --color-main: 185 28 46;
