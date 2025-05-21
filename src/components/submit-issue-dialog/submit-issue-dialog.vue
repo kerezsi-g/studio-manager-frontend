@@ -8,19 +8,19 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   projectId: string
-  assetId: string
-  onResolve(result: string | null): void
+  fileId: string
   timestamp?: number
   duration?: number
+  onResolve(result: string | null): void
 }>()
 
 const issueText = ref('')
 
 async function handleSubmit() {
-  const { issueId } = await API.Projects.createIssue({
-    projectId: props.projectId,
+  const { issueId } = await API.Issues.createIssue({
     CreateIssueRequest: {
-      assetId: props.assetId,
+      projectId: props.projectId,
+      fileId: props.fileId,
       description: issueText.value,
       timestamp: props.timestamp,
       duration: props.duration,

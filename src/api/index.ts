@@ -1,10 +1,10 @@
 import {
+  Configuration,
   ProjectsApi,
   AuthApi,
   CollectionsApi,
   FilesApi,
-  Configuration,
-  AssetsApi,
+  IssuesApi,
 } from '@/api-client'
 
 const configuration = new Configuration({
@@ -16,5 +16,5 @@ export const API = {
   Auth: new AuthApi(configuration),
   Collections: new CollectionsApi(configuration),
   Files: new FilesApi(configuration),
-  Assets: new AssetsApi(configuration),
+  Issues: new IssuesApi(configuration),
 }

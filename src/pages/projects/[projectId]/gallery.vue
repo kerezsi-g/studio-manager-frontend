@@ -23,6 +23,7 @@ defineProps<{
 <template>
   <ProjectGallery
     v-if="data"
+    assetType="misc"
     :assets="data.assets"
     :projectId="data.projectId"
     @file-uploaded="reload"

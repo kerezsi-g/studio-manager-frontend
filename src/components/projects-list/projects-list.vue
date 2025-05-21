@@ -1,13 +1,24 @@
+<i18n lang="json">
+{
+  "en": {
+    "no-data": "No Projects found",
+    "create-project": "Create new project",
+    "title": "Projects"
+  }
+}
+</i18n>
 <script setup lang="ts">
 import type { Project } from '@/api-client'
 import { useModal } from '../modal'
 import CreateProjectDialog from '../create-project-dialog/create-project-dialog.vue'
 import SolarIcon from '../SolarIcon.vue'
 import { VButton } from '../ui/Button'
-import { Icon } from '@iconify/vue/dist/iconify.js'
-import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
+
 import PageWrapper from '../page-wrapper/page-wrapper.vue'
 import ProjectListItem from './project-list-item.vue'
+
+const { t } = useI18n()
 
 defineProps<{
   projects: Project[]
@@ -26,10 +37,10 @@ async function handleCreateProject(e?: MouseEvent) {
 }
 </script>
 <template>
-  <PageWrapper title="Projects">
+  <PageWrapper :title="t('title')">
     <template #actions>
       <VButton @click="handleCreateProject">
-        Create new project
+        {{ t('create-project') }}
         <template #suffix>
           <SolarIcon icon="add-circle" class="icon-base" />
         </template>
@@ -58,7 +69,7 @@ async function handleCreateProject(e?: MouseEvent) {
 }
 
 .grid-list {
-  --width: 240px;
+  --width: 320px;
   /* --height: 240px; */
   display: grid;
   gap: 1rem;

@@ -12,6 +12,8 @@ import { VButton } from '@/components/ui/Button'
 import SolarIcon from '@/components/SolarIcon.vue'
 import dayjs from 'dayjs'
 import { API } from '@/api'
+import AssetStats from '@/components/asset-stats/asset-stats.vue'
+import { formatBytes } from '@/components/asset-stats/format-file-size'
 
 const { data, isLoading } = useProjectData()
 
@@ -21,38 +23,8 @@ const assets = computed(() => {
   return []
 })
 
-/**
- * ! TODO: Fix handling of duplicate entries (eg. thumbnail)
- */
-const totalSize = computed(() => {
-  const size = assets.value.reduce((acc, file) => acc + file.size, 0)
-  return size
-})
-
 function formatDate(d: number) {
   return dayjs(d).format('YYYY-MM-DD HH:mm')
-}
-
-enum Magnitude {
-  KB = 1024,
-  MB = 1024 ** 2,
-  GB = 1024 ** 3,
-}
-
-function formatSize(size: number) {
-  if (size < Magnitude.KB) {
-    return `${size.toLocaleString()}`
-  }
-
-  if (size < Magnitude.MB) {
-    return `${(size / Magnitude.KB).toLocaleString()} KB`
-  }
-
-  if (size < Magnitude.GB) {
-    return `${(size / Magnitude.MB).toLocaleString()} MB`
-  }
-
-  return `${(size / Magnitude.GB).toLocaleString()} GB`
 }
 
 function getIcon(contentType: string) {
@@ -71,74 +43,57 @@ function getIcon(contentType: string) {
 
   return 'file'
 }
-
-async function markFileAsUploaded(assetId: string) {
-  API.Assets.markFileAsUploaded({
-    assetId,
-    fileClass: 'base',
-  })
-}
 </script>
 <template>
-  <div class="flex flex-col">
-    <div class="flex justify-between p-8 text-2xl">
-      <span>Total size: {{ formatSize(totalSize) }}</span>
-    </div>
-  </div>
-  <ul class="file-list">
-    <header>
-      <span />
-
-      <strong>File name</strong>
-      <strong>Tag</strong>
-      <strong>Size</strong>
-      <strong>Created</strong>
-      <strong>Uploaded</strong>
-    </header>
-    <li v-for="asset in assets" :key="asset.assetId" class="file-list-item">
-      <SolarIcon :icon="getIcon(asset.contentType)" width="24" variant="bold-duotone" />
-
+  <div class="flex overflow-auto items-start px-8 gap-4 py-4">
+    <ul class="file-list">
       <header>
-        <h1 class="file-name">
-          {{ asset.assetName }}
-        </h1>
-        <h2 class="file-type">
-          {{ asset.contentType }}
-        </h2>
+        <span />
+
+        <strong>File name</strong>
+        <!-- <strong>Tag</strong> -->
+        <strong>Size</strong>
+        <strong>Created</strong>
+        <strong>Uploaded</strong>
       </header>
+      <li v-for="asset in assets" :key="asset.fileId" class="file-list-item">
+        <SolarIcon :icon="getIcon(asset.contentType)" width="24" variant="bold-duotone" />
 
-      <span class="file-tag">{{ asset.tag }}</span>
+        <header>
+          <h1 class="file-name">
+            {{ asset.assetName }}
+          </h1>
+          <h2 class="file-type">
+            {{ asset.contentType }}
+          </h2>
+        </header>
 
-      <span class="file-size">{{ formatSize(asset.size) }}</span>
+        <!-- <span class="file-tag">{{ asset.tag }}</span> -->
 
-      <span class="file-date">{{ formatDate(asset.createdAt) }}</span>
+        <span class="file-size">{{ formatBytes(asset.size) }}</span>
 
-      <span class="file-date">{{ formatDate(asset.uploadedAt) }}</span>
+        <span class="file-date">{{ formatDate(asset.uploadedAt) }}</span>
 
-      <span class="flex gap-2">
-        <VButton size="sm" color="error" variant="subdued" disabled>
-          Delete
-          <template #suffix>
-            <SolarIcon icon="trash-bin-2" variant="bold-duotone" width="24" />
-          </template>
-        </VButton>
-        <VButton
-          size="sm"
-          color="info"
-          variant="subdued"
-          @click="markFileAsUploaded(asset.assetId, asset.tag)"
-        >
-          Download
-          <template #suffix>
-            <SolarIcon icon="download" variant="bold-duotone" width="24" />
-          </template>
-        </VButton>
-        <VButton size="sm" color="success" @click="markFileAsUploaded(asset.assetId)">
-          postprocess
-        </VButton>
-      </span>
-    </li>
-  </ul>
+        <span class="flex gap-2">
+          <VButton size="sm" color="error" variant="subdued" disabled>
+            Delete
+            <template #suffix>
+              <SolarIcon icon="trash-bin-2" variant="bold-duotone" width="24" />
+            </template>
+          </VButton>
+          <a :href="`/api/files/${asset.fileId}?download=true`">
+            <VButton size="sm" color="info" variant="subdued">
+              Download
+              <template #suffix>
+                <SolarIcon icon="download" variant="bold-duotone" width="24" />
+              </template>
+            </VButton>
+          </a>
+        </span>
+      </li>
+    </ul>
+    <AssetStats :assets="assets" />
+  </div>
 </template>
 <style lang="css">
 .file-list {
@@ -146,9 +101,13 @@ async function markFileAsUploaded(assetId: string) {
   /* flex-direction: column; */
 
   display: grid;
-  grid-template-columns: auto 1fr auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
+  justify-content: flex-start;
+
   grid-auto-flow: row;
   gap: 4px;
+
+  padding: 1rem 2rem;
 
   > header {
     grid-column: 1 / -1;
@@ -174,17 +133,18 @@ async function markFileAsUploaded(assetId: string) {
   }
 
   .file-size {
-    font-size: 13px;
-    opacity: 0.75;
+    font-size: 12px;
+    opacity: 0.5;
     font-family: 'Roboto Mono', monospace;
-    font-weight: 500;
+    font-weight: 600;
+    /* text-align: right; */
   }
 
   line-height: normal;
 
   .file-name {
     font-size: 1rem;
-    margin-right: 1rem;
+    padding-right: 3rem;
   }
 
   .file-hash,
@@ -200,7 +160,7 @@ async function markFileAsUploaded(assetId: string) {
     font-weight: 500;
     /* border-radius: 2px; */
     /* padding: 4px 8px; */
-    opacity: 0.8;
+    opacity: 0.85;
   }
 
   border-left: 4px solid transparent;

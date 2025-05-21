@@ -5,6 +5,7 @@ import { computed } from 'vue'
 
 import SolarIcon from '../SolarIcon.vue'
 import icons from '../icons'
+import LazyImage from '../img-lazy/LazyImage.vue'
 
 const props = defineProps<Project>()
 
@@ -14,7 +15,7 @@ const props = defineProps<Project>()
 
 const routeTo = computed(() => {
   return {
-    name: 'project-root',
+    name: 'project-main',
     params: { projectId: props.projectId },
   }
 })
@@ -34,18 +35,17 @@ const icon = computed(() => {
 })
 
 const thumbnailUrl = computed(() => {
-  if (props.thumbnail) {
-    return `url('/api/files/${props.thumbnail}?preview=true')`
-  }
+  const url = `/api/projects/${props.projectId}/thumbnail`
 
-  return undefined
+  return url
 })
 </script>
 <template>
   <router-link :to="routeTo" class="folder-link">
     <li class="project-list-item">
-      <span class="project-thumbnail" :style="{ backgroundImage: thumbnailUrl }">
-        <SolarIcon :icon="icon" class="icon-xl" variant="bold-duotone" v-if="!thumbnailUrl" />
+      <span class="project-thumbnail">
+        <SolarIcon :icon="icon" class="icon-xl" variant="bold-duotone" />
+        <LazyImage :src="thumbnailUrl" />
       </span>
       <h1>
         {{ projectName }}
@@ -61,8 +61,12 @@ const thumbnailUrl = computed(() => {
 .project-thumbnail {
   --size: 192px;
 
-  width: var(--size);
-  height: var(--size);
+  position: relative;
+
+  /* width: var(--size); */
+  /* height: var(--size); */
+  width: 320px;
+  height: 240px;
 
   border-radius: 2px;
   background-size: cover;
@@ -74,6 +78,16 @@ const thumbnailUrl = computed(() => {
 
   background-color: rgba(var(--surface-dark) / 2575%);
 
+  img {
+    position: absolute;
+
+    object-fit: cover;
+    object-position: center;
+
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
   /* @apply shadow-xl; */
   /* box-shadow: inset 0px 0px 3px rgba(255 255 255 / 25%); */
 }
@@ -92,8 +106,8 @@ const thumbnailUrl = computed(() => {
   h1 {
     text-shadow: 0 0 2px rgba(0 0 0 / 25%);
     font-weight: 500;
-    font-size: 1.25rem;
-    padding: 4px;
+    font-size: 1.5rem;
+    padding-inline: 4px;
   }
 
   h2 {

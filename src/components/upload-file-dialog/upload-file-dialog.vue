@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { API } from '@/api'
+// import { API } from '@/api'
 import { VDialog } from '../dialog'
 import VButton from '../ui/Button/v-button.vue'
 
 import VTextInput from '../ui/TextInput/v-text-input.vue'
 import { ref } from 'vue'
-import { useS3Upload, type S3Upload } from '@/composables/use-s3-upload'
+import { useTrackedUpload, type TrackedUpload } from '@/composables/use-tracked-upload'
 import { VAlert } from '../alert'
 import VFileInput from '../file-input/v-file-input.vue'
+
+import { API } from '@/api'
+import type { AssetType } from '@/api-client'
 // import type { AssetType } from '@/api-client'
 
 const props = defineProps<{
   projectId: string
-  tag: string
+  tag: AssetType
   onResolve(fileId: string | null): void
 }>()
 
@@ -25,48 +28,35 @@ const fileRef = ref<File>()
 const path = ref('')
 const uploadFileName = ref('')
 
-const upload = ref<S3Upload | null>(null)
+const upload = ref<TrackedUpload | null>(null)
 
 async function handleSubmit() {
   if (!fileRef.value) {
     return
   }
 
-  const uploadController = await useS3Upload(fileRef.value!)
+  const formData = new FormData()
 
-  const [mime] = uploadController.detectedMime.split('/')
+  formData.append('file', fileRef.value)
 
-  if (mime !== 'audio' && mime !== 'video' && mime !== 'image') {
-    throw new Error('Unsupported file type')
-  }
-
-  const asset = await API.Assets.createAsset({
-    CreateAssetRequest: {
-      assetName: fileRef.value!.name,
-      assetType: mime,
-    },
+  const uploadController = useTrackedUpload<{ fileId: string }>(formData, {
+    url: '/api/files',
+    method: 'PUT',
   })
 
   upload.value = uploadController
 
-  const sha256 = await uploadController.start(asset.assetId)
+  const result = await uploadController.execute()
 
-  if (!sha256) {
-    return
+  if (result) {
+    await API.Projects.createAsset({
+      projectId: props.projectId,
+      fileId: result.fileId,
+      assetType: props.tag,
+    })
+
+    props.onResolve(result.fileId)
   }
-
-  await API.Projects.addAssetToProject({
-    projectId: props.projectId,
-    tag: props.tag,
-    assetId: asset.assetId,
-  })
-
-  await API.Assets.markFileAsUploaded({
-    assetId: asset.assetId,
-    fileClass: 'base',
-  })
-
-  props.onResolve(sha256)
 }
 
 function extractDefaultName() {
@@ -78,6 +68,10 @@ function extractDefaultName() {
   const fileNameWithoutExtension = fileRef.value.name.split('.').slice(0, -1).join('')
 
   uploadFileName.value = fileNameWithoutExtension
+}
+
+function formatPct(pct: number): string {
+  return Math.round(pct * 100) + '%'
 }
 </script>
 <template>
@@ -107,10 +101,10 @@ function extractDefaultName() {
         <span class="progress-outer">
           <span
             class="progress-inner"
-            :style="{ '--width': `${(upload?.progress ?? 0) * 100}%` }"
+            :style="{ '--width': `${formatPct(upload?.progress ?? 0)}` }"
           />
         </span>
-        <span class="progress-text"> {{ upload?.progress ?? 0 }}% </span>
+        <span class="progress-text"> {{ formatPct(upload?.progress ?? 0) }} </span>
       </div>
     </template>
     <template #actions>

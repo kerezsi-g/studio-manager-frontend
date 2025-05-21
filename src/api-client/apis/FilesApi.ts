@@ -15,27 +15,16 @@
 
 import * as runtime from '../runtime';
 import type {
-  CreateUploadUrl200Response,
   SignIn200Response,
 } from '../models/index';
 
-export interface CreateUploadUrlRequest {
-    fileName: string;
-    contentType: string;
-    createdAt: number;
-    sha256: string;
-}
-
-export interface GetMetadataRequest {
-    sha256: string;
+export interface GetChildResourceRequest {
+    fileId: string;
+    suffix: string;
 }
 
 export interface MarkForDeletionRequest {
-    sha256: string;
-}
-
-export interface ValidateFileRequest {
-    sha256: string;
+    fileId: string;
 }
 
 /**
@@ -47,41 +36,24 @@ export interface ValidateFileRequest {
 export interface FilesApiInterface {
     /**
      * 
-     * @summary createUploadUrl
-     * @param {string} fileName 
-     * @param {string} contentType 
-     * @param {number} createdAt 
-     * @param {string} sha256 
+     * @summary getChildResource
+     * @param {string} fileId 
+     * @param {string} suffix 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApiInterface
      */
-    createUploadUrlRaw(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateUploadUrl200Response>>;
+    getChildResourceRaw(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
 
     /**
-     * createUploadUrl
+     * getChildResource
      */
-    createUploadUrl(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateUploadUrl200Response>;
-
-    /**
-     * 
-     * @summary getMetadata
-     * @param {string} sha256 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FilesApiInterface
-     */
-    getMetadataRaw(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>>;
-
-    /**
-     * getMetadata
-     */
-    getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object>;
+    getChildResource(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
 
     /**
      * 
      * @summary markForDeletion
-     * @param {string} sha256 
+     * @param {string} fileId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FilesApiInterface
@@ -93,21 +65,6 @@ export interface FilesApiInterface {
      */
     markForDeletion(requestParameters: MarkForDeletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
-    /**
-     * 
-     * @summary validateFile
-     * @param {string} sha256 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FilesApiInterface
-     */
-    validateFileRaw(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
-
-    /**
-     * validateFile
-     */
-    validateFile(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
-
 }
 
 /**
@@ -116,79 +73,20 @@ export interface FilesApiInterface {
 export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
 
     /**
-     * createUploadUrl
+     * getChildResource
      */
-    async createUploadUrlRaw(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateUploadUrl200Response>> {
-        if (requestParameters['fileName'] == null) {
+    async getChildResourceRaw(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['fileId'] == null) {
             throw new runtime.RequiredError(
-                'fileName',
-                'Required parameter "fileName" was null or undefined when calling createUploadUrl().'
+                'fileId',
+                'Required parameter "fileId" was null or undefined when calling getChildResource().'
             );
         }
 
-        if (requestParameters['contentType'] == null) {
+        if (requestParameters['suffix'] == null) {
             throw new runtime.RequiredError(
-                'contentType',
-                'Required parameter "contentType" was null or undefined when calling createUploadUrl().'
-            );
-        }
-
-        if (requestParameters['createdAt'] == null) {
-            throw new runtime.RequiredError(
-                'createdAt',
-                'Required parameter "createdAt" was null or undefined when calling createUploadUrl().'
-            );
-        }
-
-        if (requestParameters['sha256'] == null) {
-            throw new runtime.RequiredError(
-                'sha256',
-                'Required parameter "sha256" was null or undefined when calling createUploadUrl().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        if (requestParameters['fileName'] != null) {
-            queryParameters['fileName'] = requestParameters['fileName'];
-        }
-
-        if (requestParameters['contentType'] != null) {
-            queryParameters['contentType'] = requestParameters['contentType'];
-        }
-
-        if (requestParameters['createdAt'] != null) {
-            queryParameters['createdAt'] = requestParameters['createdAt'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/files/{sha256}`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * createUploadUrl
-     */
-    async createUploadUrl(requestParameters: CreateUploadUrlRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateUploadUrl200Response> {
-        const response = await this.createUploadUrlRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * getMetadata
-     */
-    async getMetadataRaw(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
-        if (requestParameters['sha256'] == null) {
-            throw new runtime.RequiredError(
-                'sha256',
-                'Required parameter "sha256" was null or undefined when calling getMetadata().'
+                'suffix',
+                'Required parameter "suffix" was null or undefined when calling getChildResource().'
             );
         }
 
@@ -197,31 +95,30 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/files/{sha256}/metadata`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            path: `/files/{fileId}/{suffix}`.replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters['suffix']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * getMetadata
+     * getChildResource
      */
-    async getMetadata(requestParameters: GetMetadataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.getMetadataRaw(requestParameters, initOverrides);
-        return await response.value();
+    async getChildResource(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.getChildResourceRaw(requestParameters, initOverrides);
     }
 
     /**
      * markForDeletion
      */
     async markForDeletionRaw(requestParameters: MarkForDeletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['sha256'] == null) {
+        if (requestParameters['fileId'] == null) {
             throw new runtime.RequiredError(
-                'sha256',
-                'Required parameter "sha256" was null or undefined when calling markForDeletion().'
+                'fileId',
+                'Required parameter "fileId" was null or undefined when calling markForDeletion().'
             );
         }
 
@@ -230,7 +127,7 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/files/{sha256}`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
+            path: `/files/{fileId}`.replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -244,39 +141,6 @@ export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
      */
     async markForDeletion(requestParameters: MarkForDeletionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
         const response = await this.markForDeletionRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * validateFile
-     */
-    async validateFileRaw(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
-        if (requestParameters['sha256'] == null) {
-            throw new runtime.RequiredError(
-                'sha256',
-                'Required parameter "sha256" was null or undefined when calling validateFile().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/files/{sha256}`.replace(`{${"sha256"}}`, encodeURIComponent(String(requestParameters['sha256']))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * validateFile
-     */
-    async validateFile(requestParameters: ValidateFileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
-        const response = await this.validateFileRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

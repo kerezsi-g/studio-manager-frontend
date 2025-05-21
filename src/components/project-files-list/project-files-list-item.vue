@@ -46,7 +46,7 @@ const icon = computed(() => {
     </div>
 
     <span class="file-date">
-      {{ formatDate(data.createdAt) }}
+      {{ formatDate(data.uploadedAt) }}
     </span>
   </li>
 </template>

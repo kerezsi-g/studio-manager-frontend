@@ -5,13 +5,12 @@
  * 
  * @export
  */
-export const AssetTag = {
-    accepted: 'accepted',
-    rejected: 'rejected',
+export const AssetStatus = {
     pending_review: 'pending-review',
-    misc: 'misc'
+    accepted: 'accepted',
+    rejected: 'rejected'
 } as const;
-export type AssetTag = typeof AssetTag[keyof typeof AssetTag];
+export type AssetStatus = typeof AssetStatus[keyof typeof AssetStatus];
 
 
 /**
@@ -19,9 +18,11 @@ export type AssetTag = typeof AssetTag[keyof typeof AssetTag];
  * @export
  */
 export const AssetType = {
-    audio: 'audio',
-    video: 'video',
-    image: 'image'
+    primary: 'primary',
+    misc: 'misc',
+    source: 'source',
+    background_image: 'background-image',
+    thumbnail: 'thumbnail'
 } as const;
 export type AssetType = typeof AssetType[keyof typeof AssetType];
 
@@ -127,80 +128,6 @@ export interface Collection {
 /**
  * 
  * @export
- * @interface CreateAsset200Response
- */
-export interface CreateAsset200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAsset200Response
-     */
-    assetId: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAsset200Response
-     */
-    assetName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAsset200Response
-     */
-    assetType: CreateAsset200ResponseAssetTypeEnum;
-    /**
-     * 
-     * @type {number}
-     * @memberof CreateAsset200Response
-     */
-    createdAt: number;
-}
-
-
-/**
- * @export
- */
-export const CreateAsset200ResponseAssetTypeEnum = {
-    audio: 'audio',
-    video: 'video',
-    image: 'image'
-} as const;
-export type CreateAsset200ResponseAssetTypeEnum = typeof CreateAsset200ResponseAssetTypeEnum[keyof typeof CreateAsset200ResponseAssetTypeEnum];
-
-/**
- * 
- * @export
- * @interface CreateAssetRequest
- */
-export interface CreateAssetRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAssetRequest
-     */
-    assetName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateAssetRequest
-     */
-    assetType: CreateAssetRequestAssetTypeEnum;
-}
-
-
-/**
- * @export
- */
-export const CreateAssetRequestAssetTypeEnum = {
-    audio: 'audio',
-    video: 'video',
-    image: 'image'
-} as const;
-export type CreateAssetRequestAssetTypeEnum = typeof CreateAssetRequestAssetTypeEnum[keyof typeof CreateAssetRequestAssetTypeEnum];
-
-/**
- * 
- * @export
  * @interface CreateCollection200Response
  */
 export interface CreateCollection200Response {
@@ -227,19 +154,6 @@ export interface CreateCollectionRequest {
 /**
  * 
  * @export
- * @interface CreateIssue200Response
- */
-export interface CreateIssue200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateIssue200Response
-     */
-    issueId: string;
-}
-/**
- * 
- * @export
  * @interface CreateIssueRequest
  */
 export interface CreateIssueRequest {
@@ -248,7 +162,13 @@ export interface CreateIssueRequest {
      * @type {string}
      * @memberof CreateIssueRequest
      */
-    assetId: string;
+    fileId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateIssueRequest
+     */
+    projectId: string;
     /**
      * 
      * @type {string}
@@ -271,15 +191,15 @@ export interface CreateIssueRequest {
 /**
  * 
  * @export
- * @interface CreateProject200Response
+ * @interface CreateIssueResponse
  */
-export interface CreateProject200Response {
+export interface CreateIssueResponse {
     /**
      * 
      * @type {string}
-     * @memberof CreateProject200Response
+     * @memberof CreateIssueResponse
      */
-    projectId: string;
+    issueId: string;
 }
 /**
  * 
@@ -309,32 +229,6 @@ export interface CreateProjectRequest {
 /**
  * 
  * @export
- * @interface CreateUploadUrl200Response
- */
-export interface CreateUploadUrl200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUploadUrl200Response
-     */
-    uploadUrl: string;
-}
-/**
- * 
- * @export
- * @interface GetPublicAccessUrl200Response
- */
-export interface GetPublicAccessUrl200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof GetPublicAccessUrl200Response
-     */
-    url: string;
-}
-/**
- * 
- * @export
  * @interface Issue
  */
 export interface Issue {
@@ -349,7 +243,13 @@ export interface Issue {
      * @type {string}
      * @memberof Issue
      */
-    assetId: string;
+    projectId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Issue
+     */
+    fileId: string;
     /**
      * 
      * @type {string}
@@ -423,12 +323,6 @@ export interface Project {
      * @memberof Project
      */
     createdAt: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof Project
-     */
-    thumbnail: string | null;
 }
 /**
  * 
@@ -441,7 +335,7 @@ export interface ProjectAsset {
      * @type {string}
      * @memberof ProjectAsset
      */
-    assetId: string;
+    fileId: string;
     /**
      * 
      * @type {string}
@@ -450,28 +344,22 @@ export interface ProjectAsset {
     assetName: string;
     /**
      * 
-     * @type {AssetTag}
+     * @type {AssetType}
      * @memberof ProjectAsset
      */
-    tag: AssetTag;
+    assetType: AssetType;
     /**
      * 
-     * @type {number}
+     * @type {AssetStatus}
      * @memberof ProjectAsset
      */
-    addedAt: number;
+    tag: AssetStatus;
     /**
      * 
      * @type {number}
      * @memberof ProjectAsset
      */
     uploadedAt: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjectAsset
-     */
-    createdAt: number;
     /**
      * 
      * @type {string}
@@ -510,7 +398,7 @@ export interface ProjectDetails {
      * @type {string}
      * @memberof ProjectDetails
      */
-    projectType: ProjectDetailsProjectTypeEnum;
+    projectType: string;
     /**
      * 
      * @type {string}
@@ -536,30 +424,6 @@ export interface ProjectDetails {
      */
     issues: Array<Issue>;
 }
-
-
-/**
- * @export
- */
-export const ProjectDetailsProjectTypeEnum = {
-    audio: 'audio',
-    video: 'video',
-    image: 'image'
-} as const;
-export type ProjectDetailsProjectTypeEnum = typeof ProjectDetailsProjectTypeEnum[keyof typeof ProjectDetailsProjectTypeEnum];
-
-
-/**
- * 
- * @export
- */
-export const ProjectType = {
-    audio: 'audio',
-    video: 'video',
-    image: 'image'
-} as const;
-export type ProjectType = typeof ProjectType[keyof typeof ProjectType];
-
 /**
  * 
  * @export

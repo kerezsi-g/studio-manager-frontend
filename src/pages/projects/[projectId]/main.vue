@@ -16,21 +16,18 @@ export { useProjectData }
 import { VAlert } from '@/components/alert'
 
 import AudioProject from '@/views/audio-project.vue'
+import PhotographyProject from '@/views/photography-project.vue'
 
 const { data, reload } = useProjectData()
 </script>
 <template>
   <AudioProject v-if="data?.projectType === 'audio'" v-bind="data" @changed="reload" />
 
+  <PhotographyProject v-if="data?.projectType === 'image'" v-bind="data" @changed="reload" />
+
   <div v-if="data?.projectType === 'video'" class="py-16 px-24">
     <VAlert icon="confounded-circle" color="error" title="Unsupported project type">
       User interface for video projects are not supported yet.
-    </VAlert>
-  </div>
-
-  <div v-if="data?.projectType === 'image'" class="py-16 px-24">
-    <VAlert icon="confounded-circle" color="error" title="Unsupported project type">
-      User interface for photography projects are not supported yet.
     </VAlert>
   </div>
 </template>

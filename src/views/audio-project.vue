@@ -42,7 +42,7 @@ async function handleSubmitIssue(e: MouseEvent, timestamp?: number, length?: num
     SubmitIssueDialog,
     {
       projectId: props.projectId,
-      assetId: selectedAsset.value!.assetId,
+      fileId: selectedAsset.value!.fileId,
       timestamp,
       duration: length,
     },
@@ -66,7 +66,7 @@ const pendingIssues = computed(() => {
  * Filters issues to the currently selected file
  */
 function issueFilter(issue: Issue) {
-  return issue.assetId === selectedAsset.value?.assetId
+  return issue.fileId === selectedAsset.value?.fileId
 }
 </script>
 <template>
@@ -93,6 +93,7 @@ function issueFilter(issue: Issue) {
 
   <div class="flex-grow overflow-hidden grid grid-cols-2">
     <ProjectFilesList
+      assetType="primary"
       :assets="assets"
       :projectId="projectId"
       @file-uploaded="$emit('changed')"
@@ -101,7 +102,7 @@ function issueFilter(issue: Issue) {
       <ProjectFilesListItem
         :data="asset"
         @click="() => handleSelectAsset(asset)"
-        :class="{ selected: asset.assetId === selectedAsset?.assetId }"
+        :class="{ selected: asset.fileId === selectedAsset?.fileId }"
       />
     </ProjectFilesList>
 

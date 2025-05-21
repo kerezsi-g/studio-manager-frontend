@@ -1,8 +1,8 @@
-apis/AssetsApi.ts
 apis/AuthApi.ts
 apis/CollectionsApi.ts
 apis/DefaultApi.ts
 apis/FilesApi.ts
+apis/IssuesApi.ts
 apis/ProjectsApi.ts
 apis/index.ts
 index.ts

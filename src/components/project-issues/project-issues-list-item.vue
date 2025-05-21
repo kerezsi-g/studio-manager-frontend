@@ -12,8 +12,6 @@ const props = defineProps<Issue & { projectId: string }>()
 
 const emit = defineEmits<{ (c: 'issue-resolved'): void }>()
 
-const id = computed(() => props.issueId.slice(0, 8))
-
 const created = computed(() => dayjs(props.createdAt).format('YYYY-MM-DD HH:mm'))
 
 const status = computed(() => {
@@ -24,11 +22,10 @@ const status = computed(() => {
   }
 })
 
-const assetIdShort = computed(() => props.assetId.slice(0, 8))
+const assetIdShort = computed(() => props.issueId.slice(0, 8))
 
 async function handleResolveIssue() {
-  await API.Projects.resolveIssue({
-    projectId: props.projectId,
+  await API.Issues.resolveIssue({
     issueId: props.issueId,
   })
 

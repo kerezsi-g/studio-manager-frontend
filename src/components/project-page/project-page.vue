@@ -14,21 +14,13 @@ function wrapUrl(url: string) {
 }
 
 const thumbnailUrl = computed(() => {
-  /**
-   * TODO: Fix
-   */
-  const asset = data.value?.assets.find((f) => f.tag === 'thumbnail')
-
-  return asset ? wrapUrl(`/api/assets/${asset.assetId}/thumbnail`) : undefined
+  const asset = data.value?.assets.find((f) => f.assetType === 'thumbnail')
+  return asset ? wrapUrl(`/api/files/${asset.fileId}/thumbnail`) : undefined
 })
 
 const backgroundImageUrl = computed(() => {
-  /**
-   * TODO: Fix
-   */
-  const asset = data.value?.assets.find((f) => f.tag === 'background-image')
-
-  return asset ? `/api/files/${asset.assetId}` : undefined
+  const asset = data.value?.assets.find((f) => f.assetType === 'background-image')
+  return asset ? `/api/files/${asset.fileId}` : undefined
 })
 
 async function handleRename(e: MouseEvent) {
@@ -87,30 +79,32 @@ const navLinks = computed(() => {
   <div class="project-page">
     <header class="project-page-header">
       <main>
-        <div
-          class="project-img"
-          :style="{
-            'background-image': thumbnailUrl,
-          }"
-        >
-          <SolarIcon
-            v-if="data && !thumbnailUrl"
-            :icon="icons.projectType[data.projectType]"
-            variant="bold-duotone"
-            width="48"
-          />
-        </div>
-        <div class="project-title">
-          <h1>
-            {{ data?.projectName }}
+        <header class="project-title">
+          <div
+            class="project-title-img"
+            :style="{
+              'background-image': thumbnailUrl,
+            }"
+          >
+            <SolarIcon
+              v-if="data && !thumbnailUrl"
+              :icon="icons.projectType[data.projectType]"
+              variant="bold-duotone"
+              width="48"
+            />
+          </div>
+          <div class="project-title-text">
+            <h1>
+              {{ data?.projectName }}
 
-            <button class="icon-button" @click="handleRename">
-              <SolarIcon icon="pen-2" variant="bold" width="20" />
-            </button>
-          </h1>
-          <hr class="divider" />
-          <h2>{{ data?.subject }}</h2>
-        </div>
+              <button class="icon-button" @click="handleRename">
+                <SolarIcon icon="pen-2" variant="bold" width="20" />
+              </button>
+            </h1>
+            <hr class="divider" />
+            <h2>{{ data?.subject }}</h2>
+          </div>
+        </header>
 
         <RouterLink :to="{ name: 'projects-list' }">
           <VButton size="sm" color="error" variant="subdued">
@@ -122,7 +116,7 @@ const navLinks = computed(() => {
         </RouterLink>
       </main>
 
-      <nav>
+      <nav class="project-navigation">
         <RouterLink
           v-for="link in navLinks"
           :key="link.name"
@@ -148,8 +142,8 @@ const navLinks = computed(() => {
 
 .project-page {
   display: flex;
-  flex-direction: column;
-  max-width: var(--page-width, 1280px);
+  flex-direction: row;
+  /* max-width: var(--page-width, 1600px); */
   width: 100%;
   margin-inline: auto;
   flex-grow: 1;
@@ -177,23 +171,34 @@ hr.divider {
 
 .project-page-header {
   background-color: rgba(var(--surface) / 50%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
   > main {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    padding: 1rem 3rem;
+    padding: 1rem 2rem;
     gap: 1rem;
   }
 
   > nav {
     display: flex;
-    padding-inline: 4rem;
+    flex-direction: column;
+    /* padding-inline: 4rem; */
     gap: 8px;
     background-color: rgba(var(--surface-dark) / 50%);
   }
 }
 
-.project-img {
+.project-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.project-title-img {
   @apply shadow-xl;
   /* border: 1px solid rgba(var(--color-text) / 50%); */
 
@@ -229,7 +234,7 @@ button.icon-button {
   }
 }
 
-.project-title {
+.project-title-text {
   display: flex;
   flex-direction: column;
   /* flex-grow: 1; */
@@ -272,12 +277,12 @@ button.icon-button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.25rem 1.5rem;
+  padding: 0.75rem 1.5rem;
 
   font-size: 1.125rem;
   font-weight: 500;
 
-  border-block: 3px solid transparent;
+  border-inline: 3px solid transparent;
 
   z-index: 5;
 
@@ -288,8 +293,8 @@ button.icon-button {
   &.active {
     color: rgba(var(--color-main) / 100%);
     background-color: rgba(var(--surface-dark) / 25%);
-    border-bottom-color: rgba(var(--color-main) / 100%);
-    margin-bottom: -1px;
+    border-right-color: rgba(var(--color-main) / 100%);
+    /* margin-bottom: -1px; */
   }
 }
 

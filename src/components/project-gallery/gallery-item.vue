@@ -7,7 +7,7 @@ import icons from '../icons'
 const props = defineProps<ProjectAsset>()
 
 const src = computed(() => {
-  return `/api/assets/${props.assetId}/files/thumbnail`
+  return `/api/files/${props.fileId}/thumbnail`
 })
 
 const contentType = computed(() => {
@@ -57,6 +57,9 @@ const icon = computed(() => {
   cursor: pointer;
 
   background-color: rgba(0 0 0 / 50%);
+
+  height: 100%;
+  width: 100%;
   /* padding: 16px; */
 }
 
@@ -65,11 +68,17 @@ const icon = computed(() => {
 }
 
 .gallery-item-caption {
-  text-align: center;
+  text-align: left;
+  padding-inline: 6px;
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: var(--item-width);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  z-index: 5;
+  background-color: rgba(0 0 0 / 35%);
 }
 
 .gallery-item-icon {
@@ -89,8 +98,11 @@ const icon = computed(() => {
 .gallery-item-main {
   display: block;
   position: relative;
-  height: var(--item-height);
-  width: var(--item-width);
+
+  height: 100%;
+  width: 100%;
+  /* height: var(--item-height); */
+  /* width: var(--item-width); */
 }
 
 .gallery-item-img {
@@ -101,6 +113,9 @@ const icon = computed(() => {
   opacity: 0.75;
   object-fit: cover;
   background-color: rgba(0 0 0 / 50%);
-  border-radius: 3px;
+
+  height: 100%;
+  width: 100%;
+  /* border-radius: 3px; */
 }
 </style>

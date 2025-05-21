@@ -21,7 +21,7 @@ import TrackOverlay from './components/TrackOverlay.vue'
 
 const props = defineProps<ProjectAsset>()
 
-const srcUrl = computed(() => `/api/assets/${props.assetId}/files/base`)
+const srcUrl = computed(() => `/api/files/${props.fileId}`)
 
 const audio = ref<HTMLAudioElement>()
 
@@ -40,11 +40,12 @@ const { playing, /* buffered, */ currentTime, duration, volume, muted } = contro
 
 const loop = ref(false)
 const loopRegion = ref<(number | null)[]>([null, null])
+
 const minTime = computed(() => loopRegion.value[0] ?? 0)
 const maxTime = computed(() => loopRegion.value[1] ?? duration.value)
 
-async function fetchWaveform(args: { assetId: string }) {
-  const response = await fetch(`/api/assets/${args.assetId}/files/peaks`)
+async function fetchWaveform(args: { fileId: string }) {
+  const response = await fetch(`/api/files/${args.fileId}/peaks`)
   const json = await response.json()
   return json as AudioPeaks
 }
@@ -123,8 +124,8 @@ watch(currentTime, (current, previous) => {
     </nav>
 
     <div class="waveform-container palette-secondary">
-      <DataLoader :fn="fetchWaveform" :args="{ assetId: props.assetId }" v-slot="{ data }">
-        <AudioWaveformCanvas v-if="data" v-bind="data" :key="props.assetId" />
+      <DataLoader :fn="fetchWaveform" :args="{ fileId: props.fileId }" v-slot="{ data }">
+        <AudioWaveformCanvas v-if="data" v-bind="data" :key="props.fileId" />
       </DataLoader>
 
       <TrackOverlay

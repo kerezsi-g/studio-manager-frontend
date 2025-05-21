@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProjectAsset } from '@/api-client'
+import { AssetType, type ProjectAsset } from '@/api-client'
 import { computed } from 'vue'
 
 import SolarIcon from '@/components/SolarIcon.vue'
@@ -13,6 +13,7 @@ import PrimaryFilesListItem from './project-files-list-item.vue'
 const props = defineProps<{
   assets: ProjectAsset[]
   projectId: string
+  assetType?: AssetType
 }>()
 
 const emit = defineEmits(['file-uploaded'])
@@ -22,7 +23,7 @@ async function handleAddFile(e: MouseEvent) {
     UploadFileDialog,
     {
       projectId: props.projectId,
-      tag: 'pending-review',
+      tag: AssetType.primary,
     },
     {
       e,
@@ -35,7 +36,7 @@ async function handleAddFile(e: MouseEvent) {
 }
 
 const data = computed(() => {
-  return props.assets.filter((asset) => asset.tag === 'pending-review')
+  return props.assets.filter((asset) => asset.assetType == props.assetType)
 })
 </script>
 <template>
@@ -50,7 +51,7 @@ const data = computed(() => {
     </template>
 
     <template #items>
-      <slot v-for="asset in data" :key="asset.assetId" v-bind="asset">
+      <slot v-for="asset in data" :key="asset.fileId" v-bind="asset">
         <PrimaryFilesListItem :data="asset" />
       </slot>
     </template>
