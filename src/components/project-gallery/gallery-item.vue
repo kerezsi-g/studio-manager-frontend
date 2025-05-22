@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProjectAsset } from '@/api-client'
+import { AssetTag, type ProjectAsset } from '@/api-client'
 import { computed } from 'vue'
 import SolarIcon from '../SolarIcon.vue'
 import icons from '../icons'
@@ -30,7 +30,17 @@ const icon = computed(() => {
 })
 </script>
 <template>
-  <figure class="gallery-item">
+  <figure
+    class="gallery-item"
+    :class="[
+      tag,
+      {
+        'palette-warning': tag === AssetTag.pending_review,
+        'palette-success': tag === AssetTag.accepted,
+        'palette-error': tag === AssetTag.rejected,
+      },
+    ]"
+  >
     <span class="gallery-item-main">
       <img class="gallery-item-img" :src="src" :title="assetName" />
       <SolarIcon variant="bold" class="icon-base gallery-item-icon" :icon="icon" />
@@ -38,6 +48,7 @@ const icon = computed(() => {
     <figcaption class="gallery-item-caption" :title="assetName">
       {{ assetName }}
     </figcaption>
+    <figcaption class="gallery-item-tag" :title="tag">{{ tag }}</figcaption>
   </figure>
 </template>
 <style lang="css">
@@ -61,6 +72,16 @@ const icon = computed(() => {
   height: 100%;
   width: 100%;
   /* padding: 16px; */
+
+  &.pending-review,
+  &.accepted,
+  &.rejected {
+    border: 2px solid rgba(var(--color-main));
+  }
+
+  &.rejected {
+    opacity: 0.5;
+  }
 }
 
 .gallery-item:hover {
@@ -79,6 +100,22 @@ const icon = computed(() => {
   bottom: 0;
   z-index: 5;
   background-color: rgba(0 0 0 / 35%);
+}
+
+.gallery-item-tag {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background-color: rgba(var(--color-main) / 75%);
+  border-radius: 4px;
+  padding-inline: 8px;
+  padding-block: 2px;
+  font-size: 12px;
+  font-weight: 600;
+
+  line-height: normal;
+
+  z-index: 100;
 }
 
 .gallery-item-icon {

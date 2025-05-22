@@ -16,7 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   CreateIssueRequest,
-  CreateIssueResponse,
+  Issue,
   SignIn200Response,
 } from '../models/index';
 
@@ -43,12 +43,26 @@ export interface IssuesApiInterface {
      * @throws {RequiredError}
      * @memberof IssuesApiInterface
      */
-    createIssueRaw(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateIssueResponse>>;
+    createIssueRaw(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Issue>>;
 
     /**
      * createIssue
      */
-    createIssue(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateIssueResponse>;
+    createIssue(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Issue>;
+
+    /**
+     * 
+     * @summary getIssues
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof IssuesApiInterface
+     */
+    getIssuesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * getIssues
+     */
+    getIssues(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
 
     /**
      * 
@@ -75,7 +89,7 @@ export class IssuesApi extends runtime.BaseAPI implements IssuesApiInterface {
     /**
      * createIssue
      */
-    async createIssueRaw(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateIssueResponse>> {
+    async createIssueRaw(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Issue>> {
         if (requestParameters['CreateIssueRequest'] == null) {
             throw new runtime.RequiredError(
                 'CreateIssueRequest',
@@ -103,9 +117,34 @@ export class IssuesApi extends runtime.BaseAPI implements IssuesApiInterface {
     /**
      * createIssue
      */
-    async createIssue(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateIssueResponse> {
+    async createIssue(requestParameters: CreateIssueOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Issue> {
         const response = await this.createIssueRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * getIssues
+     */
+    async getIssuesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/issues`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * getIssues
+     */
+    async getIssues(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.getIssuesRaw(initOverrides);
     }
 
     /**

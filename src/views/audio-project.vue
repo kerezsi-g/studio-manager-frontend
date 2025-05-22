@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Issue, ProjectDetails, ProjectAsset } from '@/api-client'
+import { type Issue, type ProjectDetails, type ProjectAsset, AssetType } from '@/api-client'
 import { computed, onMounted, ref } from 'vue'
 
 import ProjectFilesList from '@/components/project-files-list/project-files-list.vue'
@@ -16,7 +16,7 @@ const props = defineProps<ProjectDetails>()
 const selectedAsset = ref<ProjectAsset | null>(null)
 
 const primaryAssets = computed(() => {
-  return props.assets.filter((asset) => asset.tag === 'pending-review')
+  return props.assets.filter((asset) => asset.assetType === AssetType.primary)
 })
 
 function handleSelectAsset(asset: ProjectAsset) {

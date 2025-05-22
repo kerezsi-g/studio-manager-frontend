@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { ProjectAsset } from '@/api-client'
+import { AssetTag, type ProjectAsset } from '@/api-client'
 import { clamp } from '@vueuse/core'
 
 import { VButton } from '@/components/ui/Button'
+import SolarIcon from '@/components/SolarIcon.vue'
 import { API } from '@/api'
 
 const selectedMedia = defineModel<ProjectAsset | null>({
@@ -14,6 +15,7 @@ const emit = defineEmits(['change'])
 const props = defineProps<{
   assets: ProjectAsset[]
   projectId: string
+  showTags?: boolean
 }>()
 
 function step(step: number) {
@@ -24,6 +26,17 @@ function step(step: number) {
   const nextIndex = clamp(index + step, 0, props.assets.length - 1)
 
   selectedMedia.value = props.assets[nextIndex]
+}
+
+async function setTag(tag: AssetTag) {
+  await API.Projects.setAssetTag({
+    projectId: props.projectId,
+    fileId: selectedMedia.value!.fileId,
+    assetType: selectedMedia.value!.assetType,
+    tag,
+  })
+
+  emit('change')
 }
 
 async function setFileAs(file: ProjectAsset, type: 'thumbnail' | 'background-image') {
@@ -54,14 +67,14 @@ async function setFileAs(file: ProjectAsset, type: 'thumbnail' | 'background-ima
       </div>
 
       <footer class="gallery-overlay-footer">
-        <VButton @click="step(-1)">
+        <VButton size="sm" @click="step(-1)">
           <template #prefix>
             <SolarIcon width="24" icon="alt-arrow-left" variant="bold-duotone" />
           </template>
           Previous
         </VButton>
 
-        <VButton @click="step(1)">
+        <VButton size="sm" @click="step(1)">
           <template #suffix>
             <SolarIcon width="24" icon="alt-arrow-right" variant="bold-duotone" />
           </template>
@@ -72,7 +85,7 @@ async function setFileAs(file: ProjectAsset, type: 'thumbnail' | 'background-ima
           :href="`/api/files/${selectedMedia.fileId}?download=true`"
           :download="selectedMedia.assetName"
         >
-          <VButton>
+          <VButton size="sm">
             <template #suffix>
               <SolarIcon width="24" icon="file-download" variant="bold-duotone" />
             </template>
@@ -80,26 +93,61 @@ async function setFileAs(file: ProjectAsset, type: 'thumbnail' | 'background-ima
           </VButton>
         </a>
 
-        <VButton @click="selectedMedia = null" variant="subdued">
+        <VButton size="sm" @click="selectedMedia = null" variant="subdued">
           <template #suffix>
             <SolarIcon width="24" icon="close-circle" variant="bold-duotone" />
           </template>
           Close
         </VButton>
 
-        <VButton :action="() => setFileAs(selectedMedia!, 'background-image')" variant="subdued">
+        <VButton
+          size="sm"
+          :action="() => setFileAs(selectedMedia!, 'background-image')"
+          variant="subdued"
+        >
           <template #suffix>
             <SolarIcon width="24" icon="gallery-check" variant="bold-duotone" />
           </template>
           Make Background
         </VButton>
 
-        <VButton :action="() => setFileAs(selectedMedia!, 'thumbnail')" variant="subdued">
+        <VButton size="sm" :action="() => setFileAs(selectedMedia!, 'thumbnail')" variant="subdued">
           <template #suffix>
             <SolarIcon width="24" icon="gallery-check" variant="bold-duotone" />
           </template>
           Make Thumbnail
         </VButton>
+
+        <template v-if="showTags">
+          <VButton size="sm" :action="() => setTag(AssetTag.pending_review)" variant="filled">
+            <template #suffix>
+              <SolarIcon width="24" icon="question-circle" variant="bold-duotone" />
+            </template>
+            Untag
+          </VButton>
+          <VButton
+            size="sm"
+            :action="() => setTag(AssetTag.accepted)"
+            variant="filled"
+            color="success"
+          >
+            <template #suffix>
+              <SolarIcon width="24" icon="check-circle" variant="bold-duotone" />
+            </template>
+            Accept
+          </VButton>
+          <VButton
+            size="sm"
+            :action="() => setTag(AssetTag.rejected)"
+            variant="filled"
+            color="error"
+          >
+            <template #suffix>
+              <SolarIcon width="24" icon="close-circle" variant="bold-duotone" />
+            </template>
+            Reject
+          </VButton>
+        </template>
       </footer>
     </div>
   </Teleport>
@@ -128,7 +176,7 @@ async function setFileAs(file: ProjectAsset, type: 'thumbnail' | 'background-ima
   background-color: rgba(var(--surface) / 50%);
 
   h3 {
-    font-size: 3rem;
+    font-size: 2rem;
   }
 }
 

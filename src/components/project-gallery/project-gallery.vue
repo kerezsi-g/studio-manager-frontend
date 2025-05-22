@@ -6,8 +6,7 @@ import UploadFileDialog from '../upload-file-dialog/upload-file-dialog.vue'
 import SolarIcon from '@/components/SolarIcon.vue'
 import { VButton } from '@/components/ui/Button'
 import { computed, ref } from 'vue'
-import { clamp } from '@vueuse/core'
-import { API } from '@/api'
+// import { clamp } from '@vueuse/core'
 import OverlayGallery from './overlay-gallery.vue'
 
 const props = defineProps<{
@@ -69,6 +68,7 @@ function handleGalleryClick(file: ProjectAsset) {
       :assets="data"
       :projectId="props.projectId"
       @change="$emit('file-uploaded')"
+      :showTags="assetType == 'primary'"
     />
   </div>
 </template>

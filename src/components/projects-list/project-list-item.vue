@@ -101,7 +101,7 @@ const thumbnailUrl = computed(() => {
 
   background-color: rgba(var(--surface-dark) / 50%);
   backdrop-filter: blur(8px);
-  border-radius: 6px;
+  border-radius: 3px;
 
   h1 {
     text-shadow: 0 0 2px rgba(0 0 0 / 25%);

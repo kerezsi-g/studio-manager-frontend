@@ -5,12 +5,12 @@
  * 
  * @export
  */
-export const AssetStatus = {
-    pending_review: 'pending-review',
+export const AssetTag = {
     accepted: 'accepted',
-    rejected: 'rejected'
+    rejected: 'rejected',
+    pending_review: 'pending-review'
 } as const;
-export type AssetStatus = typeof AssetStatus[keyof typeof AssetStatus];
+export type AssetTag = typeof AssetTag[keyof typeof AssetTag];
 
 
 /**
@@ -20,7 +20,6 @@ export type AssetStatus = typeof AssetStatus[keyof typeof AssetStatus];
 export const AssetType = {
     primary: 'primary',
     misc: 'misc',
-    source: 'source',
     background_image: 'background-image',
     thumbnail: 'thumbnail'
 } as const;
@@ -162,13 +161,13 @@ export interface CreateIssueRequest {
      * @type {string}
      * @memberof CreateIssueRequest
      */
-    fileId: string;
+    projectId: string;
     /**
      * 
      * @type {string}
      * @memberof CreateIssueRequest
      */
-    projectId: string;
+    fileId: string;
     /**
      * 
      * @type {string}
@@ -187,19 +186,6 @@ export interface CreateIssueRequest {
      * @memberof CreateIssueRequest
      */
     duration?: number;
-}
-/**
- * 
- * @export
- * @interface CreateIssueResponse
- */
-export interface CreateIssueResponse {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateIssueResponse
-     */
-    issueId: string;
 }
 /**
  * 
@@ -285,7 +271,7 @@ export interface Issue {
      * @type {number}
      * @memberof Issue
      */
-    resolvedAt: number | null;
+    resolvedAt?: number | null;
 }
 /**
  * 
@@ -335,13 +321,13 @@ export interface ProjectAsset {
      * @type {string}
      * @memberof ProjectAsset
      */
-    fileId: string;
+    projectId: string;
     /**
      * 
      * @type {string}
      * @memberof ProjectAsset
      */
-    assetName: string;
+    fileId: string;
     /**
      * 
      * @type {AssetType}
@@ -350,10 +336,16 @@ export interface ProjectAsset {
     assetType: AssetType;
     /**
      * 
-     * @type {AssetStatus}
+     * @type {string}
      * @memberof ProjectAsset
      */
-    tag: AssetStatus;
+    assetName: string;
+    /**
+     * 
+     * @type {AssetTag}
+     * @memberof ProjectAsset
+     */
+    tag: AssetTag;
     /**
      * 
      * @type {number}
@@ -398,7 +390,7 @@ export interface ProjectDetails {
      * @type {string}
      * @memberof ProjectDetails
      */
-    projectType: string;
+    projectType: ProjectDetailsProjectTypeEnum;
     /**
      * 
      * @type {string}
@@ -424,6 +416,30 @@ export interface ProjectDetails {
      */
     issues: Array<Issue>;
 }
+
+
+/**
+ * @export
+ */
+export const ProjectDetailsProjectTypeEnum = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type ProjectDetailsProjectTypeEnum = typeof ProjectDetailsProjectTypeEnum[keyof typeof ProjectDetailsProjectTypeEnum];
+
+
+/**
+ * 
+ * @export
+ */
+export const ProjectType = {
+    audio: 'audio',
+    video: 'video',
+    image: 'image'
+} as const;
+export type ProjectType = typeof ProjectType[keyof typeof ProjectType];
+
 /**
  * 
  * @export

@@ -15,10 +15,9 @@
 
 import * as runtime from '../runtime';
 import type {
-  AssetStatus,
+  AssetTag,
   AssetType,
   CreateProjectRequest,
-  Issue,
   Project,
   ProjectDetails,
   SignIn200Response,
@@ -41,19 +40,17 @@ export interface CreateProjectOperationRequest {
     CreateProjectRequest: CreateProjectRequest;
 }
 
+export interface DeleteAssetRequest {
+    projectId: string;
+    assetType: AssetType;
+    fileId: string;
+}
+
 export interface DeleteProjectRequest {
     projectId: string;
 }
 
-export interface GetProjectAssetsRequest {
-    projectId: string;
-}
-
 export interface GetProjectDetailsRequest {
-    projectId: string;
-}
-
-export interface GetProjectIssuesRequest {
     projectId: string;
 }
 
@@ -66,11 +63,11 @@ export interface RemoveUserFromProjectRequest {
     userId: string;
 }
 
-export interface TagAssetRequest {
-    tag: AssetStatus;
+export interface SetAssetTagRequest {
+    tag: AssetTag;
     projectId: string;
-    fileId: string;
     assetType: AssetType;
+    fileId: string;
 }
 
 export interface UpdateProjectOperationRequest {
@@ -135,6 +132,23 @@ export interface ProjectsApiInterface {
 
     /**
      * 
+     * @summary deleteAsset
+     * @param {string} projectId 
+     * @param {AssetType} assetType 
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ProjectsApiInterface
+     */
+    deleteAssetRaw(requestParameters: DeleteAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+
+    /**
+     * deleteAsset
+     */
+    deleteAsset(requestParameters: DeleteAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+
+    /**
+     * 
      * @summary deleteProject
      * @param {string} projectId 
      * @param {*} [options] Override http request option.
@@ -150,21 +164,6 @@ export interface ProjectsApiInterface {
 
     /**
      * 
-     * @summary getProjectAssets
-     * @param {string} projectId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProjectsApiInterface
-     */
-    getProjectAssetsRaw(requestParameters: GetProjectAssetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     * getProjectAssets
-     */
-    getProjectAssets(requestParameters: GetProjectAssetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
-
-    /**
-     * 
      * @summary getProjectDetails
      * @param {string} projectId 
      * @param {*} [options] Override http request option.
@@ -177,21 +176,6 @@ export interface ProjectsApiInterface {
      * getProjectDetails
      */
     getProjectDetails(requestParameters: GetProjectDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProjectDetails>;
-
-    /**
-     * 
-     * @summary getProjectIssues
-     * @param {string} projectId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ProjectsApiInterface
-     */
-    getProjectIssuesRaw(requestParameters: GetProjectIssuesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Issue>>>;
-
-    /**
-     * getProjectIssues
-     */
-    getProjectIssues(requestParameters: GetProjectIssuesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Issue>>;
 
     /**
      * 
@@ -240,21 +224,21 @@ export interface ProjectsApiInterface {
 
     /**
      * 
-     * @summary tagAsset
-     * @param {AssetStatus} tag 
+     * @summary setAssetTag
+     * @param {AssetTag} tag 
      * @param {string} projectId 
-     * @param {string} fileId 
      * @param {AssetType} assetType 
+     * @param {string} fileId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApiInterface
      */
-    tagAssetRaw(requestParameters: TagAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
+    setAssetTagRaw(requestParameters: SetAssetTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>>;
 
     /**
-     * tagAsset
+     * setAssetTag
      */
-    tagAsset(requestParameters: TagAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
+    setAssetTag(requestParameters: SetAssetTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response>;
 
     /**
      * 
@@ -349,7 +333,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{assetType}/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetType"}}`, encodeURIComponent(String(requestParameters['assetType']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
+            path: `/projects/{projectId}/assets/{assetType}/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetType"}}`, encodeURIComponent(String(requestParameters['assetType']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -403,6 +387,53 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
     /**
+     * deleteAsset
+     */
+    async deleteAssetRaw(requestParameters: DeleteAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+        if (requestParameters['projectId'] == null) {
+            throw new runtime.RequiredError(
+                'projectId',
+                'Required parameter "projectId" was null or undefined when calling deleteAsset().'
+            );
+        }
+
+        if (requestParameters['assetType'] == null) {
+            throw new runtime.RequiredError(
+                'assetType',
+                'Required parameter "assetType" was null or undefined when calling deleteAsset().'
+            );
+        }
+
+        if (requestParameters['fileId'] == null) {
+            throw new runtime.RequiredError(
+                'fileId',
+                'Required parameter "fileId" was null or undefined when calling deleteAsset().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/projects/{projectId}/assets/{assetType}/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetType"}}`, encodeURIComponent(String(requestParameters['assetType']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * deleteAsset
+     */
+    async deleteAsset(requestParameters: DeleteAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+        const response = await this.deleteAssetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * deleteProject
      */
     async deleteProjectRaw(requestParameters: DeleteProjectRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
@@ -436,38 +467,6 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
     /**
-     * getProjectAssets
-     */
-    async getProjectAssetsRaw(requestParameters: GetProjectAssetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['projectId'] == null) {
-            throw new runtime.RequiredError(
-                'projectId',
-                'Required parameter "projectId" was null or undefined when calling getProjectAssets().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/projects/{projectId}/files`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * getProjectAssets
-     */
-    async getProjectAssets(requestParameters: GetProjectAssetsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.getProjectAssetsRaw(requestParameters, initOverrides);
-    }
-
-    /**
      * getProjectDetails
      */
     async getProjectDetailsRaw(requestParameters: GetProjectDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProjectDetails>> {
@@ -497,39 +496,6 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
      */
     async getProjectDetails(requestParameters: GetProjectDetailsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProjectDetails> {
         const response = await this.getProjectDetailsRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * getProjectIssues
-     */
-    async getProjectIssuesRaw(requestParameters: GetProjectIssuesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Issue>>> {
-        if (requestParameters['projectId'] == null) {
-            throw new runtime.RequiredError(
-                'projectId',
-                'Required parameter "projectId" was null or undefined when calling getProjectIssues().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/projects/{projectId}/issues`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * getProjectIssues
-     */
-    async getProjectIssues(requestParameters: GetProjectIssuesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Issue>> {
-        const response = await this.getProjectIssuesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -633,34 +599,34 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
     /**
-     * tagAsset
+     * setAssetTag
      */
-    async tagAssetRaw(requestParameters: TagAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
+    async setAssetTagRaw(requestParameters: SetAssetTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SignIn200Response>> {
         if (requestParameters['tag'] == null) {
             throw new runtime.RequiredError(
                 'tag',
-                'Required parameter "tag" was null or undefined when calling tagAsset().'
+                'Required parameter "tag" was null or undefined when calling setAssetTag().'
             );
         }
 
         if (requestParameters['projectId'] == null) {
             throw new runtime.RequiredError(
                 'projectId',
-                'Required parameter "projectId" was null or undefined when calling tagAsset().'
-            );
-        }
-
-        if (requestParameters['fileId'] == null) {
-            throw new runtime.RequiredError(
-                'fileId',
-                'Required parameter "fileId" was null or undefined when calling tagAsset().'
+                'Required parameter "projectId" was null or undefined when calling setAssetTag().'
             );
         }
 
         if (requestParameters['assetType'] == null) {
             throw new runtime.RequiredError(
                 'assetType',
-                'Required parameter "assetType" was null or undefined when calling tagAsset().'
+                'Required parameter "assetType" was null or undefined when calling setAssetTag().'
+            );
+        }
+
+        if (requestParameters['fileId'] == null) {
+            throw new runtime.RequiredError(
+                'fileId',
+                'Required parameter "fileId" was null or undefined when calling setAssetTag().'
             );
         }
 
@@ -673,7 +639,7 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
         const headerParameters: runtime.HTTPHeaders = {};
 
         const response = await this.request({
-            path: `/projects/{projectId}/files/{assetType}/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))).replace(`{${"assetType"}}`, encodeURIComponent(String(requestParameters['assetType']))),
+            path: `/projects/{projectId}/assets/{assetType}/{fileId}`.replace(`{${"projectId"}}`, encodeURIComponent(String(requestParameters['projectId']))).replace(`{${"assetType"}}`, encodeURIComponent(String(requestParameters['assetType']))).replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -683,10 +649,10 @@ export class ProjectsApi extends runtime.BaseAPI implements ProjectsApiInterface
     }
 
     /**
-     * tagAsset
+     * setAssetTag
      */
-    async tagAsset(requestParameters: TagAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
-        const response = await this.tagAssetRaw(requestParameters, initOverrides);
+    async setAssetTag(requestParameters: SetAssetTagRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SignIn200Response> {
+        const response = await this.setAssetTagRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

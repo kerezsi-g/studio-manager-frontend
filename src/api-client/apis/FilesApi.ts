@@ -18,11 +18,6 @@ import type {
   SignIn200Response,
 } from '../models/index';
 
-export interface GetChildResourceRequest {
-    fileId: string;
-    suffix: string;
-}
-
 export interface MarkForDeletionRequest {
     fileId: string;
 }
@@ -34,22 +29,6 @@ export interface MarkForDeletionRequest {
  * @interface FilesApiInterface
  */
 export interface FilesApiInterface {
-    /**
-     * 
-     * @summary getChildResource
-     * @param {string} fileId 
-     * @param {string} suffix 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof FilesApiInterface
-     */
-    getChildResourceRaw(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
-
-    /**
-     * getChildResource
-     */
-    getChildResource(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
-
     /**
      * 
      * @summary markForDeletion
@@ -71,45 +50,6 @@ export interface FilesApiInterface {
  * 
  */
 export class FilesApi extends runtime.BaseAPI implements FilesApiInterface {
-
-    /**
-     * getChildResource
-     */
-    async getChildResourceRaw(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['fileId'] == null) {
-            throw new runtime.RequiredError(
-                'fileId',
-                'Required parameter "fileId" was null or undefined when calling getChildResource().'
-            );
-        }
-
-        if (requestParameters['suffix'] == null) {
-            throw new runtime.RequiredError(
-                'suffix',
-                'Required parameter "suffix" was null or undefined when calling getChildResource().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/files/{fileId}/{suffix}`.replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters['suffix']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * getChildResource
-     */
-    async getChildResource(requestParameters: GetChildResourceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.getChildResourceRaw(requestParameters, initOverrides);
-    }
 
     /**
      * markForDeletion
