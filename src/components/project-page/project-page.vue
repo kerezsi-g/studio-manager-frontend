@@ -155,6 +155,10 @@ const navLinks = computed(() => {
 
   background-size: cover;
   background-position: center;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
 }
 
 hr.divider {
@@ -189,6 +193,10 @@ hr.divider {
     /* padding-inline: 4rem; */
     gap: 8px;
     background-color: rgba(var(--surface-dark) / 50%);
+
+    @media (max-width: 1024px) {
+      flex-direction: row;
+    }
   }
 }
 
@@ -274,6 +282,7 @@ button.icon-button {
 
 .project-nav-link {
   @apply transition-all;
+
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -282,7 +291,8 @@ button.icon-button {
   font-size: 1.125rem;
   font-weight: 500;
 
-  border-inline: 3px solid transparent;
+  border-right: 3px solid;
+  border-color: var(--border-color, transparent);
 
   z-index: 5;
 
@@ -293,8 +303,15 @@ button.icon-button {
   &.active {
     color: rgba(var(--color-main) / 100%);
     background-color: rgba(var(--surface-dark) / 25%);
-    border-right-color: rgba(var(--color-main) / 100%);
+    --border-color: rgba(var(--color-main) / 100%);
     /* margin-bottom: -1px; */
+  }
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 3px solid var(--border-color, transparent);
+    margin-bottom: -1px;
+    flex-grow: 1;
   }
 }
 
