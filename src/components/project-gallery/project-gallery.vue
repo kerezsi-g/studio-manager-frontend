@@ -105,19 +105,4 @@ function handleGalleryClick(file: ProjectAsset) {
   /* background-color: rgba(var(--surface-dark) / 75%); */
   padding-inline: 1rem;
 }
-
-.v-fade-enter-active,
-.v-fade-leave-active {
-  transition-duration: 300ms;
-  transition-timing-function: ease-out;
-  transition-property: opacity, transform;
-  transition-delay: calc(10ms * attr(data-index type(<number>)));
-  transform: scale(1);
-}
-
-.v-fade-enter-from,
-.v-fade-leave-to {
-  opacity: 0;
-  transform: scale(0.9);
-}
 </style>

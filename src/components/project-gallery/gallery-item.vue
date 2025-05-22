@@ -48,7 +48,9 @@ const icon = computed(() => {
     <figcaption class="gallery-item-caption" :title="assetName">
       {{ assetName }}
     </figcaption>
-    <figcaption class="gallery-item-tag" :title="tag">{{ tag }}</figcaption>
+    <figcaption class="gallery-item-tag" :title="tag" v-if="tag && tag !== AssetTag.accepted">
+      {{ tag }}
+    </figcaption>
   </figure>
 </template>
 <style lang="css">
@@ -76,11 +78,20 @@ const icon = computed(() => {
   &.pending-review,
   &.accepted,
   &.rejected {
-    border: 2px solid rgba(var(--color-main));
+    /* border: 1px solid rgba(var(--color-main)); */
   }
 
   &.rejected {
-    opacity: 0.5;
+    opacity: 0.25;
+    /* filter: grayscale(100%); */
+  }
+
+  &.accepted {
+    opacity: 1;
+  }
+
+  &.pending-review {
+    opacity: 0.75;
   }
 }
 

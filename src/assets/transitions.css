@@ -1,0 +1,29 @@
+.v-fade-enter-active,
+.v-fade-leave-active {
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+  transition-property: opacity, transform;
+  transition-delay: calc(10ms * attr(data-index type(<number>)));
+  transform: scale(1);
+}
+
+.v-fade-enter-from,
+.v-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.v-slide-enter-active,
+.v-slide-leave-active {
+  transition-duration: 300ms;
+  transition-timing-function: ease-out;
+  transition-property: opacity, transform;
+  transition-delay: calc(10ms * attr(data-index type(<number>)));
+  transform: translateX(0px);
+}
+
+.v-slide-enter-from,
+.v-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-24px);
+}

@@ -5,11 +5,11 @@ import { computed, onMounted, ref } from 'vue'
 import ProjectFilesList from '@/components/project-files-list/project-files-list.vue'
 import ProjectFilesListItem from '@/components/project-files-list/project-files-list-item.vue'
 
-import AudioPlayer from '@/components/media/audio-player.vue'
+import AudioPlayer from '@/components/audio-player/audio-player.vue'
 import { ProjectIssuesList, ProjectIssue } from '@/components/project-issues'
 import { useModal } from '@/components/modal'
 import SubmitIssueDialog from '@/components/submit-issue-dialog/submit-issue-dialog.vue'
-import TimestampMarker from '@/components/media/components/TimestampMarker.vue'
+import TimestampMarker from '@/components/audio-player/components/TimestampMarker.vue'
 
 const props = defineProps<ProjectDetails>()
 

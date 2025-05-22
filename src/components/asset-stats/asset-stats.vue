@@ -15,7 +15,13 @@ const stats = computed(() => {
 <template>
   <main class="asset-statistics">
     <h1>Storage statistics</h1>
+
     <hr class="divider" />
+
+    <h2>
+      <strong>Total:</strong>
+      <span>{{ formatBytes(stats.totalSize) }}</span>
+    </h2>
     <section v-for="rootType in stats.contentTypes" :key="rootType.type" class="pl-2">
       <header class="flex items-center gap-1">
         <strong> {{ rootType.type }}:</strong>
@@ -29,10 +35,6 @@ const stats = computed(() => {
         </li>
       </ul>
     </section>
-    <footer>
-      <strong>Total:</strong>
-      <span>{{ formatBytes(stats.totalSize) }}</span>
-    </footer>
   </main>
 </template>
 <style lang="css">
@@ -44,11 +46,11 @@ const stats = computed(() => {
 
   h1 {
     font-weight: 600;
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
 
-  footer {
-    font-size: 1.25rem;
+  h2 {
+    font-size: 1.5rem;
     font-weight: 500;
     display: flex;
     gap: 4px;

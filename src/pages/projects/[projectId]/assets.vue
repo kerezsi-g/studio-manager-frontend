@@ -45,17 +45,18 @@ function getIcon(contentType: string) {
 }
 </script>
 <template>
-  <div class="flex overflow-auto items-start px-8 gap-4 py-4">
+  <div class="flex overflow-hidden items-start px-8 gap-4 py-4">
+    <!-- <div class="overflow-auto"> -->
     <ul class="file-list">
-      <header>
+      <!-- <header>
         <span />
 
         <strong>File name</strong>
-        <!-- <strong>Tag</strong> -->
+
         <strong>Size</strong>
-        <strong>Created</strong>
+
         <strong>Uploaded</strong>
-      </header>
+      </header> -->
       <li v-for="asset in assets" :key="asset.fileId" class="file-list-item">
         <SolarIcon :icon="getIcon(asset.contentType)" width="24" variant="bold-duotone" />
 
@@ -67,8 +68,6 @@ function getIcon(contentType: string) {
             {{ asset.contentType }}
           </h2>
         </header>
-
-        <!-- <span class="file-tag">{{ asset.tag }}</span> -->
 
         <span class="file-size">{{ formatBytes(asset.size) }}</span>
 
@@ -92,6 +91,8 @@ function getIcon(contentType: string) {
         </span>
       </li>
     </ul>
+    <!-- </div> -->
+
     <AssetStats :assets="assets" />
   </div>
 </template>
@@ -103,6 +104,9 @@ function getIcon(contentType: string) {
   display: grid;
   grid-template-columns: auto auto auto auto auto;
   justify-content: flex-start;
+
+  max-height: 100%;
+  overflow-y: auto;
 
   grid-auto-flow: row;
   gap: 4px;

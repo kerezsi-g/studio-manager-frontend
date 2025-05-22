@@ -48,7 +48,14 @@ async function handleCreateProject(e?: MouseEvent) {
     </template>
     <template #body>
       <ul v-if="projects.length > 0" class="grid-list" v-auto-animate>
-        <ProjectListItem v-for="project in projects" :key="project.projectId" v-bind="project" />
+        <TransitionGroup name="v-fade" appear enter>
+          <ProjectListItem
+            v-for="(project, index) in projects"
+            :key="project.projectId"
+            v-bind="project"
+            :data-index="index"
+          />
+        </TransitionGroup>
       </ul>
       <div v-else class="no-data">No Projects found</div>
     </template>

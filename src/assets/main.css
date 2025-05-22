@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './base.css';
 @import './palette.css';
+@import './transitions.css';
 
 html {
   /* background-image: url('/backgrounds/drumset.jpg'); */
